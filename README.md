@@ -1,4 +1,4 @@
-# BankDAO
+# The Bank DAO
 The Bank of Decentralized Autonomous Organizations
 ## Overview
 The repository provides implementation of the Bank DAO protocol described in this [note](https://hackmd.io/q4RHSYE6Tb6fRqgPIML9QA?view
