@@ -52,8 +52,9 @@ main (int argc, char **argv)
   unsigned t, m;
   if (argc < 3)
     {
-      printf ("Usage of %s:\n%s t m\nt: threshold for the SS\nm: number of users\n", argv[0],
-	      argv[0]);
+      printf
+	("Usage of %s:\n%s t m\nt: threshold for the SS\nm: number of users\n",
+	 argv[0], argv[0]);
       exit (1);
     }
   t = atoi (argv[1]);
@@ -62,16 +63,16 @@ main (int argc, char **argv)
 
     CycGrpZp sk[m], s;
     CycGrpG PK;
-    group_init (714); // secp256k1
+    group_init (714);		// secp256k1
     for (i = 0; i < m; i++)
       CycGrpZp_new (&sk[i]);
     CycGrpZp_new (&s);
     CycGrpG_new (&PK);
 
     generate_secret_key (&s);
-    generate_public_key (&PK,&s);
-      printf ("s:%s\n", CycGrpZp_toHexString (&s));
-      printf ("PK:%s\n", CycGrpG_toHexString (&PK));
+    generate_public_key (&PK, &s);
+    printf ("s:%s\n", CycGrpZp_toHexString (&s));
+    printf ("PK:%s\n", CycGrpG_toHexString (&PK));
     ComputeShares (t, m, sk, &s);
 
     for (i = 0; i < m; i++)

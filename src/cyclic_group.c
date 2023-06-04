@@ -94,7 +94,8 @@ CycGrpG_toHexString (const CycGrpG * a)
 size_t
 CycGrpG_toBin (unsigned char *dst, size_t len, const CycGrpG * a)
 {
-  return EC_POINT_point2oct (ec_group, a->P, POINT_CONVERSION_COMPRESSED, dst, len,NULL);
+  return EC_POINT_point2oct (ec_group, a->P, POINT_CONVERSION_COMPRESSED, dst,
+			     len, NULL);
 }
 
 char *

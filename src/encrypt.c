@@ -6,70 +6,78 @@
 #include <stdio.h>
 #include <openssl/sha.h>
 static SHA256_CTX ctx;
-#define LENGTH_GRP_ELEMENTS 33 // 33 for secp256k1 = 32 + 1 byte for the sign. This is the length in binary. The length as hex string is then the double
+#define LENGTH_GRP_ELEMENTS 33	// 33 for secp256k1 = 32 + 1 byte for the sign. This is the length in binary. The length as hex string is then the double
 
-inline static void print_hex(unsigned char *hex,size_t len){    
-size_t count;
-    printf("0x");
-for(count = 0; count < len; count++)
-        printf("%02x", hex[count]);
-    printf("\n");
+inline static void
+print_hex (unsigned char *hex, size_t len)
+{
+  size_t count;
+  printf ("0x");
+  for (count = 0; count < len; count++)
+    printf ("%02x", hex[count]);
+  printf ("\n");
 }
 
-inline static void HexToBytes(unsigned char *dst, unsigned char *src){
+inline static void
+HexToBytes (unsigned char *dst, unsigned char *src)
+{
 
-size_t count;
-    for (count = 0; count < LENGTH_GRP_ELEMENTS; count++) {
-        sscanf((char *)src, "%2hhx", &dst[count]);
-        src += 2;
+  size_t count;
+  for (count = 0; count < LENGTH_GRP_ELEMENTS; count++)
+    {
+      sscanf ((char *) src, "%2hhx", &dst[count]);
+      src += 2;
     }
 //print_hex(val,LENGTH_GRP_ELEMENTS);
 }
+
 int
 main (int argc, char **argv)
 {
-int i;
-unsigned char B[SHA256_DIGEST_LENGTH];
-unsigned char tmp[SHA256_DIGEST_LENGTH];
-unsigned char tmp2[SHA256_DIGEST_LENGTH];
-unsigned char Cbytes[LENGTH_GRP_ELEMENTS*2];
-unsigned char Addrbytes[LENGTH_GRP_ELEMENTS*2];
+  int i;
+  unsigned char B[SHA256_DIGEST_LENGTH];
+  unsigned char tmp[SHA256_DIGEST_LENGTH];
+  unsigned char tmp2[SHA256_DIGEST_LENGTH];
+  unsigned char Cbytes[LENGTH_GRP_ELEMENTS * 2];
+  unsigned char Addrbytes[LENGTH_GRP_ELEMENTS * 2];
   if (argc < 3)
     {
-      printf ("Usage of %s:\n%s PK addr\nPK: public key of the DAO to which make the deposit \naddr: address of the DAO\n", argv[0],
-	      argv[0]);
+      printf
+	("Usage of %s:\n%s PK addr\nPK: public key of the DAO to which make the deposit \naddr: address of the DAO\n",
+	 argv[0], argv[0]);
       exit (1);
     }
 
-    CycGrpZp r;
-    CycGrpG PK,A,C;
-    group_init (714);
-    CycGrpZp_new (&r);
-    CycGrpG_new (&PK);
-    CycGrpG_new (&A);
-    CycGrpG_new (&C);
-CycGrpG_fromHexString(&PK,argv[1]);
-    CycGrpZp_setRand (&r);
-	CycGrpG_mul(&A,CycGrpGenerator,&r);     
-	CycGrpG_mul(&C,&PK,&r);    
- printf ("r:0x%s\n", CycGrpZp_toHexString (&r));
-      printf ("A:0x%s\n", CycGrpG_toHexString (&A));
-      printf ("C:0x%s\n", CycGrpG_toHexString (&C));
-HexToBytes(Cbytes,(unsigned char *)CycGrpG_toHexString(&C)); 
-print_hex(Cbytes,33);
+  CycGrpZp r;
+  CycGrpG PK, A, C;
+  group_init (714);
+  CycGrpZp_new (&r);
+  CycGrpG_new (&PK);
+  CycGrpG_new (&A);
+  CycGrpG_new (&C);
+  CycGrpG_fromHexString (&PK, argv[1]);
+  CycGrpZp_setRand (&r);
+  CycGrpG_mul (&A, CycGrpGenerator, &r);
+  CycGrpG_mul (&C, &PK, &r);
+  printf ("r:0x%s\n", CycGrpZp_toHexString (&r));
+  printf ("A:0x%s\n", CycGrpG_toHexString (&A));
+  printf ("C:0x%s\n", CycGrpG_toHexString (&C));
+  HexToBytes (Cbytes, (unsigned char *) CycGrpG_toHexString (&C));
+  print_hex (Cbytes, 33);
   SHA256_Init (&ctx);
- SHA256_Update (&ctx, (unsigned char *) Cbytes, LENGTH_GRP_ELEMENTS);
+  SHA256_Update (&ctx, (unsigned char *) Cbytes, LENGTH_GRP_ELEMENTS);
   SHA256_Final (tmp, &ctx);
 //printf("H(C):");
 //print_hex(tmp,SHA256_DIGEST_LENGTH);
-HexToBytes(Addrbytes,(unsigned char *)argv[2]); 
+  HexToBytes (Addrbytes, (unsigned char *) argv[2]);
   SHA256_Init (&ctx);
- SHA256_Update (&ctx, (unsigned char *) Addrbytes, 20);
+  SHA256_Update (&ctx, (unsigned char *) Addrbytes, 20);
   SHA256_Final (tmp2, &ctx);
 //printf("H(addr):");
 //print_hex(tmp2,SHA256_DIGEST_LENGTH);
-for (i=0;i<SHA256_DIGEST_LENGTH;i++) B[i]=tmp[i] ^ tmp2[i];
-printf("B=H(C) XOR H(addr):");
-print_hex(B,SHA256_DIGEST_LENGTH);
-return 0;
+  for (i = 0; i < SHA256_DIGEST_LENGTH; i++)
+    B[i] = tmp[i] ^ tmp2[i];
+  printf ("B=H(C) XOR H(addr):");
+  print_hex (B, SHA256_DIGEST_LENGTH);
+  return 0;
 }
