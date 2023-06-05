@@ -10,7 +10,7 @@ main (int argc, char **argv)
   if (argc < 3)
     {
       printf
-	("Usage of %s:\n%s A s\nA: A value of the deposit from which to claim a withdrawal\ns: your secret shar\n",
+	("Usage of %s:\n%s A s\nA: A value of the deposit from which to claim a withdrawal\ns: your secret share\n",
 	 argv[0], argv[0]);
       exit (1);
     }

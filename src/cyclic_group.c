@@ -166,6 +166,12 @@ CycGrpG_add (CycGrpG * h, const CycGrpG * u, const CycGrpG * v)
 }
 
 void
+CycGrpG_invert (CycGrpG * h, const CycGrpG * u)
+{
+  EC_POINT_invert (ec_group, h->P, NULL);
+}
+
+void
 CycGrpZp_sub (CycGrpZp * z, const CycGrpZp * x, const CycGrpZp * y)
 {
   BN_mod_sub (z->B, x->B, y->B, Order.B, bn_ctx);

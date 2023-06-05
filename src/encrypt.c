@@ -63,7 +63,7 @@ main (int argc, char **argv)
   printf ("A:0x%s\n", CycGrpG_toHexString (&A));
   printf ("C:0x%s\n", CycGrpG_toHexString (&C));
   HexToBytes (Cbytes, (unsigned char *) CycGrpG_toHexString (&C));
-  print_hex (Cbytes, 33);
+  // print_hex (Cbytes, 33);
   SHA256_Init (&ctx);
   SHA256_Update (&ctx, (unsigned char *) Cbytes, LENGTH_GRP_ELEMENTS);
   SHA256_Final (tmp, &ctx);

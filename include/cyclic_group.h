@@ -41,6 +41,7 @@ void CycGrpZp_mul (CycGrpZp * z, const CycGrpZp * x, const CycGrpZp * y);
 void CycGrpZp_inverse (CycGrpZp * z, const CycGrpZp * x);
 int CycGrpG_isEqual (const CycGrpG * h, const CycGrpG * g);
 void CycGrpG_add (CycGrpG * h, const CycGrpG * u, const CycGrpG * v);
+void CycGrpG_invert (CycGrpG * h, const CycGrpG * u);
 void CycGrpZp_sub (CycGrpZp * z, const CycGrpZp * x, const CycGrpZp * y);
 void CycGrpG_mul (CycGrpG * h, const CycGrpG * g, const CycGrpZp * x);
 void
