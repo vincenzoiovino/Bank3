@@ -8,7 +8,7 @@ contract GenericDAO {
     receive() external payable {}
 
     fallback() external payable {}
-        mapping(uint => uint) public proposals; // maps a proposal number t to an integer n
+        mapping(uint => uint256) public proposals; // maps a proposal number t to an integer n
                                                 // if n==0 this means that proposal t was rejected
                                                 // if n>0 this means that proposal t was accepted and refers to withdraw n coins 
         bytes public PK;   // PK of the DAO represented as compressed EC point
