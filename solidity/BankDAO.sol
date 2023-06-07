@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0
 
-pragma solidity >= 0.7 .0 < 0.9 .0;
+pragma solidity >=0.7.0 <0.9.0;
 
 /** 
  * @title Bank DAO
@@ -8,72 +8,64 @@ pragma solidity >= 0.7 .0 < 0.9 .0;
  * https://hackmd.io/q4RHSYE6Tb6fRqgPIML9QA?view
   */
 
-contract GenericDAO
-{
-
-  // a generic DAO that participates in the Bank DAO protocol
-  // should implement this function that takes two integers, t and nCoins
-  // the function should output 1 iff the proposal number t in the DAO was in favour of 
-  // withdrawing nCoins from the Bank
-  function isWithdrawalApproved (uint, uint256) public returns (bool)
-  {
-  }
+contract GenericDAO {
+       
+    // a generic DAO that participates in the Bank DAO protocol
+    // should implement this function that takes two integers, t and nCoins
+    // the function should output 1 iff the proposal number t in the DAO was in favour of 
+    // withdrawing nCoins from the Bank
+    function isWithdrawalApproved(uint, uint256) public returns (bool)  { }
 }
 
-contract BankDAO
-{
+contract BankDAO {
 
+   
 
+    struct Deposit {
+        uint256 nCoins; // the amount of coins (in wei units) to be transferred
+        // string A;
+        bytes B; // the value B represented as hex string encoding an EC point in compressed form
 
-  struct Deposit
-  {
-    uint256 nCoins;		// the amount of coins (in wei units) to be transferred
-    // string A;
-    bytes B;			// the value B represented as hex string encoding an EC point in compressed form
-
-  }
-  address public Director;
-  uint256 public Fees;
-  uint public Id;
-    mapping (uint = >Deposit) public deposits;	// each deposit is associated with an identifier
-  address payable owner;
+    }
+    address public Director;
+    uint256 public Fees;
+    uint public Id;
+    mapping(uint => Deposit) public deposits; // each deposit is associated with an identifier
+    address payable owner;
 
 
     /** 
      * @dev At construction time we can set some fees and the receiver of the fees
      * @param fees the amount of fees to be paid to the Bank Director
      */
-    constructor (uint256 fees)
-  {
-    Director = msg.sender;
-    Fees = fees;
-    Id = 0;
+    constructor(uint256 fees) {
+        Director = msg.sender;
+        Fees=fees;
+        Id=0;
 
-  }
+    }
 /** 
      * @dev The Director can later set fees for deposits - not implemented yet
      * @param fees the amount of fees to be paid to the Bank Director
      */
-  function setFees (uint256 fees) external
-  {
-    require (msg.sender == Director);
-    Fees = fees;
-  }
+function setFees(uint256 fees) external {
+    require (msg.sender==Director);
+    Fees=fees;
+}
 
 /** 
      * @dev Check if the proposal number t in the DAO with address addr concerned the withdrawal of >=nCoins coins and was accepted
      * @param t the proposal number, nCoins the number of coins, addr the address of the DAO from which to withdraw
      */
-  function isWithdrawalApproved (uint t, uint256 nCoins,
-				 address addr) internal returns (bool
-								 isapproved)
-  {
-    GenericDAO D;
-    D = GenericDAO (addr);
+    function isWithdrawalApproved(uint t, uint256 nCoins, address addr) internal 
+        returns  (bool isapproved)
+     {
+         GenericDAO D;
+         D=GenericDAO(addr);
 
-    isapproved = D.isWithdrawalApproved (t, nCoins);
-
-  }
+         isapproved=D.isWithdrawalApproved(t,nCoins );
+         
+     }
 
     /** 
      * @dev Make a deposit annotated with identifier id of msg.value coins with ciphertext CT=(A,B)
@@ -82,14 +74,13 @@ contract BankDAO
      * The parameter calldata is not used on purpose, it will appear on ether scans
      * so one can use it off-chain to compute the proof needed for a withdrawal but the contract does not use it directly
      */
-  function MakeDeposit (string calldata A, bytes calldata B) external payable
-    returns (uint id)
-  {
+    function MakeDeposit(string calldata A, bytes calldata B) external  payable
+    returns  (uint id) {
 
-    deposits[Id].nCoins = msg.value;
-    deposits[Id].B = B;
-    id = Id++;
-  }
+       deposits[Id].nCoins=msg.value;
+       deposits[Id].B=B;
+       id=Id++;
+    }
 
 
     /** 
@@ -97,23 +88,19 @@ contract BankDAO
      * and presents as proof of the rights to withdraw the value C that refers to the deposit identified by identifier id
      * @param t is the number of the proposal, nCoins the quantity to withdraw in wei, addr is the address of the DAO from which to withdraw, id is the identifier of the deposit we refer to and C is the proof of the right to withdraw
      */
-  function MakeWithdrawal (uint t, uint256 nCoins, address addr, uint id,
-			   bytes calldata C) external
-  {
+    function MakeWithdrawal(uint t, uint256 nCoins, address addr, uint id, bytes calldata C) external {
+        
+ bytes32 xor= sha256(abi.encodePacked(addr)) ^ sha256(C);
+require((xor == bytes32(deposits[id].B)));
+ 
 
-    bytes32 xor = sha256 (abi.encodePacked (addr)) ^ sha256 (C);
+require(isWithdrawalApproved(t,nCoins,addr)); 
 
-    require ((xor == bytes32 (deposits[id].B)));
+require(deposits[id].nCoins>=nCoins);
 
-
-    require (isWithdrawalApproved (t, nCoins, addr));
-
-    require (deposits[id].nCoins >= nCoins);
-
-    deposits[id].nCoins -= nCoins;
-    payable (addr).transfer (nCoins);
-  }
-
-
+deposits[id].nCoins-=nCoins;
+payable(addr).transfer(nCoins);
+    }
+ 
 
 }
