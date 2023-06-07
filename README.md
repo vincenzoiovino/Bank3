@@ -98,4 +98,5 @@ The user `1` invokes the method `MakeWithdrawal` of the Bank DAO contract with t
 The transaction will transfer `100 wei` from the Bank contract to the generic DAO contract.
 With the same witness you can actually repeat the same process `10` times until all `1000 wei` consume the deposit of Alice.
 
-
+## References
+Vincenzo Iovino. [The Bank DAO: enabling deposits and withdrawals from DAOs in a private and decentralized way](https://hackmd.io/q4RHSYE6Tb6fRqgPIML9QA?view), June 2023.
