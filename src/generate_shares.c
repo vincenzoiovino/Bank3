@@ -72,7 +72,7 @@ main (int argc, char **argv)
     generate_secret_key (&s);
     generate_public_key (&PK, &s);
     printf ("s:%s\n", CycGrpZp_toHexString (&s));
-    printf ("PK:%s\n", CycGrpG_toHexString (&PK));
+    printf ("PK:0x%s\n", CycGrpG_toHexString (&PK));
     ComputeShares (t, m, sk, &s);
 
     for (i = 0; i < m; i++)

@@ -59,25 +59,27 @@ main (int argc, char **argv)
   CycGrpZp_setRand (&r);
   CycGrpG_mul (&A, CycGrpGenerator, &r);
   CycGrpG_mul (&C, &PK, &r);
-  printf ("r:0x%s\n", CycGrpZp_toHexString (&r));
   printf ("A:0x%s\n", CycGrpG_toHexString (&A));
-  printf ("C:0x%s\n", CycGrpG_toHexString (&C));
-  HexToBytes (Cbytes, (unsigned char *) CycGrpG_toHexString (&C));
-  // print_hex (Cbytes, 33);
   SHA256_Init (&ctx);
+  HexToBytes (Cbytes, (unsigned char *) CycGrpG_toHexString(&C));
   SHA256_Update (&ctx, (unsigned char *) Cbytes, LENGTH_GRP_ELEMENTS);
   SHA256_Final (tmp, &ctx);
-//printf("H(C):");
-//print_hex(tmp,SHA256_DIGEST_LENGTH);
   HexToBytes (Addrbytes, (unsigned char *) argv[2]);
   SHA256_Init (&ctx);
   SHA256_Update (&ctx, (unsigned char *) Addrbytes, 20);
   SHA256_Final (tmp2, &ctx);
-//printf("H(addr):");
-//print_hex(tmp2,SHA256_DIGEST_LENGTH);
   for (i = 0; i < SHA256_DIGEST_LENGTH; i++)
     B[i] = tmp[i] ^ tmp2[i];
-  printf ("B=H(C) XOR H(addr):");
+  printf ("B=");
   print_hex (B, SHA256_DIGEST_LENGTH);
+  #if DEBUG
+  printf("Debug info:\n");
+  printf ("r:0x%s\n", CycGrpZp_toHexString (&r));
+  printf ("C:0x%s\n", CycGrpG_toHexString (&C));
+  printf("H(C):");
+  print_hex(tmp,SHA256_DIGEST_LENGTH);
+  printf("H(addr):");
+  print_hex(tmp2,SHA256_DIGEST_LENGTH);
+  #endif
   return 0;
 }
