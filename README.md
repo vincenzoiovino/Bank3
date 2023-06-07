@@ -32,7 +32,7 @@ With the previous command we simulate a DKG protocol for 5 parties with reconstr
 A full DKG protocol is not part of this implementation but either you can run the previous command on a trusted machine and modify the code so as to distribute the shares to each user over the network or you can use any secure DKG protocol among the parties for the `secp256k1` curve. In the latter case you can still use the next commands without any change.
 Henceforth, we assume that user i=1,...,5 has the share i shown above. The user can be a DAO member or even an external party (e.g., accountant, administrator).
 
-Now, we can invoke the function `setPK' of the contract `GenericDAO.sol` with input parameter the public key `PK` shown before.
+Now, we can invoke the function `setPK` of the contract `GenericDAO.sol` with input parameter the public key `PK` shown before.
 
 ### Deposit phase
 Now suppose a user Alice wants to deposit `1000 wei` in favour of the generic DAO contract.
