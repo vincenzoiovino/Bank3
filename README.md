@@ -7,7 +7,7 @@ The repository contains a smart contract module in Solidity and the off-chain mo
 
 ## Installation for the off-chain module
 ```bash
-make install
+./install.sh
 ```
 ## Example of usage
 
