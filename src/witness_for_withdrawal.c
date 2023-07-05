@@ -86,6 +86,6 @@ main (int argc, char **argv)
 
   }
 
-  printf ("Witness C: %s\n", CycGrpG_toHexString (&C));
+  printf ("Witness C: 0x%s\n", CycGrpG_toHexString (&C));
   return 0;
 }

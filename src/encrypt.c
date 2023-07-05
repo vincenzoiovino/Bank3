@@ -4,9 +4,11 @@
 // Vincenzo Iovino, 2023, Aragon ZK Research
 #include "cyclic_group.h"
 #include <stdio.h>
+
 #include <openssl/sha.h>
 static SHA256_CTX ctx;
 #define LENGTH_GRP_ELEMENTS 33	// 33 for secp256k1 = 32 + 1 byte for the sign. This is the length in binary. The length as hex string is then the double
+#define DIGEST_LENGTH 32
 
 inline static void
 print_hex (unsigned char *hex, size_t len)
@@ -35,9 +37,9 @@ int
 main (int argc, char **argv)
 {
   int i;
-  unsigned char B[SHA256_DIGEST_LENGTH];
-  unsigned char tmp[SHA256_DIGEST_LENGTH];
-  unsigned char tmp2[SHA256_DIGEST_LENGTH];
+  unsigned char B[DIGEST_LENGTH];
+  unsigned char tmp[DIGEST_LENGTH];
+  unsigned char tmp2[DIGEST_LENGTH];
   unsigned char Cbytes[LENGTH_GRP_ELEMENTS * 2];
   unsigned char Addrbytes[LENGTH_GRP_ELEMENTS * 2];
   if (argc < 3)
@@ -50,7 +52,7 @@ main (int argc, char **argv)
 
   CycGrpZp r;
   CycGrpG PK, A, C;
-  group_init (714);
+  group_init (714);		// NID for secp256k1
   CycGrpZp_new (&r);
   CycGrpG_new (&PK);
   CycGrpG_new (&A);
@@ -61,25 +63,25 @@ main (int argc, char **argv)
   CycGrpG_mul (&C, &PK, &r);
   printf ("A:0x%s\n", CycGrpG_toHexString (&A));
   SHA256_Init (&ctx);
-  HexToBytes (Cbytes, (unsigned char *) CycGrpG_toHexString(&C));
+  HexToBytes (Cbytes, (unsigned char *) CycGrpG_toHexString (&C));
   SHA256_Update (&ctx, (unsigned char *) Cbytes, LENGTH_GRP_ELEMENTS);
   SHA256_Final (tmp, &ctx);
   HexToBytes (Addrbytes, (unsigned char *) argv[2]);
   SHA256_Init (&ctx);
   SHA256_Update (&ctx, (unsigned char *) Addrbytes, 20);
   SHA256_Final (tmp2, &ctx);
-  for (i = 0; i < SHA256_DIGEST_LENGTH; i++)
+  for (i = 0; i < DIGEST_LENGTH; i++)
     B[i] = tmp[i] ^ tmp2[i];
   printf ("B=");
-  print_hex (B, SHA256_DIGEST_LENGTH);
-  #if DEBUG
-  printf("Debug info:\n");
+  print_hex (B, DIGEST_LENGTH);
+#if DEBUG
+  printf ("Debug info:\n");
   printf ("r:0x%s\n", CycGrpZp_toHexString (&r));
   printf ("C:0x%s\n", CycGrpG_toHexString (&C));
-  printf("H(C):");
-  print_hex(tmp,SHA256_DIGEST_LENGTH);
-  printf("H(addr):");
-  print_hex(tmp2,SHA256_DIGEST_LENGTH);
-  #endif
+  printf ("H(C):");
+  print_hex (tmp, DIGEST_LENGTH);
+  printf ("H(addr):");
+  print_hex (tmp2, DIGEST_LENGTH);
+#endif
   return 0;
 }
