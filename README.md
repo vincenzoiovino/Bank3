@@ -1,7 +1,7 @@
-# The Bank DAO
-The Bank of Decentralized Autonomous Organizations
+# The Bank3 System
+The Bank3 System
 ## Overview
-The repository provides implementation of the Bank DAO protocol described in this [note](https://hackmd.io/q4RHSYE6Tb6fRqgPIML9QA?view
+The repository provides implementation of the Bank3 and Bank DAO protocol described in this [note](https://hackmd.io/q4RHSYE6Tb6fRqgPIML9QA?view
 ). 
 The repository contains a smart contract module in Solidity and the off-chain module written in C.
 
@@ -9,17 +9,17 @@ The repository contains a smart contract module in Solidity and the off-chain mo
 ```bash
 ./install.sh
 ```
-## Example of usage
+## Example of usage for Bank DAO
 
 ### Deployment phase
-We deploy both contracts `GenericDAO.sol` and `BankDAO.sol`. 
+We deploy both contracts `solidity/bankdao/GenericDAO.sol` and `solidity/bankdao/BankDAO.sol`. 
 The former represents a generic DAO contract and let us suppose that its address is `9cF86D8D08bC34248210474C4B019befb0fE70fA`.
 The constructor of the latter needs a parameter of type `uint256` that can be set to `0` because it currently not used.
 
 ### Initialization phase
 First, we need the DAO members to compute a PK and the respective secret shares for that.
 ```bash
-vincenzo@ubuntu:~/bankdao/BankDAO$ ./bin/generate_shares 3 5
+vincenzo@ubuntu:~/bank3$ ./bin/bankdao/generate_shares 3 5
 s:9887DD54CD8E52F32338ECBE2B9F5220483BC55E9466BC9247950B333805BA47
 PK:0x0323658C358FFD1903F2D6A405C14C23BA1420A7B13B1D8B7BF9A92024E2751E36
 Share 1:39F5868C0970459F34831C83F8ABBB0BD70D569576C7FAA3F60828BD4C4B4F37
@@ -38,7 +38,7 @@ Now, we can invoke the function `setPK` of the contract `GenericDAO.sol` with in
 Now suppose a user Alice wants to deposit `1000 wei` in favour of the generic DAO contract.
 Then, it executes the following command:
 ```bash
-vincenzo@ubuntu:~/bankdao/BankDAO$ ./bin/encrypt 0323658C358FFD1903F2D6A405C14C23BA1420A7B13B1D8B7BF9A92024E2751E36 9cF86D8D08bC34248210474C4B019befb0fE70fA
+vincenzo@ubuntu:~/bank3$ ./bin/bankdao/encrypt 0323658C358FFD1903F2D6A405C14C23BA1420A7B13B1D8B7BF9A92024E2751E36 9cF86D8D08bC34248210474C4B019befb0fE70fA
 A:0x025E7C20C190C943A02C1C1456ADCD60BB60F7F67618A96B55D9FFD492A483CE87
 B=0x65004d5d2d63ace0a6e855060be78f09e24ad0fd6a56cced9723cf093fea8ba7
 ```
@@ -53,7 +53,7 @@ Alice can pass the identifier `id` privately to the DAO members as reference for
 ### Approval phase
 Suppose that the DAO members of the generic DAO contract or some of them are aware that they hold at the Bank `1000 wei` and they want to withdraw from the Bank `100 wei`.
 They can make a proposal to withdraw such amount of coins. We suppose that proposals are associated with an index `t` of type `uint256` and there is an hash map `proposals` from `uint256` to `uin256` such that `proposal[t]=x` iff the proposal `t` concerned the withdrawal of `x` coins and has been approved. So, a DAO needs just to update the map `proposals` in order to be compatible with the Bank DAO.
-So let us suppose that this is done, that is `proposals[1]=100`.
+So let us suppose that this is done, that is `proposals[1]=100`. This is done in the contract `GenericDAO.sol` using the method `ApproveProposal(uint t,uint256 nCoins)`.
 
 ### Withdrawal phase
 
@@ -63,18 +63,18 @@ Let us suppose that the users to participate in the reconstructions are the user
 Then, user `1` on his computer runs the following command:
 
 ```bash
-vincenzo@ubuntu:~/bankdao/BankDAO$ ./bin/compute_share_for_withdrawal 025E7C20C190C943A02C1C1456ADCD60BB60F7F67618A96B55D9FFD492A483CE87 39F5868C0970459F34831C83F8ABBB0BD70D569576C7FAA3F60828BD4C4B4F37
+vincenzo@ubuntu:~/bank3$ ./bin/bankdao/compute_share_for_withdrawal 025E7C20C190C943A02C1C1456ADCD60BB60F7F67618A96B55D9FFD492A483CE87 39F5868C0970459F34831C83F8ABBB0BD70D569576C7FAA3F60828BD4C4B4F37
 Share to broadcast to other users (along with your user index): 03EC43DF01687023902B177F3BC33A3DB389AD68341A602C97A7F4A0B635647888
 ```
 The first argument to the above program is the value `A` computed before by the program `encrypt` and the second is the share of user `1` (cf. the execution of the program `generate_shares`).
 Similarly, user `2` (but with his own share that is different from the one of user `1`):
 ```bash
-vincenzo@ubuntu:~/bankdao/BankDAO$ ./bin/compute_share_for_withdrawal 025E7C20C190C943A02C1C1456ADCD60BB60F7F67618A96B55D9FFD492A483CE87 1E3E8231BD161DA36861ABD55FD0F5CD3E30E720CD345514C133DFE859524F48
+vincenzo@ubuntu:~/bank3$ ./bin/bankdao/compute_share_for_withdrawal 025E7C20C190C943A02C1C1456ADCD60BB60F7F67618A96B55D9FFD492A483CE87 1E3E8231BD161DA36861ABD55FD0F5CD3E30E720CD345514C133DFE859524F48
 Share to broadcast to other users (along with your user index): 032517096E7A35CE9E43B152E203B2163933A747F9BEEE75E904BE386BB7F4391D
 ```
 And user `4`:
 ```bash
-vincenzo@ubuntu:~/bankdao/BankDAO$ ./bin/compute_share_for_withdrawal 025E7C20C190C943A02C1C1456ADCD60BB60F7F67618A96B55D9FFD492A483CE87 AF6270C88BAD7DB437DBE91AFC65E0D1956E0634D62E5F13ADB51B215DA490CD
+vincenzo@ubuntu:~/bank3$ ./bin/bankdao/compute_share_for_withdrawal 025E7C20C190C943A02C1C1456ADCD60BB60F7F67618A96B55D9FFD492A483CE87 AF6270C88BAD7DB437DBE91AFC65E0D1956E0634D62E5F13ADB51B215DA490CD
 Share to broadcast to other users (along with your user index): 029765BB499A59D5EEB97A4FBDEE9F872C13ABD2547B9AD3036101C74B58D81E13
 ```
 Let us call `S1,S2,S4` be the outputs of the previous program executions respectively for users `1,2,4`.
@@ -82,7 +82,7 @@ Now, the users `1,2,4` can broadcast each other their values `S1,S2,S4`. They ca
 Now, any of them can execute the following program to compute the witness `C` that is actually needed to make a withdrawal:
 
 ```bash
-vincenzo@ubuntu:~/bankdao/BankDAO$ ./bin/witness_for_withdrawal 3 1 03EC43DF01687023902B177F3BC33A3DB389AD68341A602C97A7F4A0B635647888 2 032517096E7A35CE9E43B152E203B2163933A747F9BEEE75E904BE386BB7F4391D 4 029765BB499A59D5EEB97A4FBDEE9F872C13ABD2547B9AD3036101C74B58D81E13
+vincenzo@ubuntu:~/bank3$ ./bin/bankdao/witness_for_withdrawal 3 1 03EC43DF01687023902B177F3BC33A3DB389AD68341A602C97A7F4A0B635647888 2 032517096E7A35CE9E43B152E203B2163933A747F9BEEE75E904BE386BB7F4391D 4 029765BB499A59D5EEB97A4FBDEE9F872C13ABD2547B9AD3036101C74B58D81E13
 Witness C: 023C9C232F8D527AB5780BC679185424DBCA273DFAA4E1D48B501AF2D28B8AE25E
 ```
 The program takes as input the threshold `3` and the values `1 S1 2 S2 4 S4` where `S1,S2,S4` are as specified before.
@@ -99,4 +99,4 @@ The transaction will transfer `100 wei` from the Bank contract to the generic DA
 With the same witness you can actually repeat the same process `10` times until all `1000 wei` consume the deposit of Alice.
 
 ## References
-Vincenzo Iovino. [The Bank DAO: enabling deposits and withdrawals from DAOs in a private and decentralized way](https://hackmd.io/q4RHSYE6Tb6fRqgPIML9QA?view), June 2023.
+Vincenzo Iovino. [Bank3: enabling deposits and withdrawals from Wallets and DAOs in a private and decentralized way](https://hackmd.io/q4RHSYE6Tb6fRqgPIML9QA?view), June 2023.

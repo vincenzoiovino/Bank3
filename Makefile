@@ -1,8 +1,10 @@
 CC=cc
 CCOPT=-Wall 
 DFLAGS=-D_DEBUG_=1 
-IOPT=-I ./include -I ./SHA3IUF/
-LDFLAGS=-lcrypto SHA3IUF/libsha3.a
+IOPT=-I ./include
+IOPT2=-I ./include -I ./SHA3IUF/
+LDFLAGS=-lcrypto
+LDFLAGS2=-lcrypto SHA3IUF/libsha3.a
 all: generate_shares encrypt encrypt2 compute_share_for_withdrawal witness_for_withdrawal
 install: all
 generate_shares.o: src/generate_shares.c
@@ -14,7 +16,7 @@ generate_shares: generate_shares.o cyclic_group.o
 encrypt: src/encrypt.c cyclic_group.o
 	$(CC) -o bin/encrypt  src/encrypt.c src/cyclic_group.o $(IOPT) $(LDFLAGS) $(CCOPT)
 encrypt2: src/encrypt2.c cyclic_group.o
-	$(CC) -o bin/encrypt2  src/encrypt2.c src/cyclic_group.o $(IOPT) $(LDFLAGS) $(CCOPT)
+	$(CC) -o bin/encrypt2  src/encrypt2.c src/cyclic_group.o $(IOPT2) $(LDFLAGS2) $(CCOPT)
 compute_share_for_withdrawal: src/compute_share_for_withdrawal.c cyclic_group.o
 	$(CC) -o bin/compute_share_for_withdrawal  src/compute_share_for_withdrawal.c src/cyclic_group.o $(IOPT) $(LDFLAGS) $(CCOPT)
 witness_for_withdrawal: src/witness_for_withdrawal.c cyclic_group.o
