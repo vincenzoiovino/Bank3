@@ -94,7 +94,7 @@ The program takes as input the threshold `3` and the values `1 S1 2 S2 4 S4` whe
 The value `C` in the output of the previous execution is the witness that will be used to make the withdrawal.
 #### On-chain part
 Let us say that the user `1` is responsible to make the withdrawal.
-The user `1` invokes the method `MakeWithdrawal` of the Bank DAO contract with the following parameters: 
+The user `1` invokes the method `MakeWithdrawalSha256` of the Bank DAO contract with the following parameters: 
 `t=1`, the proposal accepted in the Generic DAO.
 `nCoins=100`, the amount of coins to withdraw from the Bank.
 `addr=9cF86D8D08bC34248210474C4B019befb0fE70fA` , the address of the generic DAO contract in favour of which the withdrawal is performed, 
@@ -103,5 +103,6 @@ The user `1` invokes the method `MakeWithdrawal` of the Bank DAO contract with t
 The transaction will transfer `100 wei` from the Bank contract to the generic DAO contract.
 With the same witness you can actually repeat the same process `10` times until all `1000 wei` consume the deposit of Alice.
 
+The user can also do the previous procedure by replacing `MakeWithdrawalSha256` with `MakeWithdrawalKeccac256` but in this case in the deposit phase it should use the program `encrypt_keccac` instead of `encrypt`.
 ## References
 Vincenzo Iovino. [Bank3: enabling deposits and withdrawals from Wallets and DAOs in a private and decentralized way](https://hackmd.io/q4RHSYE6Tb6fRqgPIML9QA?view), June 2023.

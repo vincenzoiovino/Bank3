@@ -91,7 +91,7 @@ function setFees(uint256 fees) external {
      * and presents as proof of the rights to withdraw the value C that refers to the deposit identified by identifier id
      * @param t is the number of the proposal, nCoins the quantity to withdraw in wei, addr is the address of the DAO from which to withdraw, id is the identifier of the deposit we refer to and C is the proof of the right to withdraw
      */
-    function MakeWithdrawal(uint t, uint256 nCoins, address addr, uint id, bytes calldata C) external {
+    function MakeWithdrawalSha256(uint t, uint256 nCoins, address addr, uint id, bytes calldata C) external {
         
  bytes32 xor= sha256(abi.encodePacked(addr)) ^ sha256(C);
 require((xor == bytes32(deposits[id].B)));
@@ -107,10 +107,10 @@ payable(addr).transfer(nCoins);
 
 /** 
      * @dev Make a withdrawal that was accepted for >=nCoins in proposal number t on the DAO with address addr
-     * and presents as proof of the rights to withdraw the value C that refers to the deposit identified by identifier id. It is identical to MakeWithdrawal except that it uses kecca256 rather than sha256.
+     * and presents as proof of the rights to withdraw the value C that refers to the deposit identified by identifier id. It is identical to MakeWithdrawalSha256 except that it uses kecca256 rather than sha256.
      * @param t is the number of the proposal, nCoins the quantity to withdraw in wei, addr is the address of the DAO from which to withdraw, id is the identifier of the deposit we refer to and C is the proof of the right to withdraw
      */
-    function MakeWithdrawal2(uint t, uint256 nCoins, address addr, uint id, bytes calldata C) external {
+    function MakeWithdrawalKeccac256(uint t, uint256 nCoins, address addr, uint id, bytes calldata C) external {
         
  bytes32 xor= keccak256(abi.encodePacked(addr)) ^ keccak256(C);
 require((xor == bytes32(deposits[id].B)));
