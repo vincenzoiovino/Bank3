@@ -61,6 +61,7 @@ char *CycGrpG_toHexStringUncompressed (const CycGrpG * a);
 int CycGrpZp_fromHexString (CycGrpZp * x, const char *s);
 int CycGrpG_fromHexString (CycGrpG * a, const char *s);
 void generate_secret_key (CycGrpZp * sk);
+int generate_secret_key_from_password (CycGrpZp * sk, char *password);
 void generate_public_key (CycGrpG * PK, const CycGrpZp * sk);
 
 //#endif

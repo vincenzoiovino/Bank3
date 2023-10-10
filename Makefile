@@ -2,16 +2,16 @@ CC=cc
 EMCC=emcc
 CCOPT=-Wall 
 DFLAGS=-D_DEBUG_=1 
-IOPT=-I ./include
-IOPT2=-I ./include -I ./SHA3IUF/
+IOPT=-I ./include -I ./SHA3IUF/
 IOPTWASM=-I ./include -I ./openssl/include -I ./SHA3IUF
-LDFLAGS=-lcrypto
-LDFLAGS2=-lcrypto SHA3IUF/libsha3.a
+LDFLAGS=-lcrypto SHA3IUF/libsha3.a
 LDFLAGSWASM=-lcrypto -Lopenssl/precompiled
 bankdao: generate_shares encrypt encrypt_keccac compute_share_for_withdrawal witness_for_withdrawal
 bankdao_wasm: generate_shares_wasm encrypt_keccac_wasm compute_share_for_withdrawal_wasm witness_for_withdrawal_wasm
-install: bankdao
-js-wasm: bankdao_wasm
+bankwallets: generate_public_key
+bankwallets_wasm: generate_public_key_wasm
+install: bankdao bankwallets
+js-wasm: bankdao_wasm bankwallets_wasm
 generate_shares.o: src/bankdao/generate_shares.c
 	$(CC) -o src/bankdao/generate_shares.o -c src/bankdao/generate_shares.c $(IOPT) $(CCOPT)
 cyclic_group.o: src/cyclic_group.c
@@ -23,7 +23,7 @@ generate_shares_wasm:
 encrypt: src/bankdao/encrypt.c cyclic_group.o
 	$(CC) -o bin/bankdao/encrypt  src/bankdao/encrypt.c src/cyclic_group.o $(IOPT) $(LDFLAGS) $(CCOPT)
 encrypt_keccac: src/bankdao/encrypt_keccac.c cyclic_group.o
-	$(CC) -o bin/bankdao/encrypt_keccac  src/bankdao/encrypt_keccac.c src/cyclic_group.o $(IOPT2) $(LDFLAGS2) $(CCOPT)
+	$(CC) -o bin/bankdao/encrypt_keccac  src/bankdao/encrypt_keccac.c src/cyclic_group.o $(IOPT) $(LDFLAGS) $(CCOPT)
 encrypt_keccac_wasm: 
 	$(EMCC) -o js/bankdao/encrypt_keccac.html  src/bankdao/encrypt_keccac.c SHA3IUF/sha3.c src/cyclic_group.c $(IOPTWASM) $(LDFLAGSWASM)
 compute_share_for_withdrawal: src/bankdao/compute_share_for_withdrawal.c cyclic_group.o
@@ -34,5 +34,11 @@ witness_for_withdrawal: src/bankdao/witness_for_withdrawal.c cyclic_group.o
 	$(CC) -o bin/bankdao/witness_for_withdrawal  src/bankdao/witness_for_withdrawal.c src/cyclic_group.o $(IOPT) $(LDFLAGS) $(CCOPT)
 witness_for_withdrawal_wasm: 
 	$(EMCC) -o js/bankdao/witness_for_withdrawal.html  src/bankdao/witness_for_withdrawal.c src/cyclic_group.c $(IOPTWASM) $(LDFLAGSWASM)
+generate_public_key.o: src/bankwallets/generate_public_key.c
+	$(CC) -o src/bankwallets/generate_public_key.o -c src/bankwallets/generate_public_key.c $(IOPT) $(CCOPT)
+generate_public_key: generate_public_key.o cyclic_group.o
+	$(CC) -o bin/bankwallets/generate_public_key  src/bankwallets/generate_public_key.c src/cyclic_group.o $(IOPT) $(LDFLAGS) $(CCOPT)
+generate_public_key_wasm: 
+	$(EMCC) -o js/bankwallets/generate_public_key.html  src/bankwallets/generate_public_key.c SHA3IUF/sha3.c src/cyclic_group.c $(IOPTWASM) $(LDFLAGSWASM)
 clean:
 	rm -f bin/bankdao/* src/*.o src/bankdao/*.o src/bankwallets/*.o

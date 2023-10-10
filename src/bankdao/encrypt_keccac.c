@@ -2,7 +2,7 @@
 // https://hackmd.io/q4RHSYE6Tb6fRqgPIML9QA?view
 // 
 // Vincenzo Iovino, 2023, Aragon ZK Research
-// this is identical to encrypt.c except that this uses keccac256. The values computed by this procedure indeed must be used with the on-chain method MakeWithdrawal2
+// this is identical to encrypt.c except that this uses keccac256. The values computed by this procedure indeed must be used with the on-chain method MakeWithdrawalKeccac256
 #include "cyclic_group.h"
 #include <stdio.h>
 

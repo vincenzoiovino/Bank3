@@ -7,7 +7,11 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include "sha3.h"
+static sha3_context ctx;
+#define KECCAC_DIGEST_LENGTH 32
 CycGrpG *CycGrpGenerator;
+
 #include <openssl/ec.h>
 #include <openssl/ecdh.h>
 #include <openssl/obj_mac.h>
@@ -51,6 +55,20 @@ generate_secret_key (CycGrpZp * sk)
 {
   CycGrpZp_new (sk);
   CycGrpZp_setRand (sk);
+}
+
+int 
+generate_secret_key_from_password (CycGrpZp * sk, char *password)
+{
+  int ret;
+  const unsigned char *hashed_password=malloc(KECCAC_DIGEST_LENGTH);
+  sha3_Init256 (&ctx);
+  sha3_SetFlags (&ctx, SHA3_FLAGS_KECCAK);
+  sha3_Update (&ctx, (unsigned char *) password, strlen(password)+1); // we include the null terminating character
+  hashed_password = sha3_Finalize (&ctx);
+  CycGrpZp_new (sk);
+  if (BN_bin2bn(hashed_password,KECCAC_DIGEST_LENGTH, sk->B) != NULL) ret=1;
+  return ret;
 }
 
 
