@@ -1,0 +1,54 @@
+// SPDX-License-Identifier: UNLICENSED
+// adapted from https://github.com/aragonzkresearch/nouns-anonymous-voting/blob/main/contracts/src/ZKRegistry.sol
+pragma solidity ^0.8.13;
+
+contract ZKRegistry {
+    struct public_key {
+        bytes value;
+    }
+    mapping(uint8 => mapping(address => uint256)) public registry;
+    mapping(address => public_key) public registry_public_key;
+
+    /// We currently support only maximum 256 interfaces
+    /// Some of interfaces are reserved for standard interfaces
+    /// If an interface requires more than one value, it can use another interface id
+    /// Usually, by adding an offset to the original interface id
+
+    /// Reserved interface ids
+    uint8 public BBJJPK_X_INTERFACE_ID = 0x00; // first byte of keccak("BBJJPK")
+    uint8 public BBJJPK_Y_INTERFACE_ID = 0x01; // first byte of keccak("BBJJPK") + 1
+
+    uint8 public BLS12PK_X_INTERFACE_ID = 0xc2; // first byte of keccak("BLS12PK")
+    uint8 public BLS12PK_Y_INTERFACE_ID = 0xc3; // first byte of keccak("BLS12PK") + 1
+
+    uint8 public POSEIDON_INTERFACE_ID = 0xbf; // first byte of keccak("POSEIDON")
+
+    /// Register a value for a given interface id
+
+    function register(uint8 interface_id, uint256 value) public {
+        registry[interface_id][msg.sender] = value;
+    }
+
+    // register public keys without caring about the representation
+    // the public key is represented as a byte string and serialization/deserialization is left to the caller
+    function register_public_key(bytes calldata value) public {
+        registry_public_key[msg.sender].value = value;
+    }
+
+
+    /// De-register a value for a given interface id
+    function deregister(uint8 interface_id) public {
+        delete registry[interface_id][msg.sender];
+    }
+ function deregister_public_key() public {
+        delete registry_public_key[msg.sender];
+    }
+
+    /// Get a value for a given interface id and address
+    function get(uint8 interface_id, address addr) public view returns (uint256) {
+        return registry[interface_id][addr];
+    }
+     function get_public_key(address addr) public view returns (bytes memory) {
+        return registry_public_key[addr].value;
+    }
+}
