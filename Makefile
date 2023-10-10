@@ -11,7 +11,7 @@ LDFLAGSWASM=-lcrypto -Lopenssl/precompiled
 bankdao: generate_shares encrypt encrypt_keccac compute_share_for_withdrawal witness_for_withdrawal
 bankdao_wasm: generate_shares_wasm encrypt_keccac_wasm compute_share_for_withdrawal_wasm witness_for_withdrawal_wasm
 install: bankdao
-wasm: bankdao_wasm
+js-wasm: bankdao_wasm
 generate_shares.o: src/bankdao/generate_shares.c
 	$(CC) -o src/bankdao/generate_shares.o -c src/bankdao/generate_shares.c $(IOPT) $(CCOPT)
 cyclic_group.o: src/cyclic_group.c

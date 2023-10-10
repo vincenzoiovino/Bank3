@@ -9,9 +9,9 @@ The repository contains a smart contract module in Solidity and the off-chain mo
 ```bash
 ./install.sh
 ```
-To install the ``wasm`` modules, run:
+To install the ```js`` and `wasm`` modules, run:
 ```bash
-make wasm
+make js-wasm
 ```
 The compilation will use some precompiled ``libcrypto.a``. If the compilation does not work, you may need to compile ``openssl`` with ``emscripten`` by yourself: it may require some tweaks to the ``Makefile``, feel free to contact me if you need help.
 ## Example of usage for Bank DAO
