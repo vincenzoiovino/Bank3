@@ -8,8 +8,8 @@ LDFLAGS=-lcrypto SHA3IUF/libsha3.a
 LDFLAGSWASM=-lcrypto -Lopenssl/precompiled
 bankdao: generate_shares encrypt encrypt_keccac compute_share_for_withdrawal witness_for_withdrawal
 bankdao_wasm: generate_shares_wasm encrypt_keccac_wasm compute_share_for_withdrawal_wasm witness_for_withdrawal_wasm
-bankwallets: generate_public_key
-bankwallets_wasm: generate_public_key_wasm
+bankwallets: generate_public_key witness_for_withdrawal_wallets
+bankwallets_wasm: generate_public_key_wasm witness_for_withdrawal_wallets_wasm
 install: bankdao bankwallets
 js-wasm: bankdao_wasm bankwallets_wasm
 generate_shares.o: src/bankdao/generate_shares.c
@@ -32,6 +32,8 @@ compute_share_for_withdrawal_wasm:
 	$(EMCC) -o js/bankdao/compute_share_for_withdrawal.html  src/bankdao/compute_share_for_withdrawal.c src/commons/cyclic_group.c $(IOPTWASM) $(LDFLAGSWASM)
 witness_for_withdrawal: src/bankdao/witness_for_withdrawal.c cyclic_group.o
 	$(CC) -o bin/bankdao/witness_for_withdrawal  src/bankdao/witness_for_withdrawal.c src/commons/cyclic_group.o $(IOPT) $(LDFLAGS) $(CCOPT)
+witness_for_withdrawal_wallets: src/bankwallets/witness_for_withdrawal.c cyclic_group.o
+	$(CC) -o bin/bankwallets/witness_for_withdrawal  src/bankwallets/witness_for_withdrawal.c src/commons/cyclic_group.o $(IOPT) $(LDFLAGS) $(CCOPT)
 witness_for_withdrawal_wasm: 
 	$(EMCC) -o js/bankdao/witness_for_withdrawal.html  src/bankdao/witness_for_withdrawal.c src/commons/cyclic_group.c $(IOPTWASM) $(LDFLAGSWASM)
 generate_public_key.o: src/bankwallets/generate_public_key.c
@@ -40,5 +42,7 @@ generate_public_key: generate_public_key.o cyclic_group.o
 	$(CC) -o bin/bankwallets/generate_public_key  src/bankwallets/generate_public_key.c src/commons/cyclic_group.o $(IOPT) $(LDFLAGS) $(CCOPT)
 generate_public_key_wasm: 
 	$(EMCC) -o js/bankwallets/generate_public_key.html  src/bankwallets/generate_public_key.c SHA3IUF/sha3.c src/commons/cyclic_group.c $(IOPTWASM) $(LDFLAGSWASM)
+witness_for_withdrawal_wallets_wasm: 
+	$(EMCC) -o js/bankwallets/witness_for_withdrawal.html  src/bankwallets/witness_for_withdrawal.c SHA3IUF/sha3.c src/commons/cyclic_group.c $(IOPTWASM) $(LDFLAGSWASM)
 clean:
 	rm -f bin/bankdao/* src/*.o src/bankdao/*.o src/bankwallets/*.o src/commons/.o
