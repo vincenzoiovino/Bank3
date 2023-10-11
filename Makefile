@@ -25,7 +25,7 @@ encrypt: src/commons/encrypt.c cyclic_group.o
 encrypt_keccac: src/commons/encrypt_keccac.c cyclic_group.o
 	$(CC) -o bin/commons/encrypt_keccac  src/commons/encrypt_keccac.c src/commons/cyclic_group.o $(IOPT) $(LDFLAGS) $(CCOPT)
 encrypt_keccac_wasm: 
-	$(EMCC) -o js/commons/encrypt_keccac.html  src/commons/encrypt_keccac.c SHA3IUF/sha3.c src/cyclic_group.c $(IOPTWASM) $(LDFLAGSWASM)
+	$(EMCC) -o js/commons/encrypt_keccac.html  src/commons/encrypt_keccac.c SHA3IUF/sha3.c src/commons/cyclic_group.c $(IOPTWASM) $(LDFLAGSWASM)
 compute_share_for_withdrawal: src/bankdao/compute_share_for_withdrawal.c cyclic_group.o
 	$(CC) -o bin/bankdao/compute_share_for_withdrawal  src/bankdao/compute_share_for_withdrawal.c src/commons/cyclic_group.o $(IOPT) $(LDFLAGS) $(CCOPT)
 compute_share_for_withdrawal_wasm: 
