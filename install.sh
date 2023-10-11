@@ -7,6 +7,9 @@ fi
 if [ ! -f bin/bankdao ]; then
 mkdir bin/bankdao
 fi
+if [ ! -f bin/commons ]; then
+mkdir bin/commons
+fi
 if [ ! -f SHA3IUF ]; then
 git clone https://github.com/brainhub/SHA3IUF.git
 cd SHA3IUF
