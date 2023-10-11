@@ -43,7 +43,7 @@ Now, we can invoke the function `setPK` of the contract `GenericDAO.sol` with in
 Now suppose a user Alice wants to deposit `1000 wei` in favour of the generic DAO contract.
 Then, it executes the following command:
 ```bash
-vincenzo@ubuntu:~/bank3$ ./bin/bankdao/encrypt 0323658C358FFD1903F2D6A405C14C23BA1420A7B13B1D8B7BF9A92024E2751E36 9cF86D8D08bC34248210474C4B019befb0fE70fA
+vincenzo@ubuntu:~/bank3$ ./bin/commons/encrypt 0323658C358FFD1903F2D6A405C14C23BA1420A7B13B1D8B7BF9A92024E2751E36 9cF86D8D08bC34248210474C4B019befb0fE70fA
 A:0x025E7C20C190C943A02C1C1456ADCD60BB60F7F67618A96B55D9FFD492A483CE87
 B=0x65004d5d2d63ace0a6e855060be78f09e24ad0fd6a56cced9723cf093fea8ba7
 ```
