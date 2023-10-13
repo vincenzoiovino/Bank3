@@ -45,6 +45,6 @@ generate_public_key_wasm:
 witness_for_withdrawal_wallets_wasm: 
 	$(EMCC) -o js/bankwallets/witness_for_withdrawal.html  src/bankwallets/witness_for_withdrawal.c SHA3IUF/sha3.c src/commons/cyclic_group.c $(IOPTWASM) $(LDFLAGSWASM)
 bankwallets_single_wasm: 
-	$(EMCC) -o js/bankwallets/bankwallets_single.html  src/bankwallets/witness_for_withdrawal.c src/bankwallets/generate_public_key.c src/commons/encrypt_keccac.c  SHA3IUF/sha3.c src/commons/cyclic_group.c $(IOPTWASM) $(LDFLAGSWASM)
+	$(EMCC) -o js/bankwallets/bankwallets_single.html  src/bankwallets/witness_for_withdrawal.c src/bankwallets/generate_public_key.c src/commons/encrypt_keccac.c SHA3IUF/sha3.c src/commons/cyclic_group.c $(IOPTWASM) $(LDFLAGSWASM)
 clean:
 	rm -f bin/bankdao/* src/*.o src/bankdao/*.o src/bankwallets/*.o src/commons/.o

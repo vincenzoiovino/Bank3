@@ -482,7 +482,6 @@ async function SendFunction() {
    const s=enc(pk,to).split(' ');
    const A=s[0].substr(2);
    const B=s[1].substr(2);
-alert(A+ "-"+B);  
 // Convert amount to wei (1 ether = 10^18 wei)
   const amountWei = web3.utils.toWei(amount, "ether");
   
@@ -536,6 +535,8 @@ alert('Your account has not been already associated with any ZkRegistry public k
 return;
 }
 
+   const C=enc(A.substr(2),password);
+alert(C);
 
 }
 
