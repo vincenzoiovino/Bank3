@@ -53,7 +53,7 @@ main (int argc, char **argv)
 	 argv[0], argv[0]);
       exit (1);
     }
-
+  witness_for_withdrawal(argv[1],argv[2]);
   return 0;
 }
 #endif
