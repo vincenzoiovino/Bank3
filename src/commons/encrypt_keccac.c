@@ -5,6 +5,12 @@
 // this is identical to encrypt.c except that this uses keccac256. The values computed by this procedure indeed must be used with the on-chain method MakeWithdrawalKeccac256
 #include "cyclic_group.h"
 #include <stdio.h>
+#ifdef _CC
+#define EMSCRIPTEN_KEEPALIVE
+#else
+#include <emscripten/emscripten.h>
+#endif
+
 
 #include "sha3.h"
 static sha3_context ctx;
@@ -22,6 +28,15 @@ print_hex (unsigned char *hex, size_t len)
 }
 
 inline static void
+sprint_hex (char *ret, unsigned char *hex, size_t len)
+{
+  size_t count;
+  sprintf (ret + 68, " 0x");
+  for (count = 0; count < len; count++)
+    sprintf (ret + 71 + 2 * count, "%02x", hex[count]);
+}
+
+inline static void
 HexToBytes (unsigned char *dst, unsigned char *src)
 {
 
@@ -34,8 +49,8 @@ HexToBytes (unsigned char *dst, unsigned char *src)
 //print_hex(val,LENGTH_GRP_ELEMENTS);
 }
 
-int
-main (int argc, char **argv)
+EMSCRIPTEN_KEEPALIVE char *
+encrypt_keccac (char *argv1, char *argv2)
 {
   int i;
   unsigned char B[DIGEST_LENGTH];
@@ -43,13 +58,9 @@ main (int argc, char **argv)
   const unsigned char *p;
   unsigned char Cbytes[LENGTH_GRP_ELEMENTS * 2];
   unsigned char Addrbytes[LENGTH_GRP_ELEMENTS * 2];
-  if (argc < 3)
-    {
-      printf
-	("Usage of %s:\n%s PK addr\nPK: public key of the DAO to which make the deposit \naddr: address of the DAO\n",
-	 argv[0], argv[0]);
-      exit (1);
-    }
+#ifndef _CC
+  char *ret = calloc (256, 1);
+#endif
   p = malloc (DIGEST_LENGTH);
   tmp = malloc (DIGEST_LENGTH);
   tmp2 = malloc (DIGEST_LENGTH);
@@ -60,18 +71,22 @@ main (int argc, char **argv)
   CycGrpG_new (&PK);
   CycGrpG_new (&A);
   CycGrpG_new (&C);
-  CycGrpG_fromHexString (&PK, argv[1]);
+  CycGrpG_fromHexString (&PK, argv1);
   CycGrpZp_setRand (&r);
   CycGrpG_mul (&A, CycGrpGenerator, &r);
   CycGrpG_mul (&C, &PK, &r);
+#ifdef _CC
   printf ("A:0x%s\n", CycGrpG_toHexString (&A));
+#else
+  sprintf (ret, "0x%s\n", CycGrpG_toHexString (&A));
+#endif
   sha3_Init256 (&ctx);
   sha3_SetFlags (&ctx, SHA3_FLAGS_KECCAK);
   HexToBytes (Cbytes, (unsigned char *) CycGrpG_toHexString (&C));
   sha3_Update (&ctx, (unsigned char *) Cbytes, LENGTH_GRP_ELEMENTS);
   p = sha3_Finalize (&ctx);
   memcpy (tmp, p, DIGEST_LENGTH);
-  HexToBytes (Addrbytes, (unsigned char *) argv[2]);
+  HexToBytes (Addrbytes, (unsigned char *) argv2);
   sha3_Init256 (&ctx);
   sha3_SetFlags (&ctx, SHA3_FLAGS_KECCAK);
   sha3_Update (&ctx, (unsigned char *) Addrbytes, 20);
@@ -79,8 +94,13 @@ main (int argc, char **argv)
   memcpy (tmp2, p, DIGEST_LENGTH);
   for (i = 0; i < DIGEST_LENGTH; i++)
     B[i] = tmp[i] ^ tmp2[i];
+#ifdef _CC
   printf ("B=");
   print_hex (B, DIGEST_LENGTH);
+#else
+  sprint_hex (ret, B, DIGEST_LENGTH);
+  return ret;
+#endif
 #if DEBUG
   printf ("Debug info:\n");
   printf ("r:0x%s\n", CycGrpZp_toHexString (&r));
@@ -90,5 +110,21 @@ main (int argc, char **argv)
   printf ("H(addr):");
   print_hex (tmp2, DIGEST_LENGTH);
 #endif
+  return NULL;
+}
+
+#ifdef _CC
+int
+main (int argc, char **argv)
+{
+  if (argc < 3)
+    {
+      printf
+	("Usage of %s:\n%s PK addr\nPK: public key of the DAO to which make the deposit \naddr: address of the DAO\n",
+	 argv[0], argv[0]);
+      exit (1);
+    }
+  encrypt_keccac (argv[1], argv[2]);
   return 0;
 }
+#endif
