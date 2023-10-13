@@ -21,8 +21,8 @@ contract BankWallet {
     }
     address public Director;
     uint256 public Fees;
-    uint public Id;
-    mapping(uint => Deposit) public deposits; // each deposit is associated with an identifier
+    //uint public Id;
+    mapping(bytes => Deposit) public deposits; // each deposit is associated with an identifier
     address payable owner;
 
     /** 
@@ -32,7 +32,7 @@ contract BankWallet {
     constructor(uint256 fees) {
         Director = msg.sender;
         Fees=fees;
-        Id=0;
+        //Id=0;
 
     }
 /** 
@@ -47,51 +47,52 @@ function setFees(uint256 fees) external {
     /** 
      * @dev Make a deposit annotated with identifier id of msg.value coins with ciphertext CT=(A,B)
      * @param A and B strings representing the ciphertext
-     * @return id the identifier id
+     * 
      * The parameter calldata is not used on purpose, it will appear on ether scans
      * so one can use it off-chain to compute the proof needed for a withdrawal but the contract does not use it directly
      */
-    function MakeDeposit(string calldata A, bytes calldata B) external  payable
-    returns  (uint id) {
-
-       deposits[Id].nCoins=msg.value;
-       deposits[Id].B=B;
-       id=Id++;
+    function MakeDeposit(bytes calldata A, bytes calldata B) external  payable
+    {
+        require(deposits[A].nCoins==0);
+       deposits[A].nCoins=msg.value;
+       deposits[A].B=B;
+       //id=Id++;
     }
 
 
     /** 
      * @dev Make a withdrawal for nCoins in favour of the Wallet with address addr
-     * and presents as proof of the rights to withdraw the value C that refers to the deposit identified by identifier id
-     * @param nCoins is the quantity to withdraw in wei, addr is the address of the Wallet from which to perform the withdrawal, id is the identifier of the deposit we refer to and C is the proof of the right to withdraw
+     * and presents as proof of the rights to withdraw the value C that refers to the deposit identified by identifier A
+     * @param nCoins is the quantity to withdraw in wei, addr is the address of the Wallet from which to perform the withdrawal, A is the identifier of the deposit we refer to and C is the proof of the right to withdraw
      */
-    function MakeWithdrawalSha256(uint256 nCoins, address addr, uint id, bytes calldata C) external {
+    function MakeWithdrawalSha256(uint256 nCoins, address addr, bytes calldata A, bytes calldata C) external {
         
  bytes32 xor= sha256(abi.encodePacked(addr)) ^ sha256(C);
-require((xor == bytes32(deposits[id].B)));
+require((xor == bytes32(deposits[A].B)));
  
 
-require(deposits[id].nCoins>=nCoins);
+require(deposits[A].nCoins>=nCoins);
 
-deposits[id].nCoins-=nCoins;
+deposits[A].nCoins-=nCoins;
 payable(addr).transfer(nCoins);
     }
 
 /** 
      * @dev Make a withdrawal for nCoins in favour of the wallet with address addr
-     * and presents as proof of the rights to withdraw the value C that refers to the deposit identified by identifier id. It is identical to MakeWithdrawalSha256 except that it uses kecca256 rather than sha256.
-     * @param nCoins is the quantity to withdraw in wei, addr is the address in favour of which to perform the withdrawal, id is the identifier of the deposit we refer to and C is the proof of the right to withdraw
+     * and presents as proof of the rights to withdraw the value C that refers to the deposit identified by identifier A. It is identical to MakeWithdrawalSha256 except that it uses kecca256 rather than sha256.
+     * @param nCoins is the quantity to withdraw in wei, addr is the address in favour of which to perform the withdrawal, A is the identifier of the deposit we refer to and C is the proof of the right to withdraw
      */
-    function MakeWithdrawalKeccac256(uint t, uint256 nCoins, address addr, uint id, bytes calldata C) external {
+    function MakeWithdrawalKeccac256(uint256 nCoins, address addr, bytes calldata A, bytes calldata C) external {
         
  bytes32 xor= keccak256(abi.encodePacked(addr)) ^ keccak256(C);
-require((xor == bytes32(deposits[id].B)));
+require((xor == bytes32(deposits[A].B)));
  
-require(deposits[id].nCoins>=nCoins);
+require(deposits[A].nCoins>=nCoins);
 
-deposits[id].nCoins-=nCoins;
+deposits[A].nCoins-=nCoins;
 payable(addr).transfer(nCoins);
     }
  
 
 }
+
