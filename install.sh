@@ -20,4 +20,9 @@ if [ ! -f openssl ]; then
 git clone https://github.com/openssl/openssl.git
 fi
 echo "By default we will use a precompiled libcrypto.a. If it doesn't work you should recompile the openssl library in ./openssl with emscripten and copy the so generated libcrypto.a file into openssl/precompiled. Contact me for assistance."
-make
+make install
+make js-wasm
+cd demo
+chmod u+x ./demo.sh
+./demo.sh
+

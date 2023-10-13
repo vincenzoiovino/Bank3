@@ -1,5 +1,3 @@
 #!/bin/bash
-cp ../js/commons/*.js .
-cp ../js/commons/*.wasm .
-cp ../js/bankwallets/*.js .
-cp ../js/bankwallets/*.wasm .
+cp ../js/bankwallets/bankwallets_single.js .
+cp ../js/bankwallets/bankwallets_single.wasm .
