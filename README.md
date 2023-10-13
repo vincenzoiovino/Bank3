@@ -1,5 +1,4 @@
 # The Bank3 System
-The Bank3 System
 ## Overview
 The repository provides implementation of the Bank3 and Bank DAO protocol described in this [note](https://hackmd.io/q4RHSYE6Tb6fRqgPIML9QA?view
 ). 
