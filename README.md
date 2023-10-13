@@ -13,6 +13,13 @@ To install the ```js`` and `wasm`` modules, run:
 make js-wasm
 ```
 The compilation will use some precompiled ``libcrypto.a``. If the compilation does not work, you may need to compile ``openssl`` with ``emscripten`` by yourself: it may require some tweaks to the ``Makefile``, feel free to contact me if you need help.
+## Demo for Bank Wallets
+Go to the ``demo`` folder and run a web server lik:
+```bash
+python3 -m http.server 8080
+```
+Then open ``localhost:8080`` in your browser and have fun!
+
 ## Example of usage for Bank DAO
 
 ### Deployment phase
