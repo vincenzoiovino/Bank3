@@ -57,17 +57,18 @@ generate_secret_key (CycGrpZp * sk)
   CycGrpZp_setRand (sk);
 }
 
-int 
+int
 generate_secret_key_from_password (CycGrpZp * sk, char *password)
 {
   int ret;
-  const unsigned char *hashed_password=malloc(KECCAC_DIGEST_LENGTH);
+  const unsigned char *hashed_password = malloc (KECCAC_DIGEST_LENGTH);
   sha3_Init256 (&ctx);
   sha3_SetFlags (&ctx, SHA3_FLAGS_KECCAK);
-  sha3_Update (&ctx, (unsigned char *) password, strlen(password)+1); // we include the null terminating character
+  sha3_Update (&ctx, (unsigned char *) password, strlen (password) + 1);	// we include the null terminating character
   hashed_password = sha3_Finalize (&ctx);
   CycGrpZp_new (sk);
-  if (BN_bin2bn(hashed_password,KECCAC_DIGEST_LENGTH, sk->B) != NULL) ret=1;
+  if (BN_bin2bn (hashed_password, KECCAC_DIGEST_LENGTH, sk->B) != NULL)
+    ret = 1;
   return ret;
 }
 
