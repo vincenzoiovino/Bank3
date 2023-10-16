@@ -36,6 +36,7 @@ Note: currently the demo requires a password to setup the ``ZkRegistry`` and use
 <img src="screenshot1bank3.png" width="100%" height="100%" />
 <br>
 <img src="screenshot2bank3.png" width="100%" height="100%" />
+
 ## Example of usage for Bank DAO
 
 ### Deployment phase
