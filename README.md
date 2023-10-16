@@ -32,9 +32,9 @@ Then open ``localhost:8080`` in your browser and have fun!
 
 Note: currently the demo requires a password to setup the ``ZkRegistry`` and use it. As explained [here](https://hackmd.io/q4RHSYE6Tb6fRqgPIML9QA?view) this is not strictly required: the secret key can be derived deterministically from your Metamask account so that there would be no need for a password, this will be implemented in next iteration.
 ### Screenshots
-<img src="screenshot1bank3.png" width="60%" height="60%" />
+<img src="screenshot1bank3.png" width="90%" height="90%" />
 <br>
-<img src="screenshot2bank3.png" width="60%" height="60%" />
+<img src="screenshot2bank3.png" width="90%" height="90%" />
 ## Example of usage for Bank DAO
 
 ### Deployment phase
