@@ -15,6 +15,7 @@
 #include "sha3.h"
 static sha3_context ctx;
 #define LENGTH_GRP_ELEMENTS 33	// 33 for secp256k1 = 32 + 1 byte for the sign. This is the length in binary. The length as hex string is then the double
+#define LENGTH_ETH_ADDRESS 20
 #define DIGEST_LENGTH 32
 
 inline static void
@@ -37,11 +38,11 @@ sprint_hex (char *ret, unsigned char *hex, size_t len)
 }
 
 inline static void
-HexToBytes (unsigned char *dst, unsigned char *src)
+HexToBytes (unsigned char *dst, unsigned char *src, size_t size)
 {
 
   size_t count;
-  for (count = 0; count < LENGTH_GRP_ELEMENTS; count++)
+  for (count = 0; count < size; count++)
     {
       sscanf ((char *) src, "%2hhx", &dst[count]);
       src += 2;
@@ -73,6 +74,7 @@ encrypt_keccac (char *argv1, char *argv2)
   CycGrpG_new (&C);
   CycGrpG_fromHexString (&PK, argv1);
   CycGrpZp_setRand (&r);
+  //CycGrpZp_fromHexString(&r,"767BA54314EBEB228CCEEDA320D76EF69ED83FCB34C1DF84674DD364C980E954");
   CycGrpG_mul (&A, CycGrpGenerator, &r);
   CycGrpG_mul (&C, &PK, &r);
 #ifdef _CC
@@ -82,14 +84,15 @@ encrypt_keccac (char *argv1, char *argv2)
 #endif
   sha3_Init256 (&ctx);
   sha3_SetFlags (&ctx, SHA3_FLAGS_KECCAK);
-  HexToBytes (Cbytes, (unsigned char *) CycGrpG_toHexString (&C));
+  HexToBytes (Cbytes, (unsigned char *) CycGrpG_toHexString (&C),
+	      LENGTH_GRP_ELEMENTS);
   sha3_Update (&ctx, (unsigned char *) Cbytes, LENGTH_GRP_ELEMENTS);
   p = sha3_Finalize (&ctx);
   memcpy (tmp, p, DIGEST_LENGTH);
-  HexToBytes (Addrbytes, (unsigned char *) argv2);
+  HexToBytes (Addrbytes, (unsigned char *) argv2, LENGTH_ETH_ADDRESS);
   sha3_Init256 (&ctx);
   sha3_SetFlags (&ctx, SHA3_FLAGS_KECCAK);
-  sha3_Update (&ctx, (unsigned char *) Addrbytes, 20);
+  sha3_Update (&ctx, (unsigned char *) Addrbytes, LENGTH_ETH_ADDRESS);
   p = sha3_Finalize (&ctx);
   memcpy (tmp2, p, DIGEST_LENGTH);
   for (i = 0; i < DIGEST_LENGTH; i++)

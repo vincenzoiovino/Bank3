@@ -8,6 +8,7 @@
 #include <openssl/sha.h>
 static SHA256_CTX ctx;
 #define LENGTH_GRP_ELEMENTS 33	// 33 for secp256k1 = 32 + 1 byte for the sign. This is the length in binary. The length as hex string is then the double
+#define LENGTH_ETH_ADDRESS 20
 #define DIGEST_LENGTH 32
 
 inline static void
@@ -21,11 +22,11 @@ print_hex (unsigned char *hex, size_t len)
 }
 
 inline static void
-HexToBytes (unsigned char *dst, unsigned char *src)
+HexToBytes (unsigned char *dst, unsigned char *src, size_t size)
 {
 
   size_t count;
-  for (count = 0; count < LENGTH_GRP_ELEMENTS; count++)
+  for (count = 0; count < size; count++)
     {
       sscanf ((char *) src, "%2hhx", &dst[count]);
       src += 2;
@@ -63,12 +64,13 @@ main (int argc, char **argv)
   CycGrpG_mul (&C, &PK, &r);
   printf ("A:0x%s\n", CycGrpG_toHexString (&A));
   SHA256_Init (&ctx);
-  HexToBytes (Cbytes, (unsigned char *) CycGrpG_toHexString (&C));
+  HexToBytes (Cbytes, (unsigned char *) CycGrpG_toHexString (&C),
+	      LENGTH_GRP_ELEMENTS);
   SHA256_Update (&ctx, (unsigned char *) Cbytes, LENGTH_GRP_ELEMENTS);
   SHA256_Final (tmp, &ctx);
-  HexToBytes (Addrbytes, (unsigned char *) argv[2]);
+  HexToBytes (Addrbytes, (unsigned char *) argv[2], LENGTH_ETH_ADDRESS);
   SHA256_Init (&ctx);
-  SHA256_Update (&ctx, (unsigned char *) Addrbytes, 20);
+  SHA256_Update (&ctx, (unsigned char *) Addrbytes, LENGTH_ETH_ADDRESS);
   SHA256_Final (tmp2, &ctx);
   for (i = 0; i < DIGEST_LENGTH; i++)
     B[i] = tmp[i] ^ tmp2[i];
