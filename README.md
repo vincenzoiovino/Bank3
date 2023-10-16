@@ -1,9 +1,9 @@
 # The Bank3 System
 ## Overview
-The repository provides implementation of the Bank3 and Bank DAO protocol described in this [note](https://hackmd.io/q4RHSYE6Tb6fRqgPIML9QA?view
+The repository provides implementation of the ''Bank3'' protocols described in this [note](https://hackmd.io/q4RHSYE6Tb6fRqgPIML9QA?view
 ). 
 
-Bank3 is essentially an anonymous deposit system (both for Wallets and DAOs): Alice can deposit anonymously ``n`` coins in favour of Bob by sending the coins to the ``Bank3`` contract. At any point of time Bob will hold ``m>n`` coins at the Bank, and nobody will be able to infer how much wealth Bob holds. Bob can withdraw the ``n`` coins deposited by Bob in favour of hers using just her wallet's secret key. At withdrawal time, it will be visible that Bob deposited ``n`` coins in favour of Bob but it will not be possible to leak how much more coins Bob holds at the ``Bank3``.
+''Bank3'' is essentially an anonymous deposit system (both for Wallets and DAOs): Alice can deposit anonymously ``n`` coins in favour of Bob by sending the coins to the ``Bank3`` contract. At any point of time Bob will hold ``m>n`` coins at the ''Bank3'' contract, and nobody will be able to infer how much wealth Bob holds. Bob can withdraw the ``n`` coins deposited by Bob in favour of hers using just her wallet's secret key. At withdrawal time, it will be visible that Bob deposited ``n`` coins in favour of Bob but it will not be possible to leak how much more coins Bob holds at the ``Bank3``.
 
 Therefore, ``Bank3`` is *NOT* a coin mixer but presents the following differences and advantages with respect to ``TC``:
  * ``TC`` deposit+withdrawal can consume more than 1.3 milions of GAS whereas ``Bank3`` deposit+withdrawal is about 100k with the current contract that is not optimized at all!
