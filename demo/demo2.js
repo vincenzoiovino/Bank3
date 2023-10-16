@@ -1,7 +1,44 @@
 // Contract Details
-const contractBankWalletsAddress = "0xD94c4E0C8E6A68b40753F3F89A7a6ad838313014";
+const contractBankWalletsAddress = "0xdf1253E14506a3223e351dDB8EFbC0a008A62989";
 const contractBankWalletsABI= 
 [
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "fees",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"inputs": [],
+		"name": "Director",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "Fees",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
 	{
 		"inputs": [
 			{
@@ -74,30 +111,6 @@ const contractBankWalletsABI=
 	{
 		"inputs": [
 			{
-				"internalType": "uint256",
-				"name": "fees",
-				"type": "uint256"
-			}
-		],
-		"name": "setFees",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "fees",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"inputs": [
-			{
 				"internalType": "bytes",
 				"name": "",
 				"type": "bytes"
@@ -120,21 +133,14 @@ const contractBankWalletsABI=
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "Director",
-		"outputs": [
+		"inputs": [
 			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
+				"internalType": "bytes",
+				"name": "A",
+				"type": "bytes"
 			}
 		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "Fees",
+		"name": "get_ncoins",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -143,6 +149,19 @@ const contractBankWalletsABI=
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "fees",
+				"type": "uint256"
+			}
+		],
+		"name": "setFees",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	}
 ];
@@ -552,11 +571,14 @@ return;
  
 const encodedA = hexToBytes(A.substr(2));
 const encodedC = hexToBytes(C.substr(2));
+   //const ncoins=web3.utils.fromWei( BigNumber(get_ncoins(encodedA)),"ether");
+var ncoins="";   
+await get_ncoins(encodedA).then(function(value){ ncoins= value.toString();});
     await contract.methods.MakeWithdrawalKeccac256(encodedA,myaddr,encodedC).send({from:myaddr, value:0});
     // Update status
     document.getElementById("status4").style.color = "green";
     document.getElementById("status4").innerText= "Withdrawal made successfully";
-    document.getElementById("status5").innerText = "You received the coins in your account";
+    document.getElementById("status5").innerText = "You received "+ ncoins+ "wei in your account";
     document.getElementById("status5").style.color = "green";
 
   } catch (err) {
@@ -618,6 +640,24 @@ async function getfromZkReg(updateStatus,addr) {
     return "error";
   }
 }
+
+async function get_ncoins(A) {
+
+  // Instantiate a new Contract
+  const contract = new web3.eth.Contract(contractBankWalletsABI, contractBankWalletsAddress);
+
+  try {
+    // Interact with Smart Contract
+    const _ncoins = await contract.methods.get_ncoins(A).call();
+console.log(_ncoins);
+	return _ncoins;
+  } catch (err) {
+    console.error("Failed to retrieve ncoins for value "+A+":", err);
+    return "error";
+  }
+}
+
+
 function toHex(txt){
     const encoder = new TextEncoder();
     return Array
