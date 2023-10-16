@@ -8,7 +8,7 @@ The repository provides implementation of the ''Bank3'' protocols described in t
 Therefore, ``Bank3`` is *NOT* a coin mixer but presents the following differences and advantages with respect to ``TC``:
  * ``TC`` deposit+withdrawal can consume more than 1.3 milions of GAS whereas ``Bank3`` deposit+withdrawal is about 100k with the current contract that is not optimized at all!
  * ``Bank3`` does not require trusted setup and is based on standard computational assumptions based on the hardness of breaking discrte log over elliptic curves.
- * ''Bank3'' is user-friendly. If Alice fails to save the deposit receipt or Bob loses it, Bob can at any time do an ether scan to find all anonymous deposit in favour of him and be able to make a corresponding withdrawal. (This is not currently implemented).
+ * ''Bank3'' is user-friendly. If Alice fails to save the deposit receipt or Bob loses it, Bob can at any time do an ether scan to find all anonymous deposits in favour of him and be able to make a corresponding withdrawal. (This is not currently implemented).
  * ``Bank3`` requires only hashing on-chain  and as such can be very efficient. For this reason, ``Bank3`` can be likely implemented also (with a slight variation) in ``Bitcoin``!
  * ``Bank3`` security is weaker than ``TC``: after withdrawal it is visible that Bob made the deposit. This is by design: the purpose here is just to hide the Bob's left wealth at the ``Bank3`` and not to mix the coins.
 
