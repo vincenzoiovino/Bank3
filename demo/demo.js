@@ -1,5 +1,5 @@
 // Contract Details
-const contractBankWalletsAddress = "0x5a2a8b05d1af80f01b558Ef925d2f65DFec7265d";
+const contractBankWalletsAddress = "0x40F3A68f4e54e6535091dde9910d4ffC3F1BcFd6";
 const contractBankWalletsABI= 
 [
 	{
@@ -23,19 +23,14 @@ const contractBankWalletsABI=
 	{
 		"inputs": [
 			{
-				"internalType": "uint256",
-				"name": "nCoins",
-				"type": "uint256"
+				"internalType": "bytes",
+				"name": "A",
+				"type": "bytes"
 			},
 			{
 				"internalType": "address",
 				"name": "addr",
 				"type": "address"
-			},
-			{
-				"internalType": "bytes",
-				"name": "A",
-				"type": "bytes"
 			},
 			{
 				"internalType": "bytes",
@@ -383,6 +378,8 @@ document.getElementById("metamask").addEventListener("click", async () => {
   const metaMaskAvailable = await checkMetaMaskAvailability();
   if (metaMaskAvailable) {
     await ConnectWallet();
+    await AccountInformation();
+    await BankInformation();
   } else {
     // MetaMask not available
     console.error("MetaMask not found");
@@ -426,10 +423,8 @@ return;
 if (!confirm('Your account has been already associated with the ZkRegistry PK ' +"\"" +pk +"\"."+'\nAare you sure you want to register a new public key?')) return;
 
 }
-           //alert('= ' + enc('03C13107C9BA34C0B4C0DEF020DF9AC57A30A3831B584DF662477AC1FFF659A03C','03C13107C9BA34C0B4C0DEF020DF9AC57A30A3831B584DF662477AC1FFF659A03C'));
   const metaMaskAvailable = await checkMetaMaskAvailability();
   if (metaMaskAvailable) {
-    //await AccountInformation();
 const PK=gen(password);
       await ZkRegAddPK(PK)
   }
@@ -446,14 +441,28 @@ async function AccountInformation() {
 
   // Display the account information
   document.getElementById("status2").innerText =
-    "Account Address: " +
+    "Your account address: " +
     from +
-    "\nBalance: " +
+    "\nYour Balance: " +
     balanceInEth +
     " ETH" +
     "\nGas Price: " +
     gasPriceInEth;
   document.getElementById("status2").style.color = "white";
+}
+async function BankInformation() {
+  const from = contractBankWalletsAddress;
+  const balanceInWei = await web3.eth.getBalance(from);
+  const balanceInEth = web3.utils.fromWei(balanceInWei, "ether");
+
+  // Display the account information
+  document.getElementById("status3").innerText =
+    "Bank3 Address: " +
+    from +
+    "\nBank3 Balance: " +
+    balanceInEth +
+    " ETH";
+  document.getElementById("status3").style.color = "yellow";
 }
 
 // Event Listener for Send Transaction
@@ -477,16 +486,17 @@ async function SendFunction() {
     console.error("To and amount are required");
     return;
   }
-
-   const pk=await getfromZkReg(0,to);
-   const s=enc(pk,to).split(' ');
+  const accounts = await web3.eth.getAccounts();
+  const from = accounts[0];
+   var pk=await getfromZkReg(0,to);
+   const s=enc(pk.substr(2),to.substr(2)).split(' ');
    const A=s[0].substr(2);
    const B=s[1].substr(2);
+console.log(to); 
+console.log("pk: "+pk+" s:"+enc(pk.substr(2),to.substr(2))+" A:"+A+" B:"+B);
 // Convert amount to wei (1 ether = 10^18 wei)
   const amountWei = web3.utils.toWei(amount, "ether");
   
-  const accounts = await web3.eth.getAccounts();
-  const from = accounts[0];
   const contract = new web3.eth.Contract(contractBankWalletsABI, contractBankWalletsAddress);
  zkerror=0;
   try {
@@ -495,16 +505,16 @@ const encodedA = hexToBytes(A);
 const encodedB = hexToBytes(B);
     await contract.methods.MakeDeposit(encodedA,encodedB).send({from:from, value:amountWei});
     // Update status
-    document.getElementById("status2").innerText = "Deposit of " + amountWei +"wei in favour of" +to+" has been associated to identifier: 0x"+ A;
-    document.getElementById("status2").style.color = "green";
-    document.getElementById("status3").innerText = "Deposit made successfully";
-    document.getElementById("status3").style.color = "green";
+    document.getElementById("status4").innerText = "Deposit of " + amountWei +"wei in favour of " +to+" has been associated to identifier: 0x"+ A;
+    document.getElementById("status4").style.color = "yellow";
+    document.getElementById("status5").innerText = "Deposit made successfully";
+    document.getElementById("status5").style.color = "green";
 
   } catch (err) {
     console.error("Failed to make deposit:", err);
-    document.getElementById("status2").innerText = "";
-    document.getElementById("status3").innerText = "Failed to make deposit";
-    document.getElementById("status3").style.color = "red";
+    document.getElementById("status4").innerText = "";
+    document.getElementById("status5").innerText = "Failed to make deposit";
+    document.getElementById("status5").style.color = "red";
     zkerror=1;
   }
 
@@ -535,8 +545,27 @@ alert('Your account has not been already associated with any ZkRegistry public k
 return;
 }
 
-   const C=enc(A.substr(2),password);
-alert(C);
+   const C=witness(A.substr(2),password);
+  const contract = new web3.eth.Contract(contractBankWalletsABI, contractBankWalletsAddress);
+ zkerror=0;
+  try {
+ 
+const encodedA = hexToBytes(A.substr(2));
+const encodedC = hexToBytes(C.substr(2));
+    await contract.methods.MakeWithdrawalKeccac256(encodedA,myaddr,encodedC).send({from:myaddr, value:0});
+    // Update status
+    document.getElementById("status4").style.color = "green";
+    document.getElementById("status4").innerText= "Withdrawal made successfully";
+    document.getElementById("status5").innerText = "You received the coins in your account";
+    document.getElementById("status5").style.color = "green";
+
+  } catch (err) {
+    console.error("Failed to make withdrawal:", err);
+    document.getElementById("status5").style.color = "red";
+    document.getElementById("status4").innerText = "";
+    document.getElementById("status4").innerText = "Failed to make withdrawal";
+    zkerror=1;
+  }
 
 }
 
@@ -575,18 +604,18 @@ async function getfromZkReg(updateStatus,addr) {
     const _zkReg = await contract.methods.get_public_key(address).call();
     // Update status
     if (updateStatus){
-    document.getElementById("status2").innerText = "ZkRegistry public key of address " + address+": "+ _zkReg;
-    document.getElementById("status2").style.color = "green";
-    document.getElementById("status3").innerText = "ZkRegistry public key retrieved successfully";
-    document.getElementById("status3").style.color = "green";
+    document.getElementById("status4").innerText = "ZkRegistry public key of address " + address+": "+ _zkReg;
+    document.getElementById("status4").style.color = "green";
+    document.getElementById("status5").innerText = "ZkRegistry public key retrieved successfully";
+    document.getElementById("status5").style.color = "green";
      }
 	return _zkReg;
   } catch (err) {
     console.error("Failed to retrieve public key from ZkRegistry:", err);
     if (updateStatus){
-    document.getElementById("status2").innerText = "";
-    document.getElementById("status3").innerText = "Failed to retrieve public key from ZkRegistry";
-    document.getElementById("status3").style.color = "red";
+    document.getElementById("status4").innerText = "";
+    document.getElementById("status5").innerText = "Failed to retrieve public key from ZkRegistry";
+    document.getElementById("status5").style.color = "red";
     }
     zkerror=1;
     return "error";
@@ -619,16 +648,16 @@ const encoded = hexToBytes(PK.substr(2));
      await contract.methods.register_public_key(encoded).send({from:from, value:0});
 
     // Update status
-    document.getElementById("status2").innerText = "Registered public key " + PK +"into ZkRegistry";
-    document.getElementById("status2").style.color = "green";
-    document.getElementById("status3").innerText = "ZkRegistry public key created successfully";
-    document.getElementById("status3").style.color = "green";
+    document.getElementById("status4").innerText = "Registered public key " + PK +"into ZkRegistry";
+    document.getElementById("status4").style.color = "green";
+    document.getElementById("status5").innerText = "ZkRegistry public key created successfully";
+    document.getElementById("status5").style.color = "green";
 
   } catch (err) {
     console.error("Failed to register public key into ZkRegistry:", err);
-    document.getElementById("status2").innerText = "";
-    document.getElementById("status3").innerText = "Failed to register public key into ZkRegistry";
-    document.getElementById("status3").style.color = "red";
+    document.getElementById("status4").innerText = "";
+    document.getElementById("status5").innerText = "Failed to register public key into ZkRegistry";
+    document.getElementById("status5").style.color = "red";
     zkerror=1;
   }
 }
