@@ -9,7 +9,7 @@ Therefore, ``Bank3`` is *NOT* a coin mixer but presents the following difference
  * ``TC`` deposit+withdrawal can consume more than 1.3/1.4 milions of GAS whereas ``Bank3`` deposit+withdrawal is about 129k GAS with the current contract that is highly not optimized at all. Indeed, in the next iteration we are going to publish a more optimized contract with deposit (resp. withdrawal) at about 71k (resp. 34k).
  * ``Bank3`` does not require trusted setup and is based on standard computational assumptions, namely the hardness of breaking discrte logs over elliptic curves.
  * ``Bank3``  is user-friendly. If Alice fails to save the deposit receipt or Bob loses it, Bob can at any time do an ether scan to find all anonymous deposits in favour of him and be able to make a corresponding withdrawal. This is not currently implemented but it is an easy addon for next versions.
- * ``Bank3`` requires only hashing on-chain  and as such can be very efficient. For this reason, ``Bank3`` can be likely implemented also (with a slight variation) in ``Bitcoin``!
+ * ``Bank3`` requires only hashing on-chain  and as such is very portable and efficient. A slight variant of ``Bank3`` might be likely implemented also in ``Bitcoin``!
  * ``Bank3`` security is weaker than ``TC``: after withdrawal it is visible that Bob made the deposit. This is by design: the purpose here is just to hide the Bob's left wealth at the ``Bank3`` and not to mix the coins.
 
 The repository contains a smart contract module in Solidity and the off-chain module written in C.
