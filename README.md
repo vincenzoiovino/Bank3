@@ -18,7 +18,7 @@ The repository contains a smart contract module in Solidity and the off-chain mo
 ```bash
 ./install.sh
 ```
-To install the ```js`` and `wasm`` modules, run:
+To install the ``js`` and `wasm` modules, run:
 ```bash
 make js-wasm
 ```
