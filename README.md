@@ -24,7 +24,12 @@ make js-wasm
 ```
 The compilation will use some precompiled ``libcrypto.a``. If the compilation does not work, you may need to compile ``openssl`` with ``emscripten`` by yourself: it may require some tweaks to the ``Makefile``, feel free to contact me if you need help.
 ## Demo for Bank Wallets
-Go to the ``demo`` folder and run a web server lik:
+To run the demo you don't need to install anything.
+Go to the ``demo`` folder, setup the demo with the following command:
+```bash
+./demo.sh
+```
+and run a web server like:
 ```bash
 python3 -m http.server 8080
 ```
