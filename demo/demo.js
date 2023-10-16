@@ -592,9 +592,6 @@ async function getfromZkReg(updateStatus,addr) {
   // Instantiate a new Contract
   const contract = new web3.eth.Contract(contractZkRegABI, contractZkRegAddress);
 
-  // Converts wei to Ether this currently is unused, 
-  // but if an NFT requires payment, you can use this as the argument to "value"
-  const valueWei = web3.utils.toWei("1", "gwei");
   var address="";
  if (!updateStatus) address=addr;
   else address=document.getElementById("zkregaddressinput").value;
