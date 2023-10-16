@@ -13,7 +13,7 @@ Therefore, ``Bank3`` is *NOT* a coin mixer but presents the following difference
 * ``Bank3`` does not require trusted setup and is based on standard computational assumptions, namely the hardness of breaking discrete logs over elliptic curves whereas it is known that any system based on SNARKs as ``TC`` cannot be proven secure from falsifiable assumptions.
  * ``Bank3`` security is weaker than ``TC``: after withdrawal it is visible that Bob made the deposit. This is by design: the purpose here is just to hide the Bob's left wealth at the ``Bank3`` and not to mix the coins. This should not pose legal issues as for coin mixers.
 
-The repository contains a smart contract module in Solidity and the off-chain module written in C.
+The repository contains a smart contract module in Solidity and the off-chain module written in C/wasm/Javascript.
 
 ## Installation for the off-chain module
 ```bash
