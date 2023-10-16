@@ -128,4 +128,4 @@ With the same witness you can actually repeat the same process `10` times until 
 
 The user can also do the previous procedure by replacing `MakeWithdrawalSha256` with `MakeWithdrawalKeccac256` but in this case in the deposit phase it should use the program `encrypt_keccac` instead of `encrypt`.
 ## References
-Vincenzo Iovino. [Bank3: enabling deposits and withdrawals from Wallets and DAOs in a private and decentralized way](https://hackmd.io/q4RHSYE6Tb6fRqgPIML9QA?view), June 2023.
+Vincenzo Iovino. [Bank3: enabling deposits and withdrawals from Wallets and DAOs in a private and decentralized way](https://hackmd.io/q4RHSYE6Tb6fRqgPIML9QA?view), 2023.
