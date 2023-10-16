@@ -33,9 +33,9 @@ Go to the ``demo`` folder, setup the demo with the following command:
 ```
 and run a web server like:
 ```bash
-python3 -m http.server 8080
+python3 -m http.server 8000
 ```
-Then open ``localhost:8080`` in your browser and have fun!
+Then open ``localhost:8000`` in your browser and have fun!
 
 
 Note: currently the demo requires a password to setup the ``ZkRegistry`` and use it. As explained [here](https://hackmd.io/q4RHSYE6Tb6fRqgPIML9QA?view) this is not strictly required: the secret key can be derived deterministically from your Metamask account so that there would be no need for a password, this will be implemented in next versions.
