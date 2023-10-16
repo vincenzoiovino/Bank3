@@ -3,17 +3,17 @@
 The repository provides implementation of the ``Bank3``  protocols described in this [note](https://hackmd.io/q4RHSYE6Tb6fRqgPIML9QA?view
 ). 
 
-``Bank3`` is essentially an anonymous deposit system (both for Wallets and DAOs) that can be described by the following example. Alice can deposit anonymously ``n`` coins in favour of Bob by sending the coins to the ``Bank3`` contract. At any point of time Bob will hold ``m>n`` coins at the ``Bank3``  contract, and nobody will be able to infer how much wealth Bob holds. Bob can withdraw the ``n`` coins deposited by Alice in favour of him using just his wallet. At withdrawal time, it will be pubclicly visible that Alice deposited ``n`` coins in favour of Bob but it will not be possible to leak how many more coins Bob holds at the ``Bank3``.
+``Bank3`` is essentially an anonymous deposit system (both for Wallets and DAOs) that can be described by the following example. Alice can deposit anonymously ``n`` coins in favour of Bob by sending the coins to the ``Bank3`` contract. At any point of time Bob will hold ``m>n`` coins at the ``Bank3``  contract, and nobody will be able to infer how much wealth Bob holds. Bob can withdraw the ``n`` coins deposited by Alice in favour of him using just his wallet. After withdrawal, the fact that Alice deposited ``n`` coins in favour of Bob will be public but it will not be possible to leak how many more coins Bob holds at the ``Bank3``.
 
-Therefore, ``Bank3`` is *NOT* a coin mixer but presents the following differences and advantages with respect to ``TC``:
- * ``TC`` deposit+withdrawal can consume more than 1.3/1.4 milions of GAS whereas ``Bank3`` deposit+withdrawal is about 129k GAS with the current contract that is highly not optimized at all. We are going to publish soon a more optimized contract with deposit (resp. withdrawal) GAS cost at about 71k (resp. 34k) and likely we can lower the deposit cost much more!
+Therefore, ``Bank3`` is *NOT* a coin mixer but presents the following differences and advantages with respect to Trnad0 C@sh (``TC``):
+ * A ``TC`` deposit+withdrawal can consume more than 1.3/1.4 milions of GAS whereas in our ``Bank3`` implementation a deposit+withdrawal costs about 129k GAS and the current contract is highly not optimized. We are going to publish soon a more optimized contract with deposit (resp. withdrawal) GAS cost at about 68k (resp. 42k) and likely we can lower the deposit cost a bit more!
  *   ``TC`` runs in fractions of a minute on powerful laptops whereas ``Bank3`` can run in fractions of a second even on mobile devices.
  * ``Bank3``  is user-friendly. If Alice fails to save the deposit receipt or Bob loses it, Bob can at any time do an ether scan to find all anonymous deposits in favour of him and be able to make a corresponding withdrawal. This is not currently implemented but it is an easy addon for next versions.
 * ``Bank3`` requires only hashing on-chain  and as such is very portable and efficient. A slight variant of ``Bank3`` might be likely implemented also in ``Bitcoin``!
 * ``Bank3`` does not require trusted setup and is based on standard computational assumptions, namely the hardness of breaking discrete logs over elliptic curves whereas it is known that any system based on SNARKs as ``TC`` cannot be proven secure from falsifiable assumptions.
  * ``Bank3`` security is weaker than ``TC``: after withdrawal it is visible that Bob made the deposit. This is by design: the purpose here is just to hide the Bob's left wealth at the ``Bank3`` and not to mix the coins. This should not pose legal issues as for coin mixers.
 
-The repository contains a smart contract module in Solidity and the off-chain module written in C.
+The repository contains a smart contract module in Solidity and the off-chain module written in C/wasm/Javascript.
 
 ## Installation for the off-chain module
 ```bash
@@ -33,9 +33,9 @@ Go to the ``demo`` folder, setup the demo with the following command:
 ```
 and run a web server like:
 ```bash
-python3 -m http.server 8080
+python3 -m http.server 8000
 ```
-Then open ``localhost:8080`` in your browser and have fun!
+Then open ``localhost:8000`` in your browser and have fun!
 
 
 Note: currently the demo requires a password to setup the ``ZkRegistry`` and use it. As explained [here](https://hackmd.io/q4RHSYE6Tb6fRqgPIML9QA?view) this is not strictly required: the secret key can be derived deterministically from your Metamask account so that there would be no need for a password, this will be implemented in next versions.
