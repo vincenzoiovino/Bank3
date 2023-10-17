@@ -3,7 +3,7 @@
 The repository provides implementation of the ``Bank3``  protocols described in this [note](https://hackmd.io/q4RHSYE6Tb6fRqgPIML9QA?view
 ). 
 
-``Bank3`` is essentially an anonymous deposit system (both for Wallets and DAOs) that can be described by the following example. Alice can deposit anonymously ``n`` coins in favour of Bob by sending the coins to the ``Bank3`` contract. At any point of time Bob will hold ``m>n`` coins at the ``Bank3``  contract, and nobody will be able to infer how much wealth Bob holds. Bob can withdraw the ``n`` coins deposited by Alice in favour of him using just his wallet. After withdrawal, the fact that Alice deposited ``n`` coins in favour of Bob will be public but it will not be possible to leak how many more coins Bob holds at the ``Bank3``.
+``Bank3`` is essentially an anonymous deposit system (both for Wallets and DAOs) that can be described by the following example. Alice can deposit anonymously ``n`` coins in favour of Bob by sending the coins to the ``Bank3`` contract. At any point of time Bob will hold ``m>n`` coins at the ``Bank3``  contract, and nobody will be able to infer how much wealth Bob holds. Bob can withdraw the ``n`` coins deposited by Alice in favour of him using just the ability to use his personal wallet. After withdrawal, the fact that Alice deposited ``n`` coins in favour of Bob will be public but it will not be possible to leak how many more coins Bob holds at the ``Bank3``.
 
 Therefore, ``Bank3`` is *NOT* a coin mixer but presents the following differences and advantages with respect to Trnad0 C@sh (``TC``):
  * A ``TC`` deposit+withdrawal can consume more than 1.3/1.4 milions of GAS whereas in our ``Bank3`` implementation a deposit (resp. withdrawal) is about 68k (resp. 35k) and likely we can lower the deposit cost a bit more!
@@ -13,7 +13,7 @@ Therefore, ``Bank3`` is *NOT* a coin mixer but presents the following difference
 * ``Bank3`` does not require trusted setup and is based on standard computational assumptions, namely the hardness of breaking discrete logs over elliptic curves whereas it is known that any system based on SNARKs as ``TC`` cannot be proven secure from falsifiable assumptions.
  * ``Bank3`` security is weaker than ``TC``: after withdrawal it is visible that Bob made the deposit. This is by design: the purpose here is just to hide the Bob's left wealth at the ``Bank3`` and not to mix the coins. This should not pose legal issues as for coin mixers.
 
-The repository contains a smart contract module in Solidity and the off-chain module written in C/wasm/Javascript.
+The repository contains a smart contract module in Solidity and the off-chain module written in C/Wasm-emscripten/Javascript.
 
 ## Installation for the off-chain module
 ```bash
@@ -43,6 +43,8 @@ Note: currently the demo requires a password to setup the ``ZkRegistry`` and use
 <img src="screenshot1bank3.png" width="100%" height="100%" />
 <br>
 <img src="screenshot2bank3.png" width="100%" height="100%" />
+<br>
+<img src="screenshot3bank3.png" width="100%" height="100%" />
 
 ## Example of usage for Bank DAO
 
