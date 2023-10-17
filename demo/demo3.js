@@ -431,18 +431,19 @@ async function ConnectWallet() {
 document.getElementById("accountbutton").addEventListener("click", async () => {
   const accounts = await web3.eth.getAccounts();
   const myaddr = accounts[0];
+   var pk=await getfromZkReg(0,myaddr);
+ if (pk!="error"){
+if (!confirm('Your account has been already associated with the ZkRegistry PK ' +"\"" +pk +"\"."+'\nAare you sure you want to register a new public key?')) return;
+
+}
 let password=await window.ethereum.request({method: 'personal_sign',params: [SignMessage, myaddr]});
+password=password.substr(2).toLowerCase();
 if (password=="")  {
 alert("Password is empty");
 return;
 }
 
 
-   var pk=await getfromZkReg(0,myaddr);
- if (pk!="error"){
-if (!confirm('Your account has been already associated with the ZkRegistry PK ' +"\"" +pk +"\"."+'\nAare you sure you want to register a new public key?')) return;
-
-}
   const metaMaskAvailable = await checkMetaMaskAvailability();
   if (metaMaskAvailable) {
 const PK=gen(password);
@@ -516,8 +517,8 @@ return;
    const s=enc(pk.substr(2),to.substr(2)).split(' ');
    const A=s[0].substr(2);
    const B=s[1].substr(2);
-console.log(to); 
-console.log("pk: "+pk+" s:"+enc(pk.substr(2),to.substr(2))+" A:"+A+" B:"+B);
+//console.log(to); 
+//console.log("pk: "+pk+" s:"+enc(pk.substr(2),to.substr(2))+" A:"+A+" B:"+B);
 // Convert amount to wei (1 ether = 10^18 wei)
   const amountWei = web3.utils.toWei(amount, "ether");
   
@@ -552,6 +553,7 @@ async function Withdraw() {
   const accounts = await web3.eth.getAccounts();
   const myaddr = accounts[0];
 let password=await window.ethereum.request({method: 'personal_sign',params: [SignMessage, myaddr]});
+password=password.substr(2).toLowerCase();
 if (password=="")  {
 alert("Password is empty");
 return;
@@ -593,6 +595,7 @@ await get_ncoins(encodedA).then(function(value){ ncoins= value.toString();});
   } catch (err) {
     console.error("Failed to make withdrawal:", err);
     document.getElementById("status5").style.color = "red";
+    document.getElementById("status4").style.color = "red";
     document.getElementById("status4").innerText = "";
     document.getElementById("status4").innerText = "Failed to make withdrawal";
     zkerror=1;
@@ -658,7 +661,7 @@ async function get_ncoins(A) {
   try {
     // Interact with Smart Contract
     const _ncoins = await contract.methods.get_ncoins(A).call();
-console.log(_ncoins);
+    //console.log(_ncoins);
 	return _ncoins;
   } catch (err) {
     console.error("Failed to retrieve ncoins for value "+A+":", err);
