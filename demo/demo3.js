@@ -541,7 +541,7 @@ const encodedA = hexToBytes(A);
 const encodedB = hexToBytes(B);
     await contract.methods.MakeDeposit(encodedA,encodedB).send({from:from, value:amountWei});
     // Update status
-    document.getElementById("status4").innerText = "Deposit of " + amountWei +"wei in favour of " +to+" has been associated to identifier: 0x"+ A;
+    document.getElementById("status4").innerText = "Deposit of " + amount +" ETH in favour of " +to+" has been associated to identifier: 0x"+ A;
     document.getElementById("status4").style.color = "yellow";
     document.getElementById("status5").innerText = "Deposit made successfully";
     document.getElementById("status5").style.color = "yellow";
@@ -600,7 +600,7 @@ await get_ncoins(encodedA).then(function(value){ ncoins= value.toString();});
     // Update status
     document.getElementById("status4").style.color = "green";
     document.getElementById("status4").innerText= "Withdrawal made successfully";
-    document.getElementById("status5").innerText = "You received "+ ncoins+ "wei in your account";
+    document.getElementById("status5").innerText = "You received "+ web3.utils.fromWei(ncoins,"ether")+ " ETH in your account";
     document.getElementById("status5").style.color = "green";
 
   } catch (err) {
