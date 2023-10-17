@@ -509,6 +509,10 @@ async function SendFunction() {
   const accounts = await web3.eth.getAccounts();
   const from = accounts[0];
    var pk=await getfromZkReg(0,to);
+   if (pk=="error") {
+alert("Failed to retrieve the public key of address "+to+". This can be due to the fact that the address has not been associated to a public key into the ZKRegistry.");
+return;
+}
    const s=enc(pk.substr(2),to.substr(2)).split(' ');
    const A=s[0].substr(2);
    const B=s[1].substr(2);
