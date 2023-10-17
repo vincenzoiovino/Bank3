@@ -3,17 +3,17 @@
 The repository provides implementation of the ``Bank3``  protocols described in this [note](https://hackmd.io/q4RHSYE6Tb6fRqgPIML9QA?view
 ). 
 
-``Bank3`` is essentially an anonymous deposit system (both for Wallets and DAOs) that can be described by the following example. Alice can deposit anonymously ``n`` coins in favour of Bob by sending the coins to the ``Bank3`` contract. At any point of time Bob will hold ``m>n`` coins at the ``Bank3``  contract, and nobody will be able to infer how much wealth Bob holds. Bob can withdraw the ``n`` coins deposited by Alice in favour of him using just his wallet. After withdrawal, the fact that Alice deposited ``n`` coins in favour of Bob will be public but it will not be possible to leak how many more coins Bob holds at the ``Bank3``.
+``Bank3`` is essentially an anonymous deposit system (both for Wallets and DAOs) that can be described by the following example. Alice can deposit anonymously ``n`` coins in favour of Bob by sending the coins to the ``Bank3`` contract. At any point of time Bob will hold ``m>n`` coins at the ``Bank3``  contract, and nobody will be able to infer how much wealth Bob holds. Bob can withdraw the ``n`` coins deposited by Alice in favour of him using just the ability to use his personal wallet. After withdrawal, the fact that Alice deposited ``n`` coins in favour of Bob will be public but it will not be possible to leak how many more coins Bob holds at the ``Bank3``.
 
 Therefore, ``Bank3`` is *NOT* a coin mixer but presents the following differences and advantages with respect to Trnad0 C@sh (``TC``):
- * A ``TC`` deposit+withdrawal can consume more than 1.3/1.4 milions of GAS whereas in our ``Bank3`` implementation a deposit (resp. withdrawal) is about 68k (resp. 35k) and likely we can lower the deposit cost a bit more!
+ * A ``TC`` deposit+withdrawal can consume more than 1.3/1.4 milions of GAS whereas in our current ``Bank3`` implementation a deposit (resp. withdrawal) costs about 68k (resp. 35k) and likely we can lower the deposit cost a bit more!
  *   ``TC`` runs in fractions of a minute on powerful laptops whereas ``Bank3`` can run in fractions of a second even on mobile devices.
  * ``Bank3``  is user-friendly. If Alice fails to save the deposit receipt or Bob loses it, Bob can at any time do an ether scan to find all anonymous deposits in favour of him and be able to make a corresponding withdrawal. This is not currently implemented but it is an easy addon for next versions.
 * ``Bank3`` requires only hashing on-chain  and as such is very portable and efficient. A slight variant of ``Bank3`` might be likely implemented also in ``Bitcoin``!
 * ``Bank3`` does not require trusted setup and is based on standard computational assumptions, namely the hardness of breaking discrete logs over elliptic curves whereas it is known that any system based on SNARKs as ``TC`` cannot be proven secure from falsifiable assumptions.
  * ``Bank3`` security is weaker than ``TC``: after withdrawal it is visible that Bob made the deposit. This is by design: the purpose here is just to hide the Bob's left wealth at the ``Bank3`` and not to mix the coins. This should not pose legal issues as for coin mixers.
 
-The repository contains a smart contract module in Solidity and the off-chain module written in C/wasm/Javascript.
+The repository contains a smart contract module in Solidity and the off-chain module written in C/Wasm-emscripten/Javascript.
 
 ## Installation for the off-chain module
 ```bash
@@ -24,7 +24,7 @@ To install the ``js`` and `wasm` modules, run:
 make js-wasm
 ```
 The compilation will use some precompiled ``libcrypto.a``. If the compilation does not work, you may need to compile ``openssl`` with ``emscripten`` by yourself: it may require some tweaks to the ``Makefile``, feel free to contact me if you need help.
-## Bank3 for Wallets Demo
+## Bank3 for Wallets: Demo
 We provide a web demo for Goerli testnet.
 To run the demo you don't need to install anything.
 Go to the ``demo`` folder, setup the demo with the following command:
@@ -35,14 +35,21 @@ and run a web server like:
 ```bash
 python3 -m http.server 8000
 ```
-Then open ``localhost:8000`` in your browser and have fun!
+Then open ``localhost:8000`` in your browser.
+
+### Instructions
+* Click on "Connect and Get Info" to connect to your Wallet and get information about yours and Bank3's accounts.
+*  Click on "Create public key in ZKRegistry" to generate and add a public key into the ``ZKRegistry``. This is a registry that eases the Bank3's account system (and not only) avoiding to request users to extract their wallets secret keys. This operation has to be done only once for all the future deposits and withdrawals. You will be prompted to sign a message. Be aware that this signature will be used internally by the system as your secret password so don't sign the message in any other application or website!
+*  Input the address of the person in favour of whom you want to make a deposit and the corresponding amount in ether and click on "Make deposit". After about 20secs the transaction will be accepted and you will receive an identifier associated with the deposit. Copy it or share it privately with the person in favour of whom you made the deposit. If you click on "Connect and Get Info" you should see a change in yours and Bank3's balances.
+*  When you want to withdraw input a previously generated identifier and click on "Withdraw". You will be asked to sign the same message as at the time of creation of your public key into the ``ZKRegistry``. After about 20secs your withdrawal should be successful and if you click on "Connect and Get Info" you should see a change in yours and Bank3's balances.
 
 
-Note: currently the demo requires a password to setup the ``ZkRegistry`` and use it. As explained [here](https://hackmd.io/q4RHSYE6Tb6fRqgPIML9QA?view) this is not strictly required: the secret key can be derived deterministically from your Metamask account so that there would be no need for a password, this will be implemented in next versions.
 ### Screenshots
 <img src="screenshot1bank3.png" width="100%" height="100%" />
 <br>
 <img src="screenshot2bank3.png" width="100%" height="100%" />
+<br>
+<img src="screenshot3bank3.png" width="100%" height="100%" />
 
 ## Example of usage for Bank DAO
 
