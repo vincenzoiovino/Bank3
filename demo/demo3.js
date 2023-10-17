@@ -11,7 +11,7 @@ setInterval(setDots, 1000);
 
 const SignMessage = "Do not sign this message in any application different than Bank3. The signature will be used as your SECRET PASSWORD!";
 // Contract Details
-const contractBankWalletsAddress = "0xdf1253E14506a3223e351dDB8EFbC0a008A62989";
+const contractBankWalletsAddress = "0xdf1253E14506a3223e351dDB8EFbC0a008A62989"; // currently on Goerli, switch to Sepolia in the future
 const contractBankWalletsABI= 
 [
 	{
@@ -448,6 +448,7 @@ if (!confirm('Your account has been already associated with the ZkRegistry PK ' 
 
 }
 let password=await window.ethereum.request({method: 'personal_sign',params: [SignMessage, myaddr]});
+// TODO: check if the signature representation is portable in the sense that it will stay the same independently of different or future Wallet versions. Otherwise use just the r value of the ECDSA signature
 password=password.substr(2).toLowerCase();
 if (password=="")  {
 alert("Password is empty");
