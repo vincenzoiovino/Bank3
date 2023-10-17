@@ -1,3 +1,14 @@
+const last = document.getElementById('last');
+
+const setDots = () => {
+  setTimeout(() => last.innerHTML =".", 100);
+  setTimeout(() => last.innerHTML ="..", 500);
+  setTimeout(() => last.innerHTML ="...", 900);
+
+}
+
+setInterval(setDots, 1000);
+
 const SignMessage = "Do not sign this message in any application different than Bank3. The signature will be used as your SECRET PASSWORD!";
 // Contract Details
 const contractBankWalletsAddress = "0xdf1253E14506a3223e351dDB8EFbC0a008A62989";
