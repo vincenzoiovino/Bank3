@@ -1,3 +1,4 @@
+const SignMessage = "Do not sign this message in any application different than Bank3. The signature will be used as your SECRET PASSWORD!";
 // Contract Details
 const contractBankWalletsAddress = "0xdf1253E14506a3223e351dDB8EFbC0a008A62989";
 const contractBankWalletsABI= 
@@ -428,15 +429,15 @@ async function ConnectWallet() {
 
 // Event Listener for Create public key in ZKReg 
 document.getElementById("accountbutton").addEventListener("click", async () => {
-let password = document.getElementById("password").value;
+  const accounts = await web3.eth.getAccounts();
+  const myaddr = accounts[0];
+let password=await window.ethereum.request({method: 'personal_sign',params: [SignMessage, myaddr]});
 if (password=="")  {
 alert("Password is empty");
 return;
 }
 
 
-  const accounts = await web3.eth.getAccounts();
-  const myaddr = accounts[0];
    var pk=await getfromZkReg(0,myaddr);
  if (pk!="error"){
 if (!confirm('Your account has been already associated with the ZkRegistry PK ' +"\"" +pk +"\"."+'\nAare you sure you want to register a new public key?')) return;
@@ -544,7 +545,9 @@ async function Withdraw() {
   // Get input values
   const A = document.getElementById("idinput").value;
 
-let password = document.getElementById("passwordinput2").value;
+  const accounts = await web3.eth.getAccounts();
+  const myaddr = accounts[0];
+let password=await window.ethereum.request({method: 'personal_sign',params: [SignMessage, myaddr]});
 if (password=="")  {
 alert("Password is empty");
 return;
@@ -556,8 +559,6 @@ return;
     console.error("identifier and password are required");
     return;
   }
-  const accounts = await web3.eth.getAccounts();
-  const myaddr = accounts[0];
    var mypk=await getfromZkReg(0,myaddr);
  if (mypk=="error"){
 alert('Your account has not been already associated with any ZkRegistry public key');
