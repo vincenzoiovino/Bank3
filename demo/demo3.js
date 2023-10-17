@@ -6,8 +6,25 @@ const setDots = () => {
   setTimeout(() => last.innerHTML ="...", 900);
 
 }
+const setWaitDeposit = () => {
+  setTimeout(() => last.innerHTML =".", 100);
+  setTimeout(() => last.innerHTML ="Pls wait for.", 500);
+  setTimeout(() => last.innerHTML ="Pls wait for confirm.", 900);
+  setTimeout(() => last.innerHTML ="Pls wait for confirmation..", 1300);
+  setTimeout(() => last.innerHTML ="Pls wait for confirmation of deposit...", 1700);
+  setTimeout(() => last.innerHTML ="Pls wait for confirmation of deposit and save the identifier...", 2100);
 
-setInterval(setDots, 1000);
+}
+const setWaitWithdrawal = () => {
+  setTimeout(() => last.innerHTML =".", 100);
+  setTimeout(() => last.innerHTML ="Pls wait for.", 500);
+  setTimeout(() => last.innerHTML ="Pls wait for confirm.", 900);
+  setTimeout(() => last.innerHTML ="Pls wait for confirmation..", 1300);
+  setTimeout(() => last.innerHTML ="Pls wait for confirmation of withdrawal...", 1700);
+
+}
+
+var dotsinterval=setInterval(setDots, 1000);
 
 const SignMessage = "Do not sign this message in any application different than Bank3. The signature will be used as your SECRET PASSWORD!";
 // Contract Details
@@ -444,7 +461,7 @@ document.getElementById("accountbutton").addEventListener("click", async () => {
   const myaddr = accounts[0];
    var pk=await getfromZkReg(0,myaddr);
  if (pk!="error"){
-if (!confirm('Your account has been already associated with the ZkRegistry PK ' +"\"" +pk +"\"."+'\nAare you sure you want to register a new public key?')) return;
+if (!confirm('Your account has been already associated with the ZkRegistry PK ' +"\"" +pk +"\"."+'\nAre you sure you want to register a new public key?')) return;
 
 }
 let password=await window.ethereum.request({method: 'personal_sign',params: [SignMessage, myaddr]});
@@ -522,7 +539,7 @@ async function SendFunction() {
   const accounts = await web3.eth.getAccounts();
   const from = accounts[0];
    var pk=await getfromZkReg(0,to);
-   if (pk=="error") {
+   if (pk=="error" || pk=="") {
 alert("Failed to retrieve the public key of address "+to+". This can be due to the fact that the address has not been associated to a public key into the ZKRegistry.");
 return;
 }
@@ -540,7 +557,11 @@ return;
  
 const encodedA = hexToBytes(A);
 const encodedB = hexToBytes(B);
+clearInterval(dotsinterval);
+var waitdepositinterval=setInterval(setWaitDeposit, 2700);
     await contract.methods.MakeDeposit(encodedA,encodedB).send({from:from, value:amountWei});
+clearInterval(waitdepositinterval);
+dotsinterval=setInterval(setDots, 1000);
     // Update status
     document.getElementById("status4").innerText = "Deposit of " + amount +" ETH in favour of " +to+" has been associated to identifier: 0x"+ A;
     document.getElementById("status4").style.color = "yellow";
@@ -548,6 +569,8 @@ const encodedB = hexToBytes(B);
     document.getElementById("status5").style.color = "yellow";
 
   } catch (err) {
+clearInterval(waitdepositinterval);
+dotsinterval=setInterval(setDots, 1000);
     console.error("Failed to make deposit:", err);
     document.getElementById("status4").innerText = "";
     document.getElementById("status5").innerText = "Failed to make deposit";
@@ -595,9 +618,13 @@ const encodedC = hexToBytes(C.substr(2));
 //      method: 'personal_sign',
 //      params: [message, myaddr],
 //}));
-var ncoins="";   
-await get_ncoins(encodedA).then(function(value){ ncoins= value.toString();});
+    clearInterval(dotsinterval);
+    var waitwithdrawalinterval=setInterval(setWaitWithdrawal, 2300);
+    var ncoins="";   
+    await get_ncoins(encodedA).then(function(value){ ncoins= value.toString();});
     await contract.methods.MakeWithdrawalKeccac256(encodedA,myaddr,encodedC).send({from:myaddr, value:0});
+    clearInterval(waitwithdrawalinterval);
+    dotsinterval=setInterval(setDots, 1000);
     // Update status
     document.getElementById("status4").style.color = "green";
     document.getElementById("status4").innerText= "Withdrawal made successfully";
@@ -605,6 +632,8 @@ await get_ncoins(encodedA).then(function(value){ ncoins= value.toString();});
     document.getElementById("status5").style.color = "green";
 
   } catch (err) {
+    clearInterval(waitwithdrawalinterval);
+    dotsinterval=setInterval(setDots, 1000);
     console.error("Failed to make withdrawal:", err);
     document.getElementById("status5").style.color = "red";
     document.getElementById("status4").style.color = "red";
