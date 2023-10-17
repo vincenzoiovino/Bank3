@@ -533,7 +533,7 @@ const encodedB = hexToBytes(B);
     document.getElementById("status4").innerText = "Deposit of " + amountWei +"wei in favour of " +to+" has been associated to identifier: 0x"+ A;
     document.getElementById("status4").style.color = "yellow";
     document.getElementById("status5").innerText = "Deposit made successfully";
-    document.getElementById("status5").style.color = "green";
+    document.getElementById("status5").style.color = "yellow";
 
   } catch (err) {
     console.error("Failed to make deposit:", err);
