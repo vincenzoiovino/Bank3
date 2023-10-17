@@ -443,8 +443,16 @@ async function ConnectWallet() {
     // Request access to MetaMask accounts
     await window.ethereum.request({ method: "eth_requestAccounts" });
     // Update status
-    document.getElementById("status1").innerText = "Connected to MetaMask";
+   var chainId="";    
+    await web3.eth.net.getId().then(netId => { chainId= netId; }) 
+if (chainId==5){
+    document.getElementById("status1").innerText = "Connected to MetaMask (Goerli Testnet)";
     document.getElementById("status1").style.color = "green";
+}
+    else {
+    document.getElementById("status1").style.color = "red";
+document.getElementById("status1").innerText = "Connected to MetaMask but not on Goerli Testnet. Switch to Goerli to use the dAPP. It can be necessary to restart the browser";
+}
   } catch (err) {
     // Handle error
     console.error("Failed to connect to MetaMask:", err);
@@ -502,6 +510,7 @@ async function AccountInformation() {
 }
 async function BankInformation() {
   const from = contractBankWalletsAddress;
+try {
   const balanceInWei = await web3.eth.getBalance(from);
   const balanceInEth = web3.utils.fromWei(balanceInWei, "ether");
 
@@ -513,6 +522,10 @@ async function BankInformation() {
     balanceInEth +
     " ETH";
   document.getElementById("status3").style.color = "yellow";
+} catch(error){
+  document.getElementById("status3").style.color = "red";
+  document.getElementById("status3").innerText ="Failed to retrieve the Bank3 Balance at address "+from;
+}
 }
 
 // Event Listener for Send Transaction
