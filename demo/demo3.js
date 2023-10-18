@@ -60,7 +60,7 @@ setTimeout(() => status4.innerText ="To make a deposit input the address of the 
 setTimeout(() => status5.innerText ="To withdraw a deposit input the identifier", 6400);
 setTimeout(() => status5.innerText ="To withdraw a deposit input the identifier, click on \"Withdraw\" and confirm the transaction.", 6700);
 setTimeout(() => status5.innerText ="To withdraw a deposit input the identifier, click on \"Withdraw\" and confirm the transaction.\nAfter each deposit or withdraw you can click on", 7000);
-setTimeout(() => status5.innerText ="To withdraw a deposit input the identifier, click on \"Withdraw\" and confirm the transaction.\n\nAfter each deposit or withdraw you can click on \"Connect and Get Info\" to see your updated Balance.", 7300);
+setTimeout(() => status5.innerText ="To withdraw a deposit input the identifier, click on \"Withdraw\" and confirm the transaction.\n\nAfter each deposit or withdraw you can click on \"Connect and Get Info\" to see your updated balance.", 7300);
 
 });
 
