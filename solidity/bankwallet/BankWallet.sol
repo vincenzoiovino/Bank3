@@ -15,8 +15,7 @@ contract BankWallet {
 
     struct Deposit {
         uint256 nCoins; // the amount of coins (in wei units) to be transferred
-        // string A;
-        bytes B; // the value B represented as hex string encoding an EC point in compressed form
+        bytes B; // the value B
 
     }
     address public Director;
