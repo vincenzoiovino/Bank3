@@ -671,6 +671,12 @@ dotsinterval=setInterval(setDots, 1000);
 async function Withdraw() {
   // Get input values
   const A = document.getElementById("idinput").value;
+  if (!A) {
+
+    alert("Identifier is required");
+    console.error("identifier is required");
+    return;
+  }
 
   const accounts = await web3.eth.getAccounts();
   const myaddr = accounts[0];
@@ -681,12 +687,6 @@ alert("Password is empty");
 return;
 }
   // Check if both to and amount are provided
-  if (!A || !password) {
-
-    alert("Identifier and password are required");
-    console.error("identifier and password are required");
-    return;
-  }
    var mypk=await getfromZkReg(0,myaddr);
  if (mypk=="error"){
 alert('Your account has not been already associated with any ZkRegistry public key');
