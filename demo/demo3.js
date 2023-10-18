@@ -58,10 +58,9 @@ setTimeout(() => status4.innerText ="To make a deposit input the address of the 
 setTimeout(() => status4.innerText ="To make a deposit input the address of the receiver and the amount of ETH (e.g., 0.001) you want to transfer and click on \"Make deposit\" and confirm the transaction.\nDo not close or refresh the window. When the transaction will be onchain (it can take about 20secs) you will get an identifier.\nThis is the receipt that you need to", 5800);
 setTimeout(() => status4.innerText ="To make a deposit input the address of the receiver and the amount of ETH (e.g., 0.001) you want to transfer and click on \"Make deposit\" and confirm the transaction.\nDo not close or refresh the window. When the transaction will be onchain (it can take about 20secs) you will get an identifier.\nThis is the receipt that you need to share with the receiver to allow him/her to withdraw the deposit.", 6100);
 setTimeout(() => status5.innerText ="To withdraw a deposit input the identifier", 6400);
-setTimeout(() => status5.innerText ="To withdraw a deposit input the identifier and click on \"Withdraw\" and confirm the transaction.\n", 6700);
-setTimeout(() => status5.innerText ="To withdraw a deposit input the identifier, click on \"Withdraw\" and confirm the transaction.", 7000);
-setTimeout(() => status5.innerText ="To withdraw a deposit input the identifier, click on \"Withdraw\" and confirm the transaction.\nAfter each deposit or withdraw you can click on", 7300);
-setTimeout(() => status5.innerText ="To withdraw a deposit input the identifier, click on \"Withdraw\" and confirm the transaction.\n\nAfter each deposit or withdraw you can click on \"Connect and Get Info\" to see your updated Balance.", 7600);
+setTimeout(() => status5.innerText ="To withdraw a deposit input the identifier, click on \"Withdraw\" and confirm the transaction.", 6700);
+setTimeout(() => status5.innerText ="To withdraw a deposit input the identifier, click on \"Withdraw\" and confirm the transaction.\nAfter each deposit or withdraw you can click on", 7000);
+setTimeout(() => status5.innerText ="To withdraw a deposit input the identifier, click on \"Withdraw\" and confirm the transaction.\n\nAfter each deposit or withdraw you can click on \"Connect and Get Info\" to see your updated Balance.", 7300);
 
 });
 
