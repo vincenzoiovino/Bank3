@@ -655,7 +655,7 @@ dotsinterval=setInterval(setDots, 1000);
 
   } catch (err) {
 clearInterval(waitdepositinterval);
-clearInterval(waitwithdrawalinterval);
+//clearInterval(waitwithdrawalinterval);
 dotsinterval=setInterval(setDots, 1000);
     console.error("Failed to make deposit:", err);
     document.getElementById("status4").innerText = "";
