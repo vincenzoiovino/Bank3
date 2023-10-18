@@ -180,9 +180,10 @@
 .buttons .btn{
   float:left;
   margin-left: 7px;
-  width: 12px;
-  height: 12px;
+  width: 19px;
+  height: 19px;
   border-radius: 100%;
+  text-align: center;
 }
 
 .buttons .btn:hover{
