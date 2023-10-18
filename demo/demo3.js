@@ -534,14 +534,13 @@ document.getElementById("accountbutton").addEventListener("click", async () => {
   const myaddr = accounts[0];
    var pk=await getfromZkReg(0,myaddr);
  if (pk!="error"){
-if (!confirm('Your account has been already associated with the ZkRegistry PK ' +"\"" +pk +"\"."+'\nAre you sure you want to register a new public key?')) return;
-
+if (!await swal('Yor account has been already associated with the ZkRegistry PK ' +"\"" +pk +"\"."+'\nAre you sure you want to register a new public key?', {  buttons: [true, true],icon:"warning",})) return;
 }
 let password=await window.ethereum.request({method: 'personal_sign',params: [SignMessage, myaddr]});
 // TODO: check if the signature representation is portable in the sense that it will stay the same independently of different or future Wallet versions. Otherwise use just the r value of the ECDSA signature
 password=password.substr(2).toLowerCase();
 if (password=="")  {
-alert("Password is empty");
+swal("Password is empty",{icon:"error",});
 return;
 }
 
@@ -612,7 +611,7 @@ async function SendFunction() {
   // Check if both to and amount are provided
   if (!to || !amount) {
 
-    alert("Address and amount are required");
+    swal("Address and amount are required",{icon:"error",});
     console.error("To and amount are required");
     return;
   }
@@ -620,7 +619,7 @@ async function SendFunction() {
   const from = accounts[0];
    var pk=await getfromZkReg(0,to);
    if (pk=="error" || pk=="") {
-alert("Failed to retrieve the public key of address "+to+". This can be due to the fact that the address has not been associated to a public key into the ZKRegistry.");
+swal("Failed to retrieve the public key of address "+to+". This can be due to the fact that the address has not been associated to a public key into the ZKRegistry.",{icon:"error",});
 return;
 }
    const s=enc(pk.substr(2),to.substr(2)).split(' ');
@@ -673,7 +672,7 @@ async function Withdraw() {
   const A = document.getElementById("idinput").value;
   if (!A) {
 
-    alert("Identifier is required");
+    swal("Identifier is required",{icon:"error",});
     console.error("identifier is required");
     return;
   }
@@ -683,13 +682,13 @@ async function Withdraw() {
 let password=await window.ethereum.request({method: 'personal_sign',params: [SignMessage, myaddr]});
 password=password.substr(2).toLowerCase();
 if (password=="")  {
-alert("Password is empty");
+swal("Password is empty",{icon:"error",});
 return;
 }
   // Check if both to and amount are provided
    var mypk=await getfromZkReg(0,myaddr);
  if (mypk=="error"){
-alert('Your account has not been already associated with any ZkRegistry public key');
+swal('Your account has not been already associated with any ZkRegistry public key',{icon:"error",});
 return;
 }
 
