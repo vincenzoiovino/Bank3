@@ -24,6 +24,45 @@ const setWaitWithdrawal = () => {
 
 }
 
+document.getElementById("instructions").addEventListener("click", async () => {
+    document.getElementById("status2").style.color = "white";
+    document.getElementById("status3").style.color = "white";
+    document.getElementById("status4").style.color = "white";
+    document.getElementById("status5").style.color = "white";
+status2.innerText="";
+status3.innerText="";
+status4.innerText="";
+status5.innerText="";
+  setTimeout(() => status2.innerHTML ="Click on", 100);
+  setTimeout(() => status2.innerHTML ="Click on \"Connect and Get Info\" to connect", 400);
+  setTimeout(() => status2.innerHTML ="Click on \"Connect and Get Info\" to connect to your Wallet and get information", 700);
+  setTimeout(() => status2.innerHTML ="Click on \"Connect and Get Info\" to connect to your Wallet and get information about yours and Bank3's accounts.", 1000);
+  setTimeout(() => status3.innerText ="In order to be able", 1300);
+  setTimeout(() => status3.innerText ="In order to be able to receive deposits", 1600);
+  setTimeout(() => status3.innerText ="In order to be able to receive deposits you first need to register.", 1900);
+  setTimeout(() => status3.innerText ="In order to be able to receive deposits you first need to register. Click on \"Create public key in ZKRegistry\".\n", 2200);
+  setTimeout(() => status3.innerText ="In order to be able to receive deposits you first need to register. Click on \"Create public key in ZKRegistry\".\nYou will be asked to sign a special message.\n", 2500);
+  setTimeout(() => status3.innerText ="In order to be able to receive deposits you first need to register. Click on \"Create public key in ZKRegistry\".\nYou will be asked to sign a special message.\nThe signature of the message will be used.\n", 2800);
+  setTimeout(() => status3.innerText ="In order to be able to receive deposits you first need to register. Click on \"Create public key in ZKRegistry\".\nYou will be asked to sign a special message.\nThe signature of the message will be used as your secret key.\n", 3100);
+  setTimeout(() => status3.innerText ="In order to be able to receive deposits you first need to register. Click on \"Create public key in ZKRegistry\".\nYou will be asked to sign a special message.\nThe signature of the message will be used as your secret key. Don't sign the same message in any other app or website!", 3400);
+  setTimeout(() => status3.innerText ="In order to be able to receive deposits you first need to register. Click on \"Create public key in ZKRegistry\".\nYou will be asked to sign a special message.\nThe signature of the message will be used as your secret key. Don't sign the same message in any other app or website!\nFinally, you will be asked to confirm the transaction.", 3700);
+  
+setTimeout(() => status4.innerText ="To make a deposit input", 4000);
+setTimeout(() => status4.innerText ="To make a deposit input the address of the receiver", 4300);
+setTimeout(() => status4.innerText ="To make a deposit input the address of the receiver and the amount of ETH (e.g., 0.001)", 4600);
+setTimeout(() => status4.innerText ="To make a deposit input the address of the receiver and the amount of ETH (e.g., 0.001) you want to transfer", 4900);
+setTimeout(() => status4.innerText ="To make a deposit input the address of the receiver and the amount of ETH (e.g., 0.001) you want to transfer and click on \"Make deposit\" and confirm the transaction.\n", 5200);
+setTimeout(() => status4.innerText ="To make a deposit input the address of the receiver and the amount of ETH (e.g., 0.001) you want to transfer and click on \"Make deposit\" and confirm the transaction.\nDo not close or refresh the window. When the transaction will be confirmed", 5500);
+setTimeout(() => status4.innerText ="To make a deposit input the address of the receiver and the amount of ETH (e.g., 0.001) you want to transfer and click on \"Make deposit\" and confirm the transaction.\nDo not close or refresh the window. When the transaction will be confirmed you will get an identifier.\nThis is the receipt that you need to", 5800);
+setTimeout(() => status4.innerText ="To make a deposit input the address of the receiver and the amount of ETH (e.g., 0.001) you want to transfer and click on \"Make deposit\" and confirm the transaction.\nDo not close or refresh the window. When the transaction will be confirmed you will get an identifier.\nThis is the receipt that you need to share with the receiver to allow him/her to withdraw the deposit.", 6100);
+setTimeout(() => status5.innerText ="To withdraw a deposit input the identifier", 6100);
+setTimeout(() => status5.innerText ="To withdraw a deposit input the identifier and click on \"Withdraw\" and confirm the transaction.\n", 6100);
+setTimeout(() => status5.innerText ="To withdraw a deposit input the identifier, click on \"Withdraw\" and confirm the transaction.", 6400);
+setTimeout(() => status5.innerText ="To withdraw a deposit input the identifier, click on \"Withdraw\" and confirm the transaction.\nAfter each deposit or withdraw you can click on", 6700);
+setTimeout(() => status5.innerText ="To withdraw a deposit input the identifier, click on \"Withdraw\" and confirm the transaction.\n\nAfter each deposit or withdraw you can click on \"Connect and Get Info\" to see your updated Balance.", 7000);
+
+});
+
 var dotsinterval=setInterval(setDots, 1000);
 
 const SignMessage = "Do not sign this message in any application different than Bank3. The signature will be used as your SECRET PASSWORD!";
@@ -497,6 +536,8 @@ async function AccountInformation() {
   const gasPrice = await web3.eth.getGasPrice();
   const gasPriceInEth = web3.utils.fromWei(gasPrice, "ether");
 
+  document.getElementById("status4").innerText ="";
+  document.getElementById("status5").innerText ="";
   // Display the account information
   document.getElementById("status2").innerText =
     "Your account address: " +
@@ -564,6 +605,10 @@ return;
 // Convert amount to wei (1 ether = 10^18 wei)
   const amountWei = web3.utils.toWei(amount, "ether");
   
+  document.getElementById("status2").innerText ="";
+  document.getElementById("status3").innerText ="";
+  document.getElementById("status4").innerText ="";
+  document.getElementById("status5").innerText ="";
   const contract = new web3.eth.Contract(contractBankWalletsABI, contractBankWalletsAddress);
  zkerror=0;
   try {
@@ -571,6 +616,8 @@ return;
 const encodedA = hexToBytes(A);
 const encodedB = hexToBytes(B);
 clearInterval(dotsinterval);
+clearInterval(setWaitDeposit);
+clearInterval(setWaitWithdrawal);
 var waitdepositinterval=setInterval(setWaitDeposit, 2700);
     await contract.methods.MakeDeposit(encodedA,encodedB).send({from:from, value:amountWei});
 clearInterval(waitdepositinterval);
@@ -622,6 +669,10 @@ return;
    const C=witness(A.substr(2),password);
   const contract = new web3.eth.Contract(contractBankWalletsABI, contractBankWalletsAddress);
  zkerror=0;
+  document.getElementById("status2").innerText ="";
+  document.getElementById("status3").innerText ="";
+  document.getElementById("status4").innerText ="";
+  document.getElementById("status5").innerText ="";
   try {
  
 const encodedA = hexToBytes(A.substr(2));
