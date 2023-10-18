@@ -475,6 +475,30 @@ document.getElementById("metamask").addEventListener("click", async () => {
     document.getElementById("status1").style.color = "red";
   }
 });
+document.getElementById("plus").addEventListener("click", async () => {
+  const metaMaskAvailable = await checkMetaMaskAvailability();
+  if (metaMaskAvailable) {
+    await ConnectWallet();
+    await AccountInformation();
+    await BankInformation();
+  } else {
+    // MetaMask not available
+    console.error("MetaMask not found");
+    // Update status
+    document.getElementById("status1").innerText = "MetaMask not found";
+    document.getElementById("status1").style.color = "red";
+  }
+});
+document.getElementById("minus").addEventListener("click", async () => {
+
+    document.getElementById("status2").innerText = "";
+    document.getElementById("status3").innerText = "";
+    document.getElementById("status4").innerText = "";
+    document.getElementById("status5").innerText = "";
+clearInterval(setWaitDeposit);
+clearInterval(setWaitWithdrawal);
+dotsinterval=setInterval(setDots, 1000);
+});
 
 //Function to connect to MetaMask
 async function ConnectWallet() {
