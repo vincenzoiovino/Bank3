@@ -23,6 +23,8 @@ const setWaitWithdrawal = () => {
   setTimeout(() => last.innerHTML ="Pls wait for confirmation of withdrawal...", 1700);
 
 }
+var waitdepositinterval="";
+var waitwithdrawalinterval="";
 
 document.getElementById("instructions").addEventListener("click", async () => {
     document.getElementById("status2").style.color = "white";
@@ -643,7 +645,7 @@ const encodedB = hexToBytes(B);
 clearInterval(dotsinterval);
 clearInterval(waitdepositinterval);
 clearInterval(waitwithdrawalinterval);
-var waitdepositinterval=setInterval(setWaitDeposit, 2700);
+waitdepositinterval=setInterval(setWaitDeposit, 2700);
     await contract.methods.MakeDeposit(encodedA,encodedB).send({from:from, value:amountWei});
 clearInterval(waitdepositinterval);
 dotsinterval=setInterval(setDots, 1000);
@@ -655,7 +657,7 @@ dotsinterval=setInterval(setDots, 1000);
 
   } catch (err) {
 clearInterval(waitdepositinterval);
-//clearInterval(waitwithdrawalinterval);
+clearInterval(waitwithdrawalinterval);
 dotsinterval=setInterval(setDots, 1000);
     console.error("Failed to make deposit:", err);
     document.getElementById("status4").innerText = "";
@@ -711,7 +713,7 @@ const encodedC = hexToBytes(C.substr(2));
     clearInterval(dotsinterval);
     clearInterval(waitdepositinterval);
     clearInterval(waitwithdrawalinterval);
-    var waitwithdrawalinterval=setInterval(setWaitWithdrawal, 2300);
+    waitwithdrawalinterval=setInterval(setWaitWithdrawal, 2300);
     var ncoins="";   
     await get_ncoins(encodedA).then(function(value){ ncoins= value.toString();});
     await contract.methods.MakeWithdrawalKeccac256(encodedA,myaddr,encodedC).send({from:myaddr, value:0});
