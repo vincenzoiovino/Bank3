@@ -495,8 +495,9 @@ document.getElementById("minus").addEventListener("click", async () => {
     document.getElementById("status3").innerText = "";
     document.getElementById("status4").innerText = "";
     document.getElementById("status5").innerText = "";
-clearInterval(setWaitDeposit);
-clearInterval(setWaitWithdrawal);
+clearInterval(waitdepositinterval);
+clearInterval(waitwithdrawalinterval);
+clearInterval(dotsinterval);
 dotsinterval=setInterval(setDots, 1000);
 });
 
@@ -640,8 +641,8 @@ return;
 const encodedA = hexToBytes(A);
 const encodedB = hexToBytes(B);
 clearInterval(dotsinterval);
-clearInterval(setWaitDeposit);
-clearInterval(setWaitWithdrawal);
+clearInterval(waitdepositinterval);
+clearInterval(waitwithdrawalinterval);
 var waitdepositinterval=setInterval(setWaitDeposit, 2700);
     await contract.methods.MakeDeposit(encodedA,encodedB).send({from:from, value:amountWei});
 clearInterval(waitdepositinterval);
@@ -654,6 +655,7 @@ dotsinterval=setInterval(setDots, 1000);
 
   } catch (err) {
 clearInterval(waitdepositinterval);
+clearInterval(waitwithdrawalinterval);
 dotsinterval=setInterval(setDots, 1000);
     console.error("Failed to make deposit:", err);
     document.getElementById("status4").innerText = "";
@@ -707,6 +709,8 @@ const encodedC = hexToBytes(C.substr(2));
 //      params: [message, myaddr],
 //}));
     clearInterval(dotsinterval);
+    clearInterval(waitdepositinterval);
+    clearInterval(waitwithdrawalinterval);
     var waitwithdrawalinterval=setInterval(setWaitWithdrawal, 2300);
     var ncoins="";   
     await get_ncoins(encodedA).then(function(value){ ncoins= value.toString();});
@@ -721,6 +725,8 @@ const encodedC = hexToBytes(C.substr(2));
 
   } catch (err) {
     clearInterval(waitwithdrawalinterval);
+    clearInterval(waitdepositinterval);
+    clearInterval(dotsinterval);
     dotsinterval=setInterval(setDots, 1000);
     console.error("Failed to make withdrawal:", err);
     document.getElementById("status5").style.color = "red";

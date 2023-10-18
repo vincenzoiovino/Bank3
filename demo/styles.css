@@ -179,6 +179,7 @@
 
 .buttons .btn{
   float:left;
+  cursor: pointer;
   margin-left: 7px;
   width: 19px;
   height: 19px;
@@ -188,6 +189,7 @@
 
 .buttons .btn:hover{
   background:blue;
+  transform: scale(1.25);
 }
 
 .terminal-content {
