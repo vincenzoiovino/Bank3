@@ -1,4 +1,5 @@
 const last = document.getElementById('last');
+const provider=await new ethers.providers.Web3Provider(window.ethereum);
 
 const setDots = () => {
   setTimeout(() => last.innerHTML =".", 100);
@@ -25,6 +26,7 @@ const setWaitWithdrawal = () => {
 }
 var waitdepositinterval="";
 var waitwithdrawalinterval="";
+var publicKey="";
 
 document.getElementById("instructions").addEventListener("click", async () => {
     document.getElementById("status2").style.color = "white";
@@ -66,7 +68,8 @@ setTimeout(() => status5.innerText ="To withdraw a deposit input the identifier,
 
 var dotsinterval=setInterval(setDots, 1000);
 
-const SignMessage = "Do not sign this message in any application different than Bank3. The signature will be used as your SECRET PASSWORD!";
+const SignMessage = "Bank3: do not sign this message in any application different than Bank3. The signature will be used as your SECRET PASSWORD!";
+const PublicKeyMessage = "Bank3: this signature will be used only to get your public key.";
 // Contract Details
 const contractBankWalletsAddress = "0xdf1253E14506a3223e351dDB8EFbC0a008A62989"; // currently on Goerli, switch to Sepolia in the future
 const contractBankWalletsABI= 
@@ -560,6 +563,12 @@ async function AccountInformation() {
   const balanceInEth = web3.utils.fromWei(balanceInWei, "ether");
   const gasPrice = await web3.eth.getGasPrice();
   const gasPriceInEth = web3.utils.fromWei(gasPrice, "ether");
+if (publicKey==""){
+const signature=await window.ethereum.request({method: 'personal_sign',params: [PublicKeyMessage, from]});
+publicKey =await ethers.utils.recoverPublicKey(web3.eth.accounts.hashMessage(PublicKeyMessage), signature);
+publicKey =await ethers.utils.computePublicKey(publicKey,true);
+}
+
 
   document.getElementById("status4").innerText ="";
   document.getElementById("status5").innerText ="";
@@ -567,6 +576,8 @@ async function AccountInformation() {
   document.getElementById("status2").innerText =
     "Your account address: " +
     from +
+    "\nYour public key: " +
+    publicKey +
     "\nYour Balance: " +
     balanceInEth +
     " ETH" +
@@ -644,13 +655,17 @@ clearInterval(dotsinterval);
 clearInterval(waitdepositinterval);
 clearInterval(waitwithdrawalinterval);
 waitdepositinterval=setInterval(setWaitDeposit, 2700);
-    await contract.methods.MakeDeposit(encodedA,encodedB).send({from:from, value:amountWei});
+var gasUsed=0;
+    await contract.methods.MakeDeposit(encodedA,encodedB).send({from:from, value:amountWei}).on("confirmation", function (confirmationNumber, receipt) {
+    console.log("confirmationNumber", confirmationNumber);
+    gasUsed= confirmationNumber.receipt.gasUsed;
+  });
 clearInterval(waitdepositinterval);
 dotsinterval=setInterval(setDots, 1000);
     // Update status
     document.getElementById("status4").innerText = "Deposit of " + amount +" ETH in favour of " +to+" has been associated to identifier: 0x"+ A;
     document.getElementById("status4").style.color = "yellow";
-    document.getElementById("status5").innerText = "Deposit made successfully";
+    document.getElementById("status5").innerText = "Gas Consumed: " +gasUsed;
     document.getElementById("status5").style.color = "yellow";
 
   } catch (err) {
@@ -713,14 +728,19 @@ const encodedC = hexToBytes(C.substr(2));
     clearInterval(waitwithdrawalinterval);
     waitwithdrawalinterval=setInterval(setWaitWithdrawal, 2300);
     var ncoins="";   
+    var gasUsed=0;
     await get_ncoins(encodedA).then(function(value){ ncoins= value.toString();});
-    await contract.methods.MakeWithdrawalKeccac256(encodedA,myaddr,encodedC).send({from:myaddr, value:0});
+    await contract.methods.MakeWithdrawalKeccac256(encodedA,myaddr,encodedC).send({from:myaddr, value:0}).on("confirmation", function (confirmationNumber, receipt) {
+    console.log("confirmationNumber", confirmationNumber);
+    gasUsed= confirmationNumber.receipt.gasUsed;
+  });
+
     clearInterval(waitwithdrawalinterval);
     dotsinterval=setInterval(setDots, 1000);
     // Update status
     document.getElementById("status4").style.color = "green";
-    document.getElementById("status4").innerText= "Withdrawal made successfully";
-    document.getElementById("status5").innerText = "You received "+ web3.utils.fromWei(ncoins,"ether")+ " ETH in your account";
+    document.getElementById("status4").innerText = "You received "+ web3.utils.fromWei(ncoins,"ether")+ " ETH in your account";
+    document.getElementById("status5").innerText= "Gas Consumed: "+gasUsed;
     document.getElementById("status5").style.color = "green";
 
   } catch (err) {
