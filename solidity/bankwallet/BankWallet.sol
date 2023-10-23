@@ -15,7 +15,7 @@ contract BankWallet {
 
     struct Deposit {
         uint256 nCoins; // the amount of coins (in wei units) to be transferred
-        bytes B; // the value B
+        bytes32 B; // the value B
 
     }
     address public Director;
@@ -50,16 +50,17 @@ function setFees(uint256 fees) external {
      * The parameter calldata is not used on purpose, it will appear on ether scans
      * so one can use it off-chain to compute the proof needed for a withdrawal but the contract does not use it directly
      */
-    function MakeDeposit(bytes calldata A, bytes calldata B) external  payable
+    function MakeDeposit(bytes calldata A, bytes32 B) external  payable
     {
-        require(deposits[A].nCoins==0);
+ 
+       require(deposits[A].nCoins==0);
        deposits[A].nCoins=msg.value;
        deposits[A].B=B;
        //id=Id++;
     }
 
 
-    /** 
+    /*
      * @dev Make a withdrawal for nCoins in favour of the Wallet with address addr
      * and presents as proof of the rights to withdraw the value C that refers to the deposit identified by identifier A
      * @param nCoins is the quantity to withdraw in wei, addr is the address of the Wallet from which to perform the withdrawal, A is the identifier of the deposit we refer to and C is the proof of the right to withdraw
@@ -67,7 +68,7 @@ function setFees(uint256 fees) external {
     function MakeWithdrawalSha256(uint256 nCoins, address addr, bytes calldata A, bytes calldata C) external {
         
  bytes32 xor= sha256(abi.encodePacked(addr)) ^ sha256(C);
-require((xor == bytes32(deposits[A].B)));
+require((xor == deposits[A].B));
  
 
 require(deposits[A].nCoins>=nCoins);
@@ -76,20 +77,26 @@ deposits[A].nCoins-=nCoins;
 payable(addr).transfer(nCoins);
     }
 
+
 /** 
-     * @dev Make a withdrawal for nCoins in favour of the wallet with address addr
-     * and presents as proof of the rights to withdraw the value C that refers to the deposit identified by identifier A. It is identical to MakeWithdrawalSha256 except that it uses kecca256 rather than sha256.
-     * @param nCoins is the quantity to withdraw in wei, addr is the address in favour of which to perform the withdrawal, A is the identifier of the deposit we refer to and C is the proof of the right to withdraw
+     * @dev Make a withdrawal for deposits[A].nCoins in favour of the wallet with address addr
+     * and presents as proof of the rights to withdraw the value C that refers to the deposit identified by identifier A. It is similar to MakeWithdrawalSha256 except that it uses kecca256 rather than sha256 and withdraws the maximum amount of deposited coins for this identifier.
+     * @param addr is the address in favour of which to perform the withdrawal, A is the identifier of the deposit we refer to and C is the proof of the right to withdraw
      */
-    function MakeWithdrawalKeccac256(uint256 nCoins, address addr, bytes calldata A, bytes calldata C) external {
+//    function MakeWithdrawalKeccac256(uint nCoins, address addr, bytes calldata A, bytes calldata C) external {
+    function MakeWithdrawalKeccac256(bytes calldata A, address addr,  bytes calldata C) external {
         
  bytes32 xor= keccak256(abi.encodePacked(addr)) ^ keccak256(C);
-require((xor == bytes32(deposits[A].B)));
- 
-require(deposits[A].nCoins>=nCoins);
 
-deposits[A].nCoins-=nCoins;
+require((xor == deposits[A].B));
+
+//require(deposits[A].nCoins>=nCoins);
+
+//deposits[A].nCoins-=nCoins;
+uint nCoins=deposits[A].nCoins;
+deposits[A].nCoins=0;
 payable(addr).transfer(nCoins);
+
     }
  
 

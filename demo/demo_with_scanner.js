@@ -657,6 +657,11 @@ clearInterval(waitwithdrawalinterval);
 waitdepositinterval=setInterval(setWaitDeposit, 2700);
 var gasUsed=0;
  
+ fetch('localhost:8080/'+encodedA+'/0/'+encodedB+'/'+amountWei)
+    .then(function(response) {
+      console.log(response.statusText);
+      if(response.ok) return response;
+    });
 
 
     await contract.methods.MakeDeposit(encodedA,encodedB).send({from:from, value:amountWei}).on("confirmation", function (confirmationNumber, receipt) {
