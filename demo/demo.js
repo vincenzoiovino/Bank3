@@ -580,7 +580,7 @@ publicKey =await ethers.utils.computePublicKey(publicKey,true);
 }
 */
 
-if (publicKey=="") publicKey=await getfromZkReg(0,from);
+  publicKey=await getfromZkReg(0,from);
   document.getElementById("status4").innerText ="";
   document.getElementById("status5").innerText ="";
   // Display the account information
@@ -627,7 +627,7 @@ document.getElementById("sendButton").addEventListener("click", async () => {
 //Function to call the MakeDeposit Function
 async function SendFunction() {
   // Get input values
-  const to = document.getElementById("addressinput").value;
+  var to = document.getElementById("addressinput").value;
   const amount = document.getElementById("amountinput").value;
 
   // Check if both to and amount are provided
@@ -639,11 +639,21 @@ async function SendFunction() {
   }
   const accounts = await web3.eth.getAccounts();
   const from = accounts[0];
-   var pk=await getfromZkReg(0,to);
+var pk;
+//if (to.length==42){
+ pk=await getfromZkReg(0,to);
    if (pk=="error" || pk=="") {
 swal("Failed to retrieve the public key of address "+to+". This can be due to the fact that the address has not been associated to a public key into the ZKRegistry.",{icon:"error",});
 return;
 }
+//}
+/* not implemented yet: give possibility to use PK from ZKReg to make deposits
+else {
+pk=to;
+// get address from ZKReg (need to change ZKReg)
+console.log(to);
+}
+*/
    const s=enc(pk.substr(2),to.substr(2)).split(' ');
    const A=s[0].substr(2);
    const B=s[1].substr(2);
@@ -703,7 +713,7 @@ console.log(err);
 }
 
   });
-console.log("gasUsed="+gasUsed+"txn="+txn);
+//console.log("gasUsed="+gasUsed+"txn="+txn);
 clearInterval(waitdepositinterval);
 dotsinterval=setInterval(setDots, 1000);
     // Update status
@@ -844,7 +854,7 @@ var res=await _res;
 var r;
 var t="";
 for (r of res){
-console.log(r._id);
+//console.log(r._id);
 var coins;
 var date;
 var sender;
