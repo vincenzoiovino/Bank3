@@ -122,10 +122,29 @@
           <button id="instructions2" class="button49">?</button>
           -->
         </div>
+          <div class="buttoncontainer">
+            <button type="button" id="scanButton" class="button64">Scan</button>
+          </div>
+<div class="table-container">
+  
+  <div class="table-horizontal-container">
+    <table class="unfixed-table" id="scantable">
+      <thead>
+        <tr><th>Identifier</th><th>Sender</th><th>Amount (eth)</th><th>Date</th><th>Txn</th>
+      </thead>
+      <tbody>
+        <tr><th></th><td></td><td></td><td></td><td></td></tr>
+      </tbody>
+      
+    </table>
+  </div>
+</div>
+</object>
+</article>
       </div>
       </div>
     </main>
-    <script type="module" src="./demo.js"></script>
+    <script type="module" src="./demo_with_scanner.js"></script>
 	<script>
         var Module = {
           onRuntimeInitialized: function() {

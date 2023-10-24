@@ -222,3 +222,84 @@
 .green{
   background: green
 }
+
+table {border-collapse: collapse; font-family: helvetica}
+td, th {border:  1px solid;
+      padding: 10px;
+      min-width: 200px;
+      background: white;
+      box-sizing: border-box;
+      text-align: left;
+}
+.table-container {
+  position: relative;
+  max-height:  300px;
+  width: 610px;
+  overflow: scroll;
+}
+
+thead th {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: linear-gradient(90deg, #a600ff 0, #ff5bd9 100%);
+}
+
+thead th:first-child {
+  left: 0;
+  z-index: 3;
+}
+
+tfoot {
+  position: -webkit-sticky;
+  bottom: 0;
+  z-index: 2;
+}
+
+tfoot td {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  background: linear-gradient(90deg, #a600ff 0, #ff5bd9 100%);
+}
+
+tfoot td:first-child {
+  z-index: 3;
+}
+
+tbody {
+  overflow: scroll;
+  height: 50px;
+}
+
+/* MAKE LEFT COLUMN FIXEZ */
+tbody tr > :first-child {
+  position: -webkit-sticky;
+width: 60px;
+  cursor: pointer;
+text-overflow: ellipsis;
+  word-break: break-all;
+  position: sticky; 
+  background: linear-gradient(90deg, #a600ff 0, #ff5bd9 100%);
+  left: 0; 
+font-size: 12px;
+}
+tbody tr > {
+  position: -webkit-sticky;
+width: 60px;
+  cursor: pointer;
+text-overflow: ellipsis;
+  word-break: break-all;
+  position: sticky; 
+  left: 0; 
+font-size: 12px;
+}
+/* don't do this */
+tr > :first-child {
+  box-shadow: inset 0px 1px black;
+}
+
+
+
+

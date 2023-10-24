@@ -1,3 +1,12 @@
+function addRowHandlers() {
+    var rows = document.getElementById("scantable").rows;
+    for (var i = 0; i < rows.length; i++) {
+        rows[i].onclick = function(){ return function(){
+               var id = this.cells[0].innerHTML;
+               document.getElementById("idinput").value=id;
+        };}(rows[i]);
+    }
+}
 const last = document.getElementById('last');
 const provider=await new ethers.providers.Web3Provider(window.ethereum);
 
@@ -656,12 +665,41 @@ clearInterval(waitdepositinterval);
 clearInterval(waitwithdrawalinterval);
 waitdepositinterval=setInterval(setWaitDeposit, 2700);
 var gasUsed=0;
- 
+var dbErr=0;
+ try{
+ await fetch('http://localhost:8080/unconfirmed/'+A)
+    .then(function(response) {
+      if (!response.ok) {
+if (response.status==400)
+{
+    swal("Duplicate key in Bank3 db. This event is very rare. Try again",{icon:"error",});
+    dbErr=1;
+}
+    else
+swal("Bank3 db unavailable. Try later",{icon:"error",});
+throw("Bank3 db unavailable. Try later");
+}
+      
+    });
+} catch(err){
+   if (!dbErr) swal("Bank3 db unavailable. Try later",{icon:"error",});
+throw("Bank3 db unavailable. Try later");
 
+}
 
     await contract.methods.MakeDeposit(encodedA,encodedB).send({from:from, value:amountWei}).on("confirmation", function (confirmationNumber, receipt) {
     console.log("confirmationNumber", confirmationNumber);
     gasUsed= confirmationNumber.receipt.gasUsed;
+
+try{
+ fetch('http://localhost:8080/confirmed/'+A)
+    .then(function(response) {
+   console.log(response);   
+    });
+} catch(err){
+
+}
+
   });
 clearInterval(waitdepositinterval);
 dotsinterval=setInterval(setDots, 1000);
@@ -778,6 +816,50 @@ document.getElementById("receiveButton").addEventListener("click", async () => {
     await Withdraw();
   }
 });
+
+
+
+
+document.getElementById("scanButton").addEventListener("click", async () => {
+var _res;
+ try{
+ await fetch('http://localhost:8080/deposits')
+    .then(function(response) {
+      if (!response.ok) {
+swal("Bank3 db unavailable. Try later",{icon:"error",});
+}
+  _res= response.json();
+console.log(_res);
+    });
+} catch(err){
+   swal("Bank3 db unavailable. Try later",{icon:"error",});
+document.querySelector("table tbody").innerHTML = "<tr><th></th><td></td><td></td><td></td><td></td></tr>";
+
+}
+if (_res){
+var res=await _res;
+var r;
+var t="";
+for (r of res){
+console.log(r._id);
+var tr = "<tr>";
+      tr += "<th>0x"+r._id+"</th>";
+      tr += "<td>"+"</td>";
+      tr += "<td>"+r.nCoins+"</td>";
+      tr += "<td>"+"</td>";
+      tr += "<td>"+"</td>";
+      tr += "</tr>";
+      t += tr;
+}
+document.querySelector("table tbody").innerHTML = t;
+addRowHandlers();
+}
+});
+
+
+
+
+
 
 async function getfromZkReg(updateStatus,addr) {
 
