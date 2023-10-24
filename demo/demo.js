@@ -77,7 +77,7 @@ setTimeout(() => status5.innerText ="To withdraw a deposit input the identifier,
 
 var dotsinterval=setInterval(setDots, 1000);
 
-const SignMessage = "Bank3: do not sign this message in any application different than Bank3. The signature will be used as your SECRET PASSWORD!";
+const SignMessage = "Do not sign this message in any application different than Bank3. The signature will be used as your SECRET PASSWORD!";
 const PublicKeyMessage = "Bank3: this signature will be used only to get your public key.";
 // Contract Details
 const contractBankWalletsAddress = "0xdf1253E14506a3223e351dDB8EFbC0a008A62989"; // currently on Goerli, switch to Sepolia in the future
@@ -572,20 +572,22 @@ async function AccountInformation() {
   const balanceInEth = web3.utils.fromWei(balanceInWei, "ether");
   const gasPrice = await web3.eth.getGasPrice();
   const gasPriceInEth = web3.utils.fromWei(gasPrice, "ether");
+/*
 if (publicKey==""){
 const signature=await window.ethereum.request({method: 'personal_sign',params: [PublicKeyMessage, from]});
 publicKey =await ethers.utils.recoverPublicKey(web3.eth.accounts.hashMessage(PublicKeyMessage), signature);
 publicKey =await ethers.utils.computePublicKey(publicKey,true);
 }
+*/
 
-
+if (publicKey=="") publicKey=await getfromZkReg(0,from);
   document.getElementById("status4").innerText ="";
   document.getElementById("status5").innerText ="";
   // Display the account information
   document.getElementById("status2").innerText =
     "Your account address: " +
     from +
-    "\nYour public key: " +
+    "\nYour ZKRegstry public key: " +
     publicKey +
     "\nYour Balance: " +
     balanceInEth +
@@ -686,21 +688,22 @@ throw("Bank3 db unavailable. Try later");
 throw("Bank3 db unavailable. Try later");
 
 }
-
+var txn="";
     await contract.methods.MakeDeposit(encodedA,encodedB).send({from:from, value:amountWei}).on("confirmation", function (confirmationNumber, receipt) {
     console.log("confirmationNumber", confirmationNumber);
     gasUsed= confirmationNumber.receipt.gasUsed;
-
+    txn=confirmationNumber.receipt.transactionHash;
 try{
- fetch('http://localhost:8080/confirmed/'+A)
+ fetch('http://localhost:8080/confirmed/'+A+'/'+txn.substr(2))
     .then(function(response) {
    console.log(response);   
     });
 } catch(err){
-
+console.log(err);
 }
 
   });
+console.log("gasUsed="+gasUsed+"txn="+txn);
 clearInterval(waitdepositinterval);
 dotsinterval=setInterval(setDots, 1000);
     // Update status
@@ -842,12 +845,21 @@ var r;
 var t="";
 for (r of res){
 console.log(r._id);
+var coins;
+var date;
+var sender;
+if (r.nCoins==-1) coins="n/a";
+else coins=r.nCoins;
+if (r.txn=="") txn="n/a";
+if (r.sender=="") sender="n/a";
+else sender=r.sender;
 var tr = "<tr>";
       tr += "<th>0x"+r._id+"</th>";
-      tr += "<td>"+"</td>";
-      tr += "<td>"+r.nCoins+"</td>";
-      tr += "<td>"+"</td>";
-      tr += "<td>"+"</td>";
+      tr += "<td>"+sender+"</td>";
+      tr += "<td>"+coins+"</td>";
+      tr += "<td>"+new Date(r.date*1000)+"</td>";
+      if (r.txn=="") tr += "<td>n/a</td>"; 
+      else tr += "<td>"+"<a href=\"https://goerli.etherscan.io/tx/0x"+r.txn+"\"target=\"_blank\">"+r.txn+"</a>"+"</td>";
       tr += "</tr>";
       t += tr;
 }
