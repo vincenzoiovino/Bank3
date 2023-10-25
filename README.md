@@ -25,7 +25,7 @@ make js-wasm
 ```
 The compilation will use some precompiled ``libcrypto.a``. If the compilation does not work, you may need to compile ``openssl`` with ``emscripten`` by yourself: it may require some tweaks to the ``Makefile``, feel free to contact me if you need help.
 ## Bank3 for Wallets: Demo
-We provide a web demo for Goerli testnet.
+We provide a web demo for Sepolia testnet.
 To run the demo you don't need to install anything if you don't want the scanner functionality; see later for instructions for making the scanner functionality to work.
 Go to the ``demo`` folder, setup the demo with the following command:
 ```bash
