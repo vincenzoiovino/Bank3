@@ -1025,7 +1025,7 @@ document.getElementById("receiveButton").addEventListener("click", async () => {
 });
 
 
-function _iswithdrawable(a,b,pwd){
+function _iswithdrawable(a,b,addr,pwd){
 return 1;
 }
 
@@ -1067,7 +1067,7 @@ else coins=r.nCoins;
 if (r.txn=="") txn="n/a";
 if (r.sender=="") sender="n/a";
 else sender=r.sender;
-if (!r.B || !myaddr || !_iswithdrawable(r.B.substr(2),myaddr.substr(2), password)) continue;
+if (!r.B || !myaddr || !_iswithdrawable(r.A.substr(2),r.B.substr(2),myaddr.substr(2), password)) continue;
 flag=1;
 var tr = "<tr>";
       tr += "<th>0x"+r._id+"</th>";
