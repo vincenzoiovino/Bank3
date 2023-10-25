@@ -47,34 +47,35 @@ status3.innerText="";
 status4.innerText="";
 status5.innerText="";
   setTimeout(() => status2.innerText ="*Connect*\nClick on", 100);
-  setTimeout(() => status2.innerText ="*Connect*\nClick on \"Connect and Get Info\" to connect", 400);
-  setTimeout(() => status2.innerText ="*Connect*\nClick on \"Connect and Get Info\" to connect to your Wallet and get information", 700);
-  setTimeout(() => status2.innerText ="*Connect*\nClick on \"Connect and Get Info\" to connect to your Wallet and get information about yours and Bank3's accounts.", 1000);
-  setTimeout(() => status3.innerText ="*Registration (withdrawal only)*\nIn order to be able", 1300);
-  setTimeout(() => status3.innerText ="*Registration (withdrawal only)*\nIn order to be able to receive deposits", 1600);
-  setTimeout(() => status3.innerText ="*Registration (withdrawal only)*\nIn order to be able to receive deposits you first need to register.", 1900);
-  setTimeout(() => status3.innerText ="*Registration (withdrawal only)*\nIn order to be able to receive deposits you first need to register. Click on \"Create public key in ZKRegistry\".\n", 2200);
-  setTimeout(() => status3.innerText ="*Registration (withdrawal only)*\nIn order to be able to receive deposits you first need to register. Click on \"Create public key in ZKRegistry\".\nYou will be asked to sign a special message.\n", 2500);
-  setTimeout(() => status3.innerText ="*Registration (withdrawal only)*\nIn order to be able to receive deposits you first need to register. Click on \"Create public key in ZKRegistry\".\nYou will be asked to sign a special message.\nThe signature of the message will be used.\n", 2800);
-  setTimeout(() => status3.innerText ="*Registration (withdrawal only*\nIn order to be able to receive deposits you first need to register. Click on \"Create public key in ZKRegistry\".\nYou will be asked to sign a special message.\nThe signature of the message will be used as your secret key.\n", 3100);
-  setTimeout(() => status3.innerText ="*Registration (withdrawal only)*\nIn order to be able to receive deposits you first need to register. Click on \"Create public key in ZKRegistry\".\nYou will be asked to sign a special message.\nThe signature of the message will be used as your secret key. Don't sign the same message in any other app or website!", 3400);
-  setTimeout(() => status3.innerText ="*Registration (withdrawal only)*\nIn order to be able to receive deposits you first need to register. Click on \"Create public key in ZKRegistry\".\nYou will be asked to sign a special message.\nThe signature of the message will be used as your secret key. Don't sign the same message in any other app or website!\nFinally, you will be asked to confirm the transaction.", 3700);
+  setTimeout(() => status2.innerText ="*Connect*\nClick on \"Connect and Get Info\" to connect", 300);
+  setTimeout(() => status2.innerText ="*Connect*\nClick on \"Connect and Get Info\" to connect to your Wallet and get information", 500);
+  setTimeout(() => status2.innerText ="*Connect*\nClick on \"Connect and Get Info\" to connect to your Wallet and get information about yours and Bank3's accounts.", 700);
+  setTimeout(() => status3.innerText ="*Registration (withdrawal only)*\nIn order to be able", 900);
+  setTimeout(() => status3.innerText ="*Registration (withdrawal only)*\nIn order to be able to receive deposits", 1100);
+  setTimeout(() => status3.innerText ="*Registration (withdrawal only)*\nIn order to be able to receive deposits you first need to register.", 1300);
+  setTimeout(() => status3.innerText ="*Registration (withdrawal only)*\nIn order to be able to receive deposits you first need to register. Click on \"Create public key in ZKRegistry\".\n", 1500);
+  setTimeout(() => status3.innerText ="*Registration (withdrawal only)*\nIn order to be able to receive deposits you first need to register. Click on \"Create public key in ZKRegistry\".\nYou will be asked to sign a special message.\n", 1700);
+  setTimeout(() => status3.innerText ="*Registration (withdrawal only)*\nIn order to be able to receive deposits you first need to register. Click on \"Create public key in ZKRegistry\".\nYou will be asked to sign a special message.\nThe signature of the message will be used.\n", 1900);
+  setTimeout(() => status3.innerText ="*Registration (withdrawal only)*\nIn order to be able to receive deposits you first need to register. Click on \"Create public key in ZKRegistry\".\nYou will be asked to sign a special message.\nThe signature of the message will be used as your secret key.\n", 2100);
+  setTimeout(() => status3.innerText ="*Registration (withdrawal only)*\nIn order to be able to receive deposits you first need to register. Click on \"Create public key in ZKRegistry\".\nYou will be asked to sign a special message.\nThe signature of the message will be used as your secret key. Don't sign the same message in any other app or website!", 2300);
+  setTimeout(() => status3.innerText ="*Registration (withdrawal only)*\nIn order to be able to receive deposits you first need to register. Click on \"Create public key in ZKRegistry\".\nYou will be asked to sign a special message.\nThe signature of the message will be used as your secret key. Don't sign the same message in any other app or website!\nFinally, you will be asked to confirm the transaction.", 2500);
   
-setTimeout(() => status4.innerText ="*Deposits*\nTo make a deposit input", 4000);
-setTimeout(() => status4.innerText ="*Deposits*\nTo make a deposit input the address of the receiver", 4300);
-setTimeout(() => status4.innerText ="*Deposits*\nTo make a deposit input the address of the receiver and the amount of ETH (e.g., 0.001)", 4600);
-setTimeout(() => status4.innerText ="*Deposits*\nTo make a deposit input the address of the receiver and the amount of ETH (e.g., 0.001) you want to transfer", 4900);
-setTimeout(() => status4.innerText ="*Deposits*\nTo make a deposit input the address of the receiver and the amount of ETH (e.g., 0.001) you want to transfer and click on \"Make deposit\" and confirm the transaction.\n", 5200);
-setTimeout(() => status4.innerText ="*Deposits*\nTo make a deposit input the address of the receiver and the amount of ETH (e.g., 0.001) you want to transfer and click on \"Make deposit\" and confirm the transaction.\nDo not close or refresh the window. When the transaction will be onchain (it can take up to 1min)", 5500);
-setTimeout(() => status4.innerText ="*Deposits*\nTo make a deposit input the address of the receiver and the amount of ETH (e.g., 0.001) you want to transfer and click on \"Make deposit\" and confirm the transaction.\nDo not close or refresh the window. When the transaction will be onchain (it can take up to 1min) you will get an identifier.\nThis is the receipt that you need to", 5800);
-setTimeout(() => status4.innerText ="*Deposits*\nTo make a deposit input the address of the receiver and the amount of ETH (e.g., 0.001) you want to transfer and click on \"Make deposit\" and confirm the transaction.\nDo not close or refresh the window. When the transaction will be onchain (it can take up to 1min) you will get an identifier.\nThis is the receipt that you need to share with the receiver to allow him/her to withdraw the deposit.", 6100);
-setTimeout(() => status5.innerText ="*Withdrawals*\nTo withdraw a deposit input the identifier", 6400);
-setTimeout(() => status5.innerText ="*Withdrawals*\nTo withdraw a deposit input the identifier, click on \"Withdraw\" and confirm the transaction.", 6700);
-setTimeout(() => status5.innerText ="*Withdrawals*\nTo withdraw a deposit input the identifier, click on \"Withdraw\" and confirm the transaction.\nAfter each deposit or withdraw you can click on", 7000);
-setTimeout(() => status5.innerText ="*Withdrawals*\nTo withdraw a deposit input the identifier, click on \"Withdraw\" and confirm the transaction.\nAfter each deposit or withdraw you can click on \"Connect and Get Info\" to see your updated balance.", 7300);
-setTimeout(() => status5.innerText ="*Withdrawals*\nTo withdraw a deposit input the identifier, click on \"Withdraw\" and confirm the transaction.\nAfter each deposit or withdraw you can click on \"Connect and Get Info\" to see your updated balance.\n\n*Scanner*\nClick on \"Scan\"", 7600);
-setTimeout(() => status5.innerText ="*Withdrawals*\nTo withdraw a deposit input the identifier, click on \"Withdraw\" and confirm the transaction.\nAfter each deposit or withdraw you can click on \"Connect and Get Info\" to see your updated balance.\n\n*Scanner*\nClick on \"Scan\" for getting a list of all deposits in favour of you", 8000);
-setTimeout(() => status5.innerText ="*Withdrawals*\nTo withdraw a deposit input the identifier, click on \"Withdraw\" and confirm the transaction.\nAfter each deposit or withdraw you can click on \"Connect and Get Info\" to see your updated balance.\n\n*Scanner*\nClick on \"Scan\" for getting a list of all deposits in favour of you. Click on an identifier in the list to copy it to the \"Withdraw\" box.", 8400);
+setTimeout(() => status4.innerText ="*Deposits*\nTo make a deposit input", 2700);
+setTimeout(() => status4.innerText ="*Deposits*\nTo make a deposit input the address of the receiver", 2900);
+setTimeout(() => status4.innerText ="*Deposits*\nTo make a deposit input the address of the receiver and the amount of ETH (e.g., 0.001)", 3100);
+setTimeout(() => status4.innerText ="*Deposits*\nTo make a deposit input the address of the receiver and the amount of ETH (e.g., 0.001) you want to transfer", 3300);
+setTimeout(() => status4.innerText ="*Deposits*\nTo make a deposit input the address of the receiver and the amount of ETH (e.g., 0.001) you want to transfer and click on \"Make deposit\" and confirm the transaction.\n", 3500);
+setTimeout(() => status4.innerText ="*Deposits*\nTo make a deposit input the address of the receiver and the amount of ETH (e.g., 0.001) you want to transfer and click on \"Make deposit\" and confirm the transaction.\nDo not close or refresh the window. When the transaction will be onchain (it can take up to 1min)", 3700);
+setTimeout(() => status4.innerText ="*Deposits*\nTo make a deposit input the address of the receiver and the amount of ETH (e.g., 0.001) you want to transfer and click on \"Make deposit\" and confirm the transaction.\nDo not close or refresh the window. When the transaction will be onchain (it can take up to 1min) you will get an identifier.\nThis is the receipt that you need to", 3900);
+setTimeout(() => status4.innerText ="*Deposits*\nTo make a deposit input the address of the receiver and the amount of ETH (e.g., 0.001) you want to transfer and click on \"Make deposit\" and confirm the transaction.\nDo not close or refresh the window. When the transaction will be onchain (it can take up to 1min) you will get an identifier.\nThis is the receipt that you need to share with the receiver to allow him/her to withdraw the deposit.", 4100);
+setTimeout(() => status5.innerText ="*Withdrawals*\nTo withdraw a deposit input the identifier", 4300);
+setTimeout(() => status5.innerText ="*Withdrawals*\nTo withdraw a deposit input the identifier, click on \"Withdraw\" and confirm the transaction.", 4500);
+setTimeout(() => status5.innerText ="*Withdrawals*\nTo withdraw a deposit input the identifier, click on \"Withdraw\" and confirm the transaction.\nAfter each deposit or withdraw you can click on", 4700);
+setTimeout(() => status5.innerText ="*Withdrawals*\nTo withdraw a deposit input the identifier, click on \"Withdraw\" and confirm the transaction.\nAfter each deposit or withdraw you can click on \"Connect and Get Info\" to see your updated balance.", 4900);
+setTimeout(() => status5.innerText ="*Withdrawals*\nTo withdraw a deposit input the identifier, click on \"Withdraw\" and confirm the transaction.\nAfter each deposit or withdraw you can click on \"Connect and Get Info\" to see your updated balance.\n\n*Scanner*\nClick on \"Scan\"", 5100);
+setTimeout(() => status5.innerText ="*Withdrawals*\nTo withdraw a deposit input the identifier, click on \"Withdraw\" and confirm the transaction.\nAfter each deposit or withdraw you can click on \"Connect and Get Info\" to see your updated balance.\n\n*Scanner*\nClick on \"Scan\" for getting a list of all deposits in favour of you", 5300);
+setTimeout(() => status5.innerText ="*Withdrawals*\nTo withdraw a deposit input the identifier, click on \"Withdraw\" and confirm the transaction.\nAfter each deposit or withdraw you can click on \"Connect and Get Info\" to see your updated balance.\n\n*Scanner*\nClick on \"Scan\" for getting a list of all deposits in favour of you. You will be asked to sign the special message (see above) used as your secret key.", 5500);
+setTimeout(() => status5.innerText ="*Withdrawals*\nTo withdraw a deposit input the identifier, click on \"Withdraw\" and confirm the transaction.\nAfter each deposit or withdraw you can click on \"Connect and Get Info\" to see your updated balance.\n\n*Scanner*\nClick on \"Scan\" for getting a list of all deposits in favour of you. You will be asked to sign the special message (see above) used as your secret key.\nClick on an identifier in the list to copy it to the \"Withdraw\" box.", 5700);
 
 });
 
@@ -1024,7 +1025,7 @@ document.getElementById("receiveButton").addEventListener("click", async () => {
 });
 
 
-function _iswithdrawable(a,b){
+function _iswithdrawable(a,b,pwd){
 return 1;
 }
 
@@ -1045,6 +1046,14 @@ document.querySelector("table tbody").innerHTML = "<tr><th></th><td></td><td></t
 
 }
 if (_res){
+  const accounts = await web3.eth.getAccounts();
+  const myaddr = accounts[0];
+let password=await window.ethereum.request({method: 'personal_sign',params: [SignMessage, myaddr]});
+password=password.substr(2).toLowerCase();
+if (password=="")  {
+swal("Password is empty",{icon:"error",});
+return;
+}
 var res=await _res;
 var r;
 var t="";
@@ -1058,9 +1067,7 @@ else coins=r.nCoins;
 if (r.txn=="") txn="n/a";
 if (r.sender=="") sender="n/a";
 else sender=r.sender;
-  const accounts = await web3.eth.getAccounts();
-  const addr = accounts[0];
-if (!r.B || !addr || !_iswithdrawable(r.B.substr(2),addr.substr(2))) continue;
+if (!r.B || !myaddr || !_iswithdrawable(r.B.substr(2),myaddr.substr(2), password)) continue;
 flag=1;
 var tr = "<tr>";
       tr += "<th>0x"+r._id+"</th>";
