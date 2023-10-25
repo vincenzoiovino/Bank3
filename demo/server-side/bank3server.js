@@ -1,4 +1,5 @@
-const CHAIN="goerli";
+//const CHAIN="goerli";
+const CHAIN="sepolia";
 const UpdateDb =  () =>{
 var coins;
   db.collection('bank3').find({isConfirmed: true}).toArray( async (err, result) => {
@@ -126,7 +127,8 @@ app.get('/deposits', (req, res) => {
 });
 
 }
-const contractBankWalletsAddress = "0xC14fdB467Cc1a2C7337B9bDfDC84970E98936796"; // currently on Goerli, switch to Sepolia in the future
+//const contractBankWalletsAddress = "0xC14fdB467Cc1a2C7337B9bDfDC84970E98936796"; // contract on Goerli
+const contractBankWalletsAddress = "0x4d4F9E4A5d2e178B91d3BE81fB16D59F49099cb1"; // contract on Sepolia
 const contractBankWalletsABI= [
 	{
 		"inputs": [

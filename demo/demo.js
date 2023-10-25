@@ -1,5 +1,7 @@
-const CHAIN_ID=5; // Goerli = 5, Sepolia = 11155111
-const CHAIN="Goerli"; 
+//const CHAIN_ID=5; // Goerli = 5, Sepolia = 11155111
+const CHAIN_ID=11155111; // Goerli = 5, Sepolia = 11155111
+//const CHAIN="Goerli"; 
+const CHAIN="Sepolia"; 
 function addRowHandlers() {
     var rows = document.getElementById("scantable").rows;
     for (var i = 0; i < rows.length; i++) {
@@ -86,8 +88,8 @@ var dotsinterval=setInterval(setDots, 1000);
 const SignMessage = "Do not sign this message in any application different than Bank3. The signature will be used as your SECRET PASSWORD!";
 const PublicKeyMessage = "Bank3: this signature will be used only to get your public key.";
 // Contract Details
-//const contractBankWalletsAddress = "0xdf1253E14506a3223e351dDB8EFbC0a008A62989"; // currently on Goerli, switch to Sepolia in the future
-const contractBankWalletsAddress = "0xC14fdB467Cc1a2C7337B9bDfDC84970E98936796"; // currently on Goerli, switch to Sepolia in the future
+// const contractBankWalletsAddress = "0xC14fdB467Cc1a2C7337B9bDfDC84970E98936796"; // contract on Goerli
+ const contractBankWalletsAddress = "0x4d4F9E4A5d2e178B91d3BE81fB16D59F49099cb1"; // contract on Sepolia
 const contractBankWalletsABI= [
 	{
 		"inputs": [
@@ -438,7 +440,8 @@ const contractBankWalletsABI=
 	}
 ];
 */
-const contractZkRegAddress = "0xc32498817cC84236D0686D7ee449D2ADB186097B"; 
+//const contractZkRegAddress = "0xc32498817cC84236D0686D7ee449D2ADB186097B"; // contract on Goerli
+const contractZkRegAddress = "0x4e9EAf3F2e2A1Bf76c94D041efe96B54bDC8A093";  // contract on Sepolia
 const contractZkRegABI = [
 	{
 		"inputs": [],
@@ -737,7 +740,8 @@ document.getElementById("accountbutton").addEventListener("click", async () => {
   const accounts = await web3.eth.getAccounts();
   const myaddr = accounts[0];
    var pk=await getfromZkReg(0,myaddr);
- if (pk!="error"){
+console.log(pk);
+ if (pk!="error" && pk!="0x"){
 if (!await swal('Yor account has been already associated with the ZkRegistry PK ' +"\"" +pk +"\"."+'\nAre you sure you want to register a new public key?', {  buttons: [true, true],icon:"warning",})) return;
 }
 let password=await window.ethereum.request({method: 'personal_sign',params: [SignMessage, myaddr]});
@@ -773,6 +777,7 @@ publicKey =await ethers.utils.computePublicKey(publicKey,true);
 */
 
   publicKey=await getfromZkReg(0,from);
+  if (publicKey=="0x" || publicKey=="error") publicKey="not registered yet";
   document.getElementById("status4").innerText ="";
   document.getElementById("status5").innerText ="";
   // Display the account information
@@ -1114,6 +1119,7 @@ async function getfromZkReg(updateStatus,addr) {
     // Interact with Smart Contract
     //const result = await contract.methods.mint(1).send({ from: from, value: 0 });
     const _zkReg = await contract.methods.get_public_key(address).call();
+    console.log(_zkReg);
     // Update status
     if (updateStatus){
     document.getElementById("status4").innerText = "ZkRegistry public key of address " + address+": "+ _zkReg;
