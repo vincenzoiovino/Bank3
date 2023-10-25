@@ -1024,7 +1024,9 @@ document.getElementById("receiveButton").addEventListener("click", async () => {
 });
 
 
-
+function _iswithdrawable(a,b){
+return 1;
+}
 
 document.getElementById("scanButton").addEventListener("click", async () => {
 var _res;
@@ -1046,8 +1048,8 @@ if (_res){
 var res=await _res;
 var r;
 var t="";
+var flag=0;
 for (r of res){
-//console.log(r._id);
 var coins;
 var date;
 var sender;
@@ -1056,6 +1058,10 @@ else coins=r.nCoins;
 if (r.txn=="") txn="n/a";
 if (r.sender=="") sender="n/a";
 else sender=r.sender;
+  const accounts = await web3.eth.getAccounts();
+  const addr = accounts[0];
+if (!r.B || !addr || !_iswithdrawable(r.B.substr(2),addr.substr(2))) continue;
+flag=1;
 var tr = "<tr>";
       tr += "<th>0x"+r._id+"</th>";
       tr += "<td>"+sender+"</td>";
@@ -1068,8 +1074,11 @@ var tr = "<tr>";
       tr += "</tr>";
       t += tr;
 }
-document.querySelector("table tbody").innerHTML = t;
+if (flag)
+{document.querySelector("table tbody").innerHTML = t;
 addRowHandlers();
+}
+else document.querySelector("table tbody").innerHTML = "<tr><th></th><td></td><td></td><td></td><td></td></tr>";
 }
 });
 

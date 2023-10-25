@@ -16,7 +16,6 @@ const newvalues = { $set: {nCoins:coins } };
      console.log(err);
     return;
     }
-    console.log('updated coins confirmed into db');
   });
 
 
@@ -55,7 +54,7 @@ app.get('/unconfirmed/:A', (req, res) => {
 app.get('/confirmed/:A/:txn', async (req, res) => {
   console.log(req.params.A);
   console.log(req.params.txn);
-// check if req.params.A is confirmed and gets corresponding nCoins and possibly sender of the transaction txn
+// check if req.params.A is confirmed and gets corresponding B, nCoins and possibly sender of the transaction txn
 // TODO: add sender
 const encodedA = await hexToBytes(req.params.A);
 var B="";
@@ -65,6 +64,11 @@ B=value.toString();
 
 if (B=="0x0000000000000000000000000000000000000000000000000000000000000000") {
      console.log("unconfirmed value A not present onchain");
+const myquery = { _id: req.params.A };
+db.collection('bank3').deleteOne(myquery, function(err, result) {
+    if (err) console.log(err); // removal failed, we should retry later
+    console.log("entry deleted:"+req.params.A);
+  });
  res.status(400).json({
             success: false,
             error: "unconfirmed value A not present onchain"
@@ -73,15 +77,11 @@ if (B=="0x0000000000000000000000000000000000000000000000000000000000000000") {
     }
   console.log("confirmed with B:"+B);
 const myquery = { _id: req.params.A };
-const newvalues = { $set: {isConfirmed: true,sender:"", date:Date.now(),txn:req.params.txn } };
+const newvalues = { $set: {isConfirmed: true,sender:"", B: B,date:Date.now(),txn:req.params.txn } };
   db.collection('bank3').update(myquery, newvalues, (err, result) => {
     if (err) {
      console.log(err);
 
-db.collection('bank3').deleteOne(myquery, function(err, result) {
-    if (err) console.log(err); // removal failed, we should retry later
-    console.log("entry deleted:"+req.params.A);
-  });
 
  res.status(400).json({
             success: false,
