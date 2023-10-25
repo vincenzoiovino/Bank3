@@ -46,7 +46,7 @@ npm install express --save
 
 You should run a ``MongoDB`` server on ``localhost:27017``.
 See [here](https://www.mongodb.com/docs/manual/installation/) instructions to install ``MongoDB`` and run it on your local machine.
-We recommend you [Compass](https://www.mongodb.com/products/tools/compass) to handle ``MongoDB`` with a nice GUI.
+We recommend you [Compass](https://www.mongodb.com/products/tools/compass) to handle with ``MongoDB`` via a nice GUI.
 
 You need an [Infura](https://infura.io) API key that you can get from Infura after registration. Then fill the ``INFURA_KEY`` variable in the file ``server-side/bank3server.js`` with your key.
 
@@ -55,7 +55,7 @@ Finally, in the folder ``server-side`` launch the command:
 node bank3server.js
 ```
 
-### Instructions
+### Demo: instructions
 * Click on "Connect and Get Info" to connect to your Wallet and get information about yours and Bank3's accounts.
 *  Click on "Create public key in ZKRegistry" to generate and add a public key into the ``ZKRegistry``. This is a registry that eases the Bank3's account system (and not only) avoiding to request users to extract their wallets secret keys. This operation has to be done only once for all the future deposits and withdrawals and only users who want to receive deposits need to carry out this step (if you only make deposits but not wothdrawals you don't need to). You will be prompted to sign a message. Be aware that this signature will be used internally by the system as your secret password so don't sign the message in any other application or website!
 *  Input the address of the person in favour of whom you want to make a deposit and the corresponding amount in ether and click on "Make deposit". After about 20secs the transaction will be accepted and you will receive an identifier associated with the deposit. Copy it or share it privately with the person in favour of whom you made the deposit. If you click on "Connect and Get Info" you should see a change in yours and Bank3's balances.
