@@ -61,7 +61,10 @@ app.get('/confirmed/:A/:txn', async (req, res) => {
 const encodedA = await hexToBytes(req.params.A);
 var B="";
 var coins="";
-get_B(encodedA).then(function(value){
+var tx=await web3.eth.getTransaction("0x"+req.params.txn);
+//var tx=await web3.eth.getTransaction("0x6c6a479424728942c4a7bcc2709abe197baaa5555cd8e1f3805dd1c4187158f4");
+var bn=tx.blockNumber;
+get_B(encodedA,bn).then(function(value){
 B=value.toString();
 
 if (B=="0x0000000000000000000000000000000000000000000000000000000000000000") {
@@ -77,7 +80,7 @@ db.collection('bank3').deleteOne(myquery, function(err, result) {
         });
     return;
     }
-
+// from now we can assume that there exists and there will exist one and only one transaction onchain with value A=req.params.A
   console.log("confirmed with B:"+B);
 const myquery = { _id: req.params.A };
 const newvalues = { $set: {isConfirmed: true,sender:"", B: B.substr(2),date:Date.now(),txn:req.params.txn } };
@@ -364,14 +367,14 @@ web3.eth
 
 run();
 
-async function get_B(A) {
+async function get_B(A,bn) {
     
   // Instantiate a new Contract
   const contract = new web3.eth.Contract(contractBankWalletsABI, contractBankWalletsAddress);
   
   try {
     // Interact with Smart Contract
-    const B = await contract.methods.get_B(A).call();
+    const B = await contract.methods.get_B(A).call(null,bn);
     console.log("B="+B);
         return B;
   } catch (err) {
