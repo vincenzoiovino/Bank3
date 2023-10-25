@@ -77,6 +77,7 @@ db.collection('bank3').deleteOne(myquery, function(err, result) {
         });
     return;
     }
+
   console.log("confirmed with B:"+B);
 const myquery = { _id: req.params.A };
 const newvalues = { $set: {isConfirmed: true,sender:"", B: B.substr(2),date:Date.now(),txn:req.params.txn } };
@@ -128,7 +129,8 @@ app.get('/deposits', (req, res) => {
 
 }
 //const contractBankWalletsAddress = "0xC14fdB467Cc1a2C7337B9bDfDC84970E98936796"; // contract on Goerli
-const contractBankWalletsAddress = "0x4d4F9E4A5d2e178B91d3BE81fB16D59F49099cb1"; // contract on Sepolia
+//const contractBankWalletsAddress = "0x4d4F9E4A5d2e178B91d3BE81fB16D59F49099cb1"; // old contract on Sepolia
+const contractBankWalletsAddress = "0xc32498817cC84236D0686D7ee449D2ADB186097B"; // contract on Sepolia
 const contractBankWalletsABI= [
 	{
 		"inputs": [

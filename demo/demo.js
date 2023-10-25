@@ -89,7 +89,8 @@ const SignMessage = "Do not sign this message in any application different than 
 const PublicKeyMessage = "Bank3: this signature will be used only to get your public key.";
 // Contract Details
 // const contractBankWalletsAddress = "0xC14fdB467Cc1a2C7337B9bDfDC84970E98936796"; // contract on Goerli
- const contractBankWalletsAddress = "0x4d4F9E4A5d2e178B91d3BE81fB16D59F49099cb1"; // contract on Sepolia
+// const contractBankWalletsAddress = "0x4d4F9E4A5d2e178B91d3BE81fB16D59F49099cb1"; // old contract on Sepolia
+const contractBankWalletsAddress = "0xc32498817cC84236D0686D7ee449D2ADB186097B"; // contract on Sepolia
 const contractBankWalletsABI= [
 	{
 		"inputs": [
@@ -1119,7 +1120,6 @@ async function getfromZkReg(updateStatus,addr) {
     // Interact with Smart Contract
     //const result = await contract.methods.mint(1).send({ from: from, value: 0 });
     const _zkReg = await contract.methods.get_public_key(address).call();
-    console.log(_zkReg);
     // Update status
     if (updateStatus){
     document.getElementById("status4").innerText = "ZkRegistry public key of address " + address+": "+ _zkReg;

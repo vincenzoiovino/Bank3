@@ -53,7 +53,7 @@ function setFees(uint256 fees) external {
     function MakeDeposit(bytes calldata A, bytes32 B) external  payable
     {
  
-       require(deposits[A].nCoins==0);
+       require(deposits[A].B==0);
        deposits[A].nCoins=msg.value;
        deposits[A].B=B;
        //id=Id++;
