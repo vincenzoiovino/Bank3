@@ -80,7 +80,192 @@ var dotsinterval=setInterval(setDots, 1000);
 const SignMessage = "Do not sign this message in any application different than Bank3. The signature will be used as your SECRET PASSWORD!";
 const PublicKeyMessage = "Bank3: this signature will be used only to get your public key.";
 // Contract Details
-const contractBankWalletsAddress = "0xdf1253E14506a3223e351dDB8EFbC0a008A62989"; // currently on Goerli, switch to Sepolia in the future
+//const contractBankWalletsAddress = "0xdf1253E14506a3223e351dDB8EFbC0a008A62989"; // currently on Goerli, switch to Sepolia in the future
+const contractBankWalletsAddress = "0xC14fdB467Cc1a2C7337B9bDfDC84970E98936796"; // currently on Goerli, switch to Sepolia in the future
+const contractBankWalletsABI= [
+	{
+		"inputs": [
+			{
+				"internalType": "bytes",
+				"name": "A",
+				"type": "bytes"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "B",
+				"type": "bytes32"
+			}
+		],
+		"name": "MakeDeposit",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes",
+				"name": "A",
+				"type": "bytes"
+			},
+			{
+				"internalType": "address",
+				"name": "addr",
+				"type": "address"
+			},
+			{
+				"internalType": "bytes",
+				"name": "C",
+				"type": "bytes"
+			}
+		],
+		"name": "MakeWithdrawalKeccac256",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "nCoins",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "addr",
+				"type": "address"
+			},
+			{
+				"internalType": "bytes",
+				"name": "A",
+				"type": "bytes"
+			},
+			{
+				"internalType": "bytes",
+				"name": "C",
+				"type": "bytes"
+			}
+		],
+		"name": "MakeWithdrawalSha256",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "fees",
+				"type": "uint256"
+			}
+		],
+		"name": "setFees",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "fees",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes",
+				"name": "",
+				"type": "bytes"
+			}
+		],
+		"name": "deposits",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "nCoins",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "B",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "Director",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "Fees",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes",
+				"name": "A",
+				"type": "bytes"
+			}
+		],
+		"name": "get_B",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes",
+				"name": "A",
+				"type": "bytes"
+			}
+		],
+		"name": "get_ncoins",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+];
+/*
 const contractBankWalletsABI= 
 [
 	{
@@ -246,6 +431,7 @@ const contractBankWalletsABI=
 		"type": "function"
 	}
 ];
+*/
 const contractZkRegAddress = "0xc32498817cC84236D0686D7ee449D2ADB186097B"; 
 const contractZkRegABI = [
 	{
@@ -694,8 +880,12 @@ throw("Bank3 db unavailable. Try later");
       
     });
 } catch(err){
-   if (!dbErr) swal("Bank3 db unavailable. Try later",{icon:"error",});
+   if (!dbErr) {
+
+if (!await swal('Bank3 db currently unavailable. If you continue the receiver might not be able to find the deposit if the identifier is lost. Are you sure you want to continue?', {  buttons: [true, true],icon:"warning",})) 
 throw("Bank3 db unavailable. Try later");
+
+}
 
 }
 var txn="";
@@ -866,8 +1056,10 @@ else sender=r.sender;
 var tr = "<tr>";
       tr += "<th>0x"+r._id+"</th>";
       tr += "<td>"+sender+"</td>";
-      tr += "<td>"+coins+"</td>";
-      tr += "<td>"+new Date(r.date*1000)+"</td>";
+    if (r.nCoins==0)
+      tr += "<td>0 (already claimed)</td>";
+      else tr += "<td>"+web3.utils.fromWei(coins,"ether")+"</td>";
+      tr += "<td>"+new Date(r.date).toLocaleString()+"</td>";
       if (r.txn=="") tr += "<td>n/a</td>"; 
       else tr += "<td>"+"<a href=\"https://goerli.etherscan.io/tx/0x"+r.txn+"\"target=\"_blank\">"+r.txn+"</a>"+"</td>";
       tr += "</tr>";
@@ -972,3 +1164,5 @@ const encoded = hexToBytes(PK.substr(2));
     zkerror=1;
   }
 }
+
+// TODO: implement a function that periodically cycles over all confirmed transactions and update them if they are withdrawn (the amount of coins changed to 0)
