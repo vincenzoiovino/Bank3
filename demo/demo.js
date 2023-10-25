@@ -743,7 +743,7 @@ document.getElementById("accountbutton").addEventListener("click", async () => {
    var pk=await getfromZkReg(0,myaddr);
 console.log(pk);
  if (pk!="error" && pk!="0x"){
-if (!await swal('Yor account has been already associated with the ZkRegistry PK ' +"\"" +pk +"\"."+'\nAre you sure you want to register a new public key?', {  buttons: [true, true],icon:"warning",})) return;
+if (!await swal('Yor account has been already associated with the ZkRegistry PK ' +"\"" +pk +"\"."+'\nAre you sure you want to register the public key again?', {  buttons: [true, true],icon:"warning",})) return;
 }
 let password=await window.ethereum.request({method: 'personal_sign',params: [SignMessage, myaddr]});
 // TODO: check if the signature representation is portable in the sense that it will stay the same independently of different or future Wallet versions. Otherwise use just the r value of the ECDSA signature
