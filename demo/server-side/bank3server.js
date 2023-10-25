@@ -1,3 +1,4 @@
+const CHAIN="goerli";
 const UpdateDb =  () =>{
 var coins;
   db.collection('bank3').find({isConfirmed: true}).toArray( async (err, result) => {
@@ -310,7 +311,7 @@ const contractBankWalletsABI= [
 	}
 ];
 
-const INFURA_KEY=`https://goerli.infura.io/v3/718b6870be174fa7a36d71442baee8e7`;
+const INFURA_KEY="https://"+CHAIN+".infura.io/v3/718b6870be174fa7a36d71442baee8e7";
 
 const express = require('express');
 const MongoClient = require('mongodb').MongoClient;

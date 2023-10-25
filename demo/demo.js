@@ -1,3 +1,5 @@
+const CHAIN_ID=5; // Goerli = 5, Sepolia = 11155111
+const CHAIN="Goerli"; 
 function addRowHandlers() {
     var rows = document.getElementById("scantable").rows;
     for (var i = 0; i < rows.length; i++) {
@@ -712,13 +714,13 @@ async function ConnectWallet() {
     // Update status
    var chainId="";    
     await web3.eth.net.getId().then(netId => { chainId= netId; }) 
-if (chainId==5){
-    document.getElementById("status1").innerText = "Connected to MetaMask (Goerli Testnet)";
+if (chainId==CHAIN_ID){
+    document.getElementById("status1").innerText = "Connected to MetaMask ("+CHAIN+" Testnet)";
     document.getElementById("status1").style.color = "green";
 }
     else {
     document.getElementById("status1").style.color = "red";
-document.getElementById("status1").innerText = "Connected to MetaMask but not on Goerli Testnet. Switch to Goerli to use the dAPP. It can be necessary to restart the browser";
+document.getElementById("status1").innerText = "Connected to MetaMask but not on "+CHAIN+" Testnet. Switch to "+CHAIN+" to use the dAPP. It can be necessary to restart the browser";
 }
   } catch (err) {
     // Handle error
@@ -909,6 +911,7 @@ console.log(err);
   });
 //console.log("gasUsed="+gasUsed+"txn="+txn);
 clearInterval(waitdepositinterval);
+clearInterval(dotsinterval);
 dotsinterval=setInterval(setDots, 1000);
     // Update status
     document.getElementById("status4").innerText = "Deposit of " + amount +" ETH in favour of " +to+" has been associated to identifier: 0x"+ A;
@@ -919,6 +922,7 @@ dotsinterval=setInterval(setDots, 1000);
   } catch (err) {
 clearInterval(waitdepositinterval);
 clearInterval(waitwithdrawalinterval);
+clearInterval(dotsinterval);
 dotsinterval=setInterval(setDots, 1000);
     console.error("Failed to make deposit:", err);
     document.getElementById("status4").innerText = "";
@@ -984,6 +988,7 @@ const encodedC = hexToBytes(C.substr(2));
   });
 
     clearInterval(waitwithdrawalinterval);
+    clearInterval(dotsinterval);
     dotsinterval=setInterval(setDots, 1000);
     // Update status
     document.getElementById("status4").style.color = "green";
@@ -1080,7 +1085,7 @@ var tr = "<tr>";
       else tr += "<td>"+web3.utils.fromWei(coins,"ether")+"</td>";
       tr += "<td>"+new Date(r.date).toLocaleString()+"</td>";
       if (r.txn=="") tr += "<td>n/a</td>"; 
-      else tr += "<td>"+"<a href=\"https://goerli.etherscan.io/tx/0x"+r.txn+"\"target=\"_blank\">"+r.txn+"</a>"+"</td>";
+      else tr += "<td>"+"<a href=\"https://"+CHAIN+".etherscan.io/tx/0x"+r.txn+"\"target=\"_blank\">"+r.txn+"</a>"+"</td>";
       tr += "</tr>";
       t += tr;
 }
