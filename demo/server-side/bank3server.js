@@ -83,7 +83,7 @@ db.collection('bank3').deleteOne(myquery, function(err, result) {
 // from now we can assume that there exists and there will exist one and only one transaction onchain with value A=req.params.A
   console.log("confirmed with B:"+B);
 const myquery = { _id: req.params.A };
-const newvalues = { $set: {isConfirmed: true,sender:"", B: B.substr(2),date:Date.now(),txn:req.params.txn } };
+const newvalues = { $set: {isConfirmed: true,sender:tx.from, B: B.substr(2),date:Date.now(),txn:req.params.txn } };
   db.collection('bank3').update(myquery, newvalues, (err, result) => {
     if (err) {
      console.log(err);
