@@ -125,11 +125,13 @@
 
 .button49 {
   display: inline-block;
+  margin-left: 8px;
   outline: 0;
   cursor: pointer;
   border: none;
   padding: 0 56px;
   height: 45px;
+  width: 318px;
   line-height: 45px;
   border-radius: 7px;
   font-weight: 400;

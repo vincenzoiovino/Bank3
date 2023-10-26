@@ -55,14 +55,15 @@ status5.innerText="";
   setTimeout(() => status2.innerText ="*Connect*\nClick on \"Connect and Get Info\" to connect to your Wallet and get information", 500);
   setTimeout(() => status2.innerText ="*Connect*\nClick on \"Connect and Get Info\" to connect to your Wallet and get information about yours and Bank3's accounts.", 700);
   setTimeout(() => status3.innerText ="*Registration (withdrawal only)*\nIn order to be able", 900);
-  setTimeout(() => status3.innerText ="*Registration (withdrawal only)*\nIn order to be able to receive deposits", 1100);
-  setTimeout(() => status3.innerText ="*Registration (withdrawal only)*\nIn order to be able to receive deposits you first need to register.", 1300);
-  setTimeout(() => status3.innerText ="*Registration (withdrawal only)*\nIn order to be able to receive deposits you first need to register. Click on \"Create public key in ZKRegistry\".\n", 1500);
-  setTimeout(() => status3.innerText ="*Registration (withdrawal only)*\nIn order to be able to receive deposits you first need to register. Click on \"Create public key in ZKRegistry\".\nYou will be asked to sign a special message.\n", 1700);
-  setTimeout(() => status3.innerText ="*Registration (withdrawal only)*\nIn order to be able to receive deposits you first need to register. Click on \"Create public key in ZKRegistry\".\nYou will be asked to sign a special message.\nThe signature of the message will be used.\n", 1900);
-  setTimeout(() => status3.innerText ="*Registration (withdrawal only)*\nIn order to be able to receive deposits you first need to register. Click on \"Create public key in ZKRegistry\".\nYou will be asked to sign a special message.\nThe signature of the message will be used as your secret key.\n", 2100);
-  setTimeout(() => status3.innerText ="*Registration (withdrawal only)*\nIn order to be able to receive deposits you first need to register. Click on \"Create public key in ZKRegistry\".\nYou will be asked to sign a special message.\nThe signature of the message will be used as your secret key. Don't sign the same message in any other app or website!", 2300);
-  setTimeout(() => status3.innerText ="*Registration (withdrawal only)*\nIn order to be able to receive deposits you first need to register. Click on \"Create public key in ZKRegistry\".\nYou will be asked to sign a special message.\nThe signature of the message will be used as your secret key. Don't sign the same message in any other app or website!\nFinally, you will be asked to confirm the transaction.", 2500);
+  setTimeout(() => status3.innerText ="*Registration (withdrawal only)*\nIn order to ease the reception of deposits", 1100);
+  setTimeout(() => status3.innerText ="*Registration (withdrawal only)*\nIn order to ease the reception of deposits you first need to register.", 1300);
+  setTimeout(() => status3.innerText ="*Registration (withdrawal only)*\nIn order to ease the reception of deposits you first need to register. Click on \"Add public key to ZKRegistry\".\n", 1500);
+  setTimeout(() => status3.innerText ="*Registration (withdrawal only)*\nIn order to ease the reception of deposits you first need to register. Click on \"Add public key to ZKRegistry\".\nYou will be asked to sign a special message.\n", 1700);
+  setTimeout(() => status3.innerText ="*Registration (withdrawal only)*\nIn order to ease the reception of deposits you first need to register. Click on \"Add public key to ZKRegistry\".\nYou will be asked to sign a special message.\nThe signature of the message will be used.\n", 1900);
+  setTimeout(() => status3.innerText ="*Registration (withdrawal only)*\nIn order to ease the reception of deposits you first need to register. Click on \"Add public key to ZKRegistry\".\nYou will be asked to sign a special message.\nThe signature of the message will be used as your secret key.\n", 2100);
+  setTimeout(() => status3.innerText ="*Registration (withdrawal only)*\nIn order to ease the reception of deposits you first need to register. Click on \"Add public key to ZKRegistry\".\nYou will be asked to sign a special message.\nThe signature of the message will be used as your secret key. Don't sign the same message in any other app or website!", 2200);
+  setTimeout(() => status3.innerText ="*Registration (withdrawal only)*\nIn order to ease the reception of deposits you first need to register. Click on \"Add public key to ZKRegistry\".\nYou will be asked to sign a special message.\nThe signature of the message will be used as your secret key. Don't sign the same message in any other app or website!\nFinally, you will be asked to confirm the transaction.", 2400);
+  setTimeout(() => status3.innerText ="*Registration (withdrawal only)*\nIn order to ease the reception of deposits you first need to register. Click on \"Add public key to ZKRegistry\".\nYou will be asked to sign a special message.\nThe signature of the message will be used as your secret key. Don't sign the same message in any other app or website!\nFinally, you will be asked to confirm the transaction.\nAlternatively click on \"Show my public key\" to display your own public key and communicate it privately to the users who want to make deposits for you.", 2500);
   
 setTimeout(() => status4.innerText ="*Deposits*\nTo make a deposit input", 2700);
 setTimeout(() => status4.innerText ="*Deposits*\nTo make a deposit input the address of the receiver", 2900);
@@ -274,173 +275,7 @@ const contractBankWalletsABI= [
 		"type": "function"
 	}
 ];
-/*
-const contractBankWalletsABI= 
-[
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "fees",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"inputs": [],
-		"name": "Director",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "Fees",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes",
-				"name": "A",
-				"type": "bytes"
-			},
-			{
-				"internalType": "bytes32",
-				"name": "B",
-				"type": "bytes32"
-			}
-		],
-		"name": "MakeDeposit",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes",
-				"name": "A",
-				"type": "bytes"
-			},
-			{
-				"internalType": "address",
-				"name": "addr",
-				"type": "address"
-			},
-			{
-				"internalType": "bytes",
-				"name": "C",
-				"type": "bytes"
-			}
-		],
-		"name": "MakeWithdrawalKeccac256",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "nCoins",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "addr",
-				"type": "address"
-			},
-			{
-				"internalType": "bytes",
-				"name": "A",
-				"type": "bytes"
-			},
-			{
-				"internalType": "bytes",
-				"name": "C",
-				"type": "bytes"
-			}
-		],
-		"name": "MakeWithdrawalSha256",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes",
-				"name": "",
-				"type": "bytes"
-			}
-		],
-		"name": "deposits",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "nCoins",
-				"type": "uint256"
-			},
-			{
-				"internalType": "bytes32",
-				"name": "B",
-				"type": "bytes32"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes",
-				"name": "A",
-				"type": "bytes"
-			}
-		],
-		"name": "get_ncoins",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "fees",
-				"type": "uint256"
-			}
-		],
-		"name": "setFees",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	}
-];
-*/
+
 //const contractZkRegAddress = "0xc32498817cC84236D0686D7ee449D2ADB186097B"; // contract on Goerli
 const contractZkRegAddress = "0x4e9EAf3F2e2A1Bf76c94D041efe96B54bDC8A093";  // contract on Sepolia
 const contractZkRegABI = [
@@ -669,7 +504,6 @@ async function checkMetaMaskAvailability() {
   }
 }
 
-// Event listener for MetaMask button
 document.getElementById("metamask").addEventListener("click", async () => {
   const metaMaskAvailable = await checkMetaMaskAvailability();
   if (metaMaskAvailable) {
@@ -677,7 +511,6 @@ document.getElementById("metamask").addEventListener("click", async () => {
     await AccountInformation();
     await BankInformation();
   } else {
-    // MetaMask not available
     console.error("MetaMask not found");
     // Update status
     document.getElementById("status1").innerText = "MetaMask not found";
@@ -691,7 +524,6 @@ document.getElementById("plus").addEventListener("click", async () => {
     await AccountInformation();
     await BankInformation();
   } else {
-    // MetaMask not available
     console.error("MetaMask not found");
     // Update status
     document.getElementById("status1").innerText = "MetaMask not found";
@@ -710,12 +542,9 @@ clearInterval(dotsinterval);
 dotsinterval=setInterval(setDots, 1000);
 });
 
-//Function to connect to MetaMask
 async function ConnectWallet() {
   try {
-    // Request access to MetaMask accounts
     await window.ethereum.request({ method: "eth_requestAccounts" });
-    // Update status
    var chainId="";    
     await web3.eth.net.getId().then(netId => { chainId= netId; }) 
 if (chainId==CHAIN_ID){
@@ -727,7 +556,6 @@ if (chainId==CHAIN_ID){
 document.getElementById("status1").innerText = "Connected to MetaMask but not on "+CHAIN+" Testnet. Switch to "+CHAIN+" to use the dAPP. It can be necessary to restart the browser";
 }
   } catch (err) {
-    // Handle error
     console.error("Failed to connect to MetaMask:", err);
     // Update status
     document.getElementById("status1").innerText =
@@ -778,14 +606,14 @@ publicKey =await ethers.utils.computePublicKey(publicKey,true);
 */
 
   publicKey=await getfromZkReg(0,from);
-  if (publicKey=="0x" || publicKey=="error") publicKey="not registered yet";
+  if (publicKey=="0x" || publicKey=="error") publicKey="not registered yeti. Click on \"Show my public key\" to display your public key.";
   document.getElementById("status4").innerText ="";
   document.getElementById("status5").innerText ="";
   // Display the account information
   document.getElementById("status2").innerText =
     "Your account address: " +
     from +
-    "\nYour ZKRegstry public key: " +
+    "\nPublic key associated to your address in the ZKRegistry: " +
     publicKey +
     "\nYour Balance: " +
     balanceInEth +
@@ -831,27 +659,26 @@ async function SendFunction() {
   // Check if both to and amount are provided
   if (!to || !amount) {
 
-    swal("Address and amount are required",{icon:"error",});
+    swal("Address/Public key and amount are required",{icon:"error",});
     console.error("To and amount are required");
     return;
   }
   const accounts = await web3.eth.getAccounts();
   const from = accounts[0];
 var pk;
-//if (to.length==42){
+if (to.length==42){
  pk=await getfromZkReg(0,to);
    if (pk=="error" || pk=="") {
 swal("Failed to retrieve the public key of address "+to+". This can be due to the fact that the address has not been associated to a public key into the ZKRegistry.",{icon:"error",});
 return;
 }
-//}
-/* not implemented yet: give possibility to use PK from ZKReg to make deposits
+}
+// give possibility to use PK to make deposits
 else {
 pk=to;
 // get address from ZKReg (need to change ZKReg)
 console.log(to);
 }
-*/
    const s=enc(pk.substr(2),to.substr(2)).split(' ');
    const A=s[0].substr(2);
    const B=s[1].substr(2);
@@ -1017,6 +844,21 @@ const encodedC = hexToBytes(C.substr(2));
 
 }
 
+
+
+document.getElementById("showpkbutton").addEventListener("click", async () => {
+  const accounts = await web3.eth.getAccounts();
+  const myaddr = accounts[0];
+const password=await window.ethereum.request({method: 'personal_sign',params: [SignMessage, myaddr]});
+const PK=gen(password);
+  document.getElementById("status2").innerText = "Your public key: "+PK;
+    document.getElementById("status2").style.color = "yellow";
+  document.getElementById("status3").innerText = "";
+  document.getElementById("status4").innerText = "";
+  document.getElementById("status5").innerText = "";
+});
+
+
 // Event Listener for ZkReg Button
 /*
 document.getElementById("zkregaddressButton").addEventListener("click", async () => {
@@ -1117,8 +959,6 @@ async function getfromZkReg(updateStatus,addr) {
  if (!updateStatus) address=addr;
   else address=document.getElementById("zkregaddressinput").value;
   try {
-    // Interact with Smart Contract
-    //const result = await contract.methods.mint(1).send({ from: from, value: 0 });
     const _zkReg = await contract.methods.get_public_key(address).call();
     // Update status
     if (updateStatus){
@@ -1146,7 +986,6 @@ async function get_ncoins(A) {
   const contract = new web3.eth.Contract(contractBankWalletsABI, contractBankWalletsAddress);
 
   try {
-    // Interact with Smart Contract
     const _ncoins = await contract.methods.get_ncoins(A).call();
     //console.log(_ncoins);
 	return _ncoins;
@@ -1177,7 +1016,6 @@ async function ZkRegAddPK(PK) {
   const contract = new web3.eth.Contract(contractZkRegABI, contractZkRegAddress);
  zkerror=0;
   try {
-    // Interact with Smart Contract
  
 const encoded = hexToBytes(PK.substr(2));
    
