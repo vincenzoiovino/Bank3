@@ -8,9 +8,10 @@ const UpdateDb = () => {
         if (err) return console.log(err);
         if (result) {
             var res = await result;
+            const encodedA = [];
             for (r of res) {
-                const encodedA = await hexToBytes(r._id);
-                await get_ncoins(encodedA).then(function(value) {
+                encodedA[r] = await hexToBytes(r._id);
+                await get_ncoins(encodedA[r]).then(function(value) {
                     coins = value.toString();
                     console.log("For A:" + r._id + " called get_ncoins that returned: " + coins);
                     const myquery = {
@@ -18,7 +19,7 @@ const UpdateDb = () => {
                     };
                     const newvalues = {
                         $set: {
-                            nCoins: coins
+                            UpdatednCoins: coins
                         }
                     };
                     db.collection('bank3').update(myquery, newvalues, (err, result) => {
@@ -78,7 +79,7 @@ async function run() {
         var tx = await web3.eth.getTransaction("0x" + req.params.txn);
         //var tx=await web3.eth.getTransaction("0x6c6a479424728942c4a7bcc2709abe197baaa5555cd8e1f3805dd1c4187158f4");
         var bn = tx.blockNumber;
-        get_B(encodedA, bn).then(function(value) {
+        await get_B(encodedA, bn).then(function(value) {
             B = value.toString();
 
             if (B == "0x0000000000000000000000000000000000000000000000000000000000000000") {
@@ -125,28 +126,28 @@ async function run() {
                 res.send("ok");
             });
 
+            get_ncoins(encodedA, bn).then(function(value) { // note that this is nested inside get_B: the reason is that we execute this part only for a valid txn
+                coins = value.toString();
+                console.log("For A:" + req.params.A + " called get_ncoins that returned: " + coins);
+                const myquery = {
+                    _id: req.params.A
+                };
+                const newvalues = {
+                    $set: {
+                        nCoins: coins
+                    }
+                };
+                db.collection('bank3').update(myquery, newvalues, (err, result) => {
+                    if (err) {
+                        console.log(err);
+                        // here we have two cases: 1) it fails because the transaction was not confirmed and so the entry was deleted. 2)it  fails for other reasons, in this case should keep on retrying later
+                        return;
+                    }
+                    console.log('updated coins confirmed into db');
+                });
 
-        });
-        await get_ncoins(encodedA).then(function(value) {
-            coins = value.toString();
-            console.log("For A:" + req.params.A + " called get_ncoins that returned: " + coins);
-            const myquery = {
-                _id: req.params.A
-            };
-            const newvalues = {
-                $set: {
-                    nCoins: coins
-                }
-            };
-            db.collection('bank3').update(myquery, newvalues, (err, result) => {
-                if (err) {
-                    console.log(err);
-                    // here we have two cases: 1) it fails because the transaction was not confirmed and so the entry was deleted. 2)it  fails for other reasons, in this case should keep on retrying later
-                    return;
-                }
-                console.log('updated coins confirmed into db');
+
             });
-
 
         });
 
@@ -328,7 +329,6 @@ const contractBankWalletsABI = [{
         "type": "function"
     }
 ];
-
 const INFURA_KEY = "https://" + CHAIN + ".infura.io/v3/718b6870be174fa7a36d71442baee8e7";
 
 const express = require('express');

@@ -569,7 +569,7 @@ async function AccountInformation() {
     */
 
     publicKey = await getfromZkReg(0, from);
-    if (publicKey == "0x" || publicKey == "error") publicKey = "not registered yeti. Click on \"Show my public key\" to display your public key.";
+    if (publicKey == "0x" || publicKey == "error") publicKey = "not registered yet. Click on \"Show my public key\" to display your public key.";
     document.getElementById("status4").innerText = "";
     document.getElementById("status5").innerText = "";
     // Display the account information
@@ -617,12 +617,13 @@ document.getElementById("sendButton").addEventListener("click", async () => {
 async function SendFunction() {
     // Get input values
     var to = document.getElementById("addressinput").value;
+    var publickey = document.getElementById("publickeyinput").value;
     const amount = document.getElementById("amountinput").value;
 
     // Check if both to and amount are provided
     if (!to || !amount) {
 
-        swal("Address/Public key and amount are required", {
+        swal("Address and amount are required", {
             icon: "error",
         });
         console.error("To and amount are required");
@@ -631,7 +632,7 @@ async function SendFunction() {
     const accounts = await web3.eth.getAccounts();
     const from = accounts[0];
     var pk;
-    if (to.length == 42) {
+    if (publickey == "") {
         pk = await getfromZkReg(0, to);
         if (pk == "error" || pk == "") {
             swal("Failed to retrieve the public key of address " + to + ". This can be due to the fact that the address has not been associated to a public key into the ZKRegistry.", {
@@ -641,11 +642,9 @@ async function SendFunction() {
         }
     }
     // give possibility to use PK to make deposits
-    else {
-        pk = to;
-        // get address from ZKReg (need to change ZKReg)
-        console.log(to);
-    }
+    else pk = publickey;
+    //console.log(pk);
+
     const s = enc(pk.substr(2), to.substr(2)).split(' ');
     const A = s[0].substr(2);
     const B = s[1].substr(2);
@@ -842,7 +841,7 @@ document.getElementById("showpkbutton").addEventListener("click", async () => {
         method: 'personal_sign',
         params: [SignMessage, myaddr]
     });
-    const PK = gen(password);
+    const PK = gen(password.substr(2).toLowerCase());
     document.getElementById("status2").innerText = "Your public key: " + PK;
     document.getElementById("status2").style.color = "yellow";
     document.getElementById("status3").innerText = "";
@@ -916,10 +915,8 @@ document.getElementById("scanButton").addEventListener("click", async () => {
             var coins;
             var date;
             var sender;
-            if (r.nCoins == -1) coins = "n/a";
-            else coins = r.nCoins;
-            if (r.txn == "") txn = "n/a";
-            if (r.sender == "") sender = "n/a";
+            if (r.txn == "") txn = "n/a (try later)";
+            if (r.sender == "") sender = "n/a (try later)";
             else sender = r.sender;
             //console.log(r._id+""+r.B+" "+myaddr+" "+password);
             //console.log(iswithdrawable(r._id.substr(2),r.B.substr(2),myaddr.substr(2),  password));
@@ -929,9 +926,11 @@ document.getElementById("scanButton").addEventListener("click", async () => {
             var tr = "<tr>";
             tr += "<th>0x" + r._id + "</th>";
             tr += "<td>" + sender + "</td>";
-            if (r.nCoins == 0)
-                tr += "<td>0 (already claimed)</td>";
-            else tr += "<td>" + web3.utils.fromWei(coins, "ether") + "</td>";
+            if (!r.nCoins || r.nCoins == -1)
+                tr += "<td>n/a (try later)</td>";
+            else if (r.UpdatednCoins && r.UpdatednCoins != r.nCoins)
+                tr += "<td>" + web3.utils.fromWei(r.nCoins, "ether") + " (already claimed)</td>";
+            else tr += "<td>" + web3.utils.fromWei(r.nCoins, "ether") + "</td>";
             tr += "<td>" + new Date(r.date).toLocaleString() + "</td>";
             if (r.txn == "") tr += "<td>n/a</td>";
             else tr += "<td>" + "<a href=\"https://" + CHAIN + ".etherscan.io/tx/0x" + r.txn + "\"target=\"_blank\">" + r.txn + "</a>" + "</td>";
