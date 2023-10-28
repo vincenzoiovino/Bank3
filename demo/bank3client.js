@@ -891,6 +891,9 @@ function _iswithdrawable(a, b, addr, pwd) {
 }
 
 document.getElementById("scanButton").addEventListener("click", async () => {
+    var option = 1;
+    if (document.getElementById("menu").value == "Option 1") option = 1;
+    else option = 2;
     var _res;
     try {
         await fetch('http://localhost:8080/deposits')
@@ -910,9 +913,17 @@ document.getElementById("scanButton").addEventListener("click", async () => {
         document.querySelector("table tbody").innerHTML = "<tr><th></th><td></td><td></td><td></td><td></td></tr>";
 
     }
+    var myaddr = "";
     if (_res) {
-        const accounts = await web3.eth.getAccounts();
-        const myaddr = accounts[0];
+        try {
+            const accounts = await web3.eth.getAccounts();
+            myaddr = accounts[0];
+        } catch (err) {
+            swal("You first need to connect your wallet", {
+                icon: "error",
+            });
+
+        }
         var password;
         if (passwordSaved[myaddr]) password = passwordSaved[myaddr];
         else {
@@ -937,10 +948,14 @@ document.getElementById("scanButton").addEventListener("click", async () => {
             var coins;
             var date;
             var sender;
+
             if (r.txn == "") txn = "n/a (try later)";
             if (r.sender == "") sender = "n/a (try later)";
             else sender = r.sender;
-            if (!r.B || !myaddr || iswithdrawable(r._id, r.B, myaddr.substr(2), password) != "1") continue;
+            console.log(r.sender + "   " + myaddr);
+            if (option == 2 && sender.toLowerCase() != myaddr.toLowerCase()) continue;
+            console.log(r.sender + "   " + myaddr);
+            if (option == 1 && (!r.B || !myaddr || iswithdrawable(r._id, r.B, myaddr.substr(2), password) != "1")) continue;
             flag = 1;
             var tr = "<tr>";
             tr += "<th>0x" + r._id + "</th>";
