@@ -2,6 +2,7 @@
 const CHAIN_ID = 11155111; // Goerli = 5, Sepolia = 11155111
 //const CHAIN="Goerli"; 
 const CHAIN = "Sepolia";
+var passwordSaved = [];
 
 function addRowHandlers() {
     var rows = document.getElementById("scantable").rows;
@@ -531,12 +532,17 @@ document.getElementById("accountbutton").addEventListener("click", async () => {
                 icon: "warning",
             })) return;
     }
-    let password = await window.ethereum.request({
-        method: 'personal_sign',
-        params: [SignMessage, myaddr]
-    });
-    // TODO: check if the signature representation is portable in the sense that it will stay the same independently of different or future Wallet versions. Otherwise use just the r value of the ECDSA signature
-    password = password.substr(2).toLowerCase();
+    var password;
+    if (passwordSaved[myaddr]) password = passwordSaved[myaddr];
+    else {
+        password = await window.ethereum.request({
+            method: 'personal_sign',
+            params: [SignMessage, myaddr]
+        });
+        // TODO: check if the signature representation is portable in the sense that it will stay the same independently of different or future Wallet versions. Otherwise use just the r value of the ECDSA signature
+        password = password.substr(2).toLowerCase();
+        passwordSaved[myaddr] = password;
+    }
     if (password == "") {
         swal("Password is empty", {
             icon: "error",
@@ -755,11 +761,16 @@ async function Withdraw() {
 
     const accounts = await web3.eth.getAccounts();
     const myaddr = accounts[0];
-    let password = await window.ethereum.request({
-        method: 'personal_sign',
-        params: [SignMessage, myaddr]
-    });
-    password = password.substr(2).toLowerCase();
+    var password;
+    if (passwordSaved[myaddr]) password = passwordSaved[myaddr];
+    else {
+        password = await window.ethereum.request({
+            method: 'personal_sign',
+            params: [SignMessage, myaddr]
+        });
+        password = password.substr(2).toLowerCase();
+        passwordSaved[myaddr] = password;
+    }
     if (password == "") {
         swal("Password is empty", {
             icon: "error",
@@ -837,11 +848,17 @@ async function Withdraw() {
 document.getElementById("showpkbutton").addEventListener("click", async () => {
     const accounts = await web3.eth.getAccounts();
     const myaddr = accounts[0];
-    const password = await window.ethereum.request({
-        method: 'personal_sign',
-        params: [SignMessage, myaddr]
-    });
-    const PK = gen(password.substr(2).toLowerCase());
+    var password;
+    if (passwordSaved[myaddr]) password = passwordSaved[myaddr];
+    else {
+        password = await window.ethereum.request({
+            method: 'personal_sign',
+            params: [SignMessage, myaddr]
+        });
+        password = password.substr(2).toLowerCase();
+        passwordSaved[myaddr] = password;
+    }
+    const PK = gen(password);
     document.getElementById("status2").innerText = "Your public key: " + PK;
     document.getElementById("status2").style.color = "yellow";
     document.getElementById("status3").innerText = "";
@@ -896,11 +913,16 @@ document.getElementById("scanButton").addEventListener("click", async () => {
     if (_res) {
         const accounts = await web3.eth.getAccounts();
         const myaddr = accounts[0];
-        let password = await window.ethereum.request({
-            method: 'personal_sign',
-            params: [SignMessage, myaddr]
-        });
-        password = password.substr(2).toLowerCase();
+        var password;
+        if (passwordSaved[myaddr]) password = passwordSaved[myaddr];
+        else {
+            password = await window.ethereum.request({
+                method: 'personal_sign',
+                params: [SignMessage, myaddr]
+            });
+            password = password.substr(2).toLowerCase();
+            passwordSaved[myaddr] = password;
+        }
         if (password == "") {
             swal("Password is empty", {
                 icon: "error",
@@ -918,10 +940,7 @@ document.getElementById("scanButton").addEventListener("click", async () => {
             if (r.txn == "") txn = "n/a (try later)";
             if (r.sender == "") sender = "n/a (try later)";
             else sender = r.sender;
-            //console.log(r._id+""+r.B+" "+myaddr+" "+password);
-            //console.log(iswithdrawable(r._id.substr(2),r.B.substr(2),myaddr.substr(2),  password));
             if (!r.B || !myaddr || iswithdrawable(r._id, r.B, myaddr.substr(2), password) != "1") continue;
-            //if (!r.B || !myaddr || iswithdrawable("02F1257C1A6CA0220519394BD819E1BC503A96A05D29DF02D1EC297C60ED4920EE",r.B.substr(2),myaddr.substr(2),  password)!="1") continue;
             flag = 1;
             var tr = "<tr>";
             tr += "<th>0x" + r._id + "</th>";
