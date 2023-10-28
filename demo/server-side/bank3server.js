@@ -2,66 +2,109 @@
 const CHAIN = "sepolia";
 const UpdateDb = () => {
     var coins = [];
-    db.collection('bank3').find({
-        isConfirmed: true
-    }).toArray(async (err, result) => {
+    db.collection('bank3').find({}).toArray(async (err, result) => {
         if (err) return console.log(err);
         if (result) {
             var res = result;
             const encodedA = [];
             for (r of res) {
                 encodedA[r._id] = hexToBytes(r._id);
-                await get_ncoins(encodedA[r._id]).then(function(value) {
-                    if (value == "error") {
-                        console.log("error in updating:" + r._id);
+                if (r.isConfirmed == true) {
+                    await get_ncoins(encodedA[r._id]).then(function(value) {
+                        if (value == "error") {
+                            console.log("error in updating:" + r._id);
+                            return;
+                        }
+                        coins[r._id] = value.toString();
+                        console.log("Update for A:" + r._id + " called get_ncoins that returned: " + coins[r._id]);
+                        const myquery = {
+                            _id: r._id,
+                            isConfirmed: true,
+                        };
+                        const newvalues = {
+                            $set: {
+                                UpdatednCoins: coins[r._id]
+                            }
+                        };
+                        db.collection('bank3').update(myquery, newvalues, (err, result) => {
+                            if (err) {
+                                console.log(err);
+                                return;
+                            }
+                        });
+                        if (r.blockNumber) {
+                            bn[r._id] = BigInt(r.blockNumber);
+                            get_ncoins(encodedA[r._id], bn[r._id]).then(function(value) { // TODO: it does not seem to work. It gets nCoins from the latest block and not from the block bn[r._id] as it should be
+                                if (value == "error") {
+                                    console.log("error in updating:" + r._id + " for bn:" + bn[r._id]);
+                                    return;
+                                }
+                                coins[r._id] = value.toString();
+                                console.log("Update for nCoins for bn:" + bn[r._id] + " for A:" + r._id + " called get_ncoins that returned: " + coins[r._id]);
+                                const myquery = {
+                                    _id: r._id,
+                                    isConfirmed: true,
+                                };
+                                const newvalues = {
+                                    $set: {
+                                        nCoins: coins[r._id]
+                                    }
+                                };
+                                db.collection('bank3').update(myquery, newvalues, (err, result) => {
+                                    if (err) {
+                                        console.log(err);
+                                        return;
+                                    }
+                                });
+
+
+                            });
+
+                        }
+
+                    });
+
+
+                }
+                get_B(encodedA[r._id]).then(function(value) {
+                    B = value.toString();
+                    if (B == "error") {
+                        console.log("error for A:" + r._id + " getting corresponding B");
                         return;
                     }
-                    coins[r._id] = value.toString();
-                    console.log("Update for A:" + r._id + " called get_ncoins that returned: " + coins[r._id]);
+                    if (B == "0x0000000000000000000000000000000000000000000000000000000000000000") {
+                        console.log("unconfirmed value" + r._id + "not present onchain");
+                        const myquery = {
+                            _id: r._id
+                        };
+                        db.collection('bank3').deleteOne(myquery, function(err, result) {
+                            if (err) console.log(err); // removal failed, we should retry later
+                            console.log("entry deleted:" + r._id);
+                        });
+                        return;
+                    }
+                    console.log("confirmed with B:" + B);
                     const myquery = {
-                        _id: r._id,
-                        isConfirmed: true,
+                        _id: r._id
                     };
+                    var newdate = "";
+                    if (!r.date) newdate = Date.now();
+                    else newdate = r.date;
                     const newvalues = {
                         $set: {
-                            UpdatednCoins: coins[r._id]
+                            isConfirmed: true,
+                            B: B.substr(2),
+                            date: newdate,
                         }
                     };
                     db.collection('bank3').update(myquery, newvalues, (err, result) => {
                         if (err) {
                             console.log(err);
+
+
                             return;
                         }
                     });
-                    if (r.blockNumber) {
-                        bn = BigInt(r.blockNumber);
-                        get_ncoins(encodedA[r._id], bn).then(function(value) { // TODO: it does not seem to work. It gets nCoins from the latest block and not from the block bn as it should be
-                            if (value == "error") {
-                                console.log("error in updating:" + r._id + " for bn:" + bn);
-                                return;
-                            }
-                            coins[r._id] = value.toString();
-                            console.log("Update for nCoins for bn:" + bn + " for A:" + r._id + " called get_ncoins that returned: " + coins[r._id]);
-                            const myquery = {
-                                _id: r._id,
-                                isConfirmed: true,
-                            };
-                            const newvalues = {
-                                $set: {
-                                    nCoins: coins[r._id]
-                                }
-                            };
-                            db.collection('bank3').update(myquery, newvalues, (err, result) => {
-                                if (err) {
-                                    console.log(err);
-                                    return;
-                                }
-                            });
-
-
-                        });
-                    }
-
                 });
 
             }

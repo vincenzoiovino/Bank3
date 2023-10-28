@@ -948,13 +948,11 @@ document.getElementById("scanButton").addEventListener("click", async () => {
             var coins;
             var date;
             var sender;
-
-            if (r.txn == "") txn = "n/a (try later)";
-            if (r.sender == "") sender = "n/a (try later)";
+            var txn;
+            if (!r.txn || r.txn == "") txn = "n/a (try later)";
+            if (!r.sender || r.sender == "") sender = "n/a (try later)";
             else sender = r.sender;
-            console.log(r.sender + "   " + myaddr);
             if (option == 2 && sender.toLowerCase() != myaddr.toLowerCase()) continue;
-            console.log(r.sender + "   " + myaddr);
             if (option == 1 && (!r.B || !myaddr || iswithdrawable(r._id, r.B, myaddr.substr(2), password) != "1")) continue;
             flag = 1;
             var tr = "<tr>";
