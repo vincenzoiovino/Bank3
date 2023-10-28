@@ -1,5 +1,5 @@
-//const CHAIN="goerli";
-const CHAIN = "sepolia";
+const CHAIN="goerli";
+//const CHAIN = "sepolia";
 const UpdateDb = () => {
     var coins = [];
     db.collection('bank3').find({}).toArray(async (err, result) => {
@@ -247,9 +247,9 @@ async function run() {
         });
     });
 }
-//const contractBankWalletsAddress = "0xC14fdB467Cc1a2C7337B9bDfDC84970E98936796"; // contract on Goerli
+const contractBankWalletsAddress = "0xf03eB7b77Efe402c6e1721a17f9527F178Fc34f8"; // contract on Goerli
 //const contractBankWalletsAddress = "0x4d4F9E4A5d2e178B91d3BE81fB16D59F49099cb1"; // old contract on Sepolia
-const contractBankWalletsAddress = "0xc32498817cC84236D0686D7ee449D2ADB186097B"; // contract on Sepolia
+//const contractBankWalletsAddress = "0xc32498817cC84236D0686D7ee449D2ADB186097B"; // contract on Sepolia
 const contractBankWalletsABI = [{
         "inputs": [{
                 "internalType": "bytes",
@@ -410,7 +410,7 @@ const contractBankWalletsABI = [{
         "type": "function"
     }
 ];
-const INFURA_KEY = "https://" + CHAIN + ".infura.io/v3/718b6870be174fa7a36d71442baee8e7";
+const INFURA_KEY = "https://" + CHAIN + ".infura.io/v3/89235f1ec0f84511ade8dcf9aa9529f1";
 
 const express = require('express');
 const MongoClient = require('mongodb').MongoClient;
