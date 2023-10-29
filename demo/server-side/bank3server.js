@@ -35,17 +35,16 @@ const UpdateDb = () => {
                                 return;
                             }
                         });
-                        if (typeof r.blockNumber === 'undefined' || r.blockNumber === null) {
-                            //bn[r._id] = BigInt(r.blockNumber);
+                        if (r.blockNumber != null) {
                             try {
-                                get_ncoins(hexToBytes(r._id), BigInt(r.blockNumber)).then(function(value) { // TODO: it does not seem to work. It gets nCoins from the latest block and not from the block bn[r._id] as it should be
-                                    //getncoins(encodedA[r._id]).then(function(value) { // TODO: it does not seem to work. It gets nCoins from the latest block and not from the block bn[r._id] as it should be
+                                var bn = BigInt(r.blockNumber);
+                                get_ncoins(hexToBytes(r._id), bn).then(function(value) { // TODO: check if it gets nCoins from the block bn and not from the latest block
                                     if (value == "error") {
-                                        console.log("error in updating:" + r._id + " for bn:" + BigInt(r.blockNumber));
+                                        console.log("error in updating:" + r._id + " for bn:" + bn);
                                         return;
                                     }
                                     coins[r._id] = value.toString();
-                                    console.log("Update for nCoins for bn:" + BigInt(r.blockNumber) + " for A:" + r._id + " called get_ncoins that returned: " + coins[r._id]);
+                                    console.log("Update for nCoins for bn:" + bn + " for A:" + r._id + " called get_ncoins that returned: " + coins[r._id]);
                                     const myquery = {
                                         _id: r._id,
                                         isConfirmed: true,
