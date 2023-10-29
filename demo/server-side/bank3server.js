@@ -92,7 +92,7 @@ const UpdateDb = () => {
 			*/
                         return;
                     }
-                    console.log("confirmed with B:" + B);
+                    console.log("confirmed for A: "+r._id+" with B:" + B);
                     const myquery = {
                         _id: r._id
                     };
@@ -171,7 +171,7 @@ async function run() {
                     return;
                 }
                 if (B == "0x0000000000000000000000000000000000000000000000000000000000000000") {
-                    console.log("unconfirmed value" + req.params.A + "not present onchain");
+                    console.log("unconfirmed value " + req.params.A + " not present onchain");
                     const myquery = {
                         _id: req.params.A
                     };
