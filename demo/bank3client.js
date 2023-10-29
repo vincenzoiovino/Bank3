@@ -1,3 +1,4 @@
+// TODO: check correctly when variables are defined 
 //const CHAIN_ID=5; // Goerli = 5, Sepolia = 11155111
 const CHAIN_ID = 11155111; // Goerli = 5, Sepolia = 11155111
 //const CHAIN="Goerli"; 

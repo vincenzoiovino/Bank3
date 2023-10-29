@@ -1,3 +1,4 @@
+// TODO: check correctly when variables are defined 
 //process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 //const CHAIN="goerli";
@@ -34,46 +35,46 @@ const UpdateDb = () => {
                                 return;
                             }
                         });
-                        if (r.blockNumber) {
-                            bn[r._id] = BigInt(r.blockNumber);
-try {
-                            get_ncoins(hexToBytes(r._id), BigInt(r.blockNumber)).then(function(value) { // TODO: it does not seem to work. It gets nCoins from the latest block and not from the block bn[r._id] as it should be
-                            //getncoins(encodedA[r._id]).then(function(value) { // TODO: it does not seem to work. It gets nCoins from the latest block and not from the block bn[r._id] as it should be
-                                if (value == "error") {
-                                    console.log("error in updating:" + r._id + " for bn:" + BigInt(r.blockNumber));
-                                    return;
-                                }
-                                coins[r._id] = value.toString();
-                                console.log("Update for nCoins for bn:" + BigInt(r.blockNumber) + " for A:" + r._id + " called get_ncoins that returned: " + coins[r._id]);
-                                const myquery = {
-                                    _id: r._id,
-                                    isConfirmed: true,
-                                };
-                                const newvalues = {
-                                    $set: {
-                                        nCoins: coins[r._id]
-                                    }
-                                };
-                                db.collection('bank3').update(myquery, newvalues, (err, result) => {
-                                    if (err) {
-                                        console.log(err);
+                        if (typeof r.blockNumber === 'undefined' || r.blockNumber === null) {
+                            //bn[r._id] = BigInt(r.blockNumber);
+                            try {
+                                get_ncoins(hexToBytes(r._id), BigInt(r.blockNumber)).then(function(value) { // TODO: it does not seem to work. It gets nCoins from the latest block and not from the block bn[r._id] as it should be
+                                    //getncoins(encodedA[r._id]).then(function(value) { // TODO: it does not seem to work. It gets nCoins from the latest block and not from the block bn[r._id] as it should be
+                                    if (value == "error") {
+                                        console.log("error in updating:" + r._id + " for bn:" + BigInt(r.blockNumber));
                                         return;
                                     }
+                                    coins[r._id] = value.toString();
+                                    console.log("Update for nCoins for bn:" + BigInt(r.blockNumber) + " for A:" + r._id + " called get_ncoins that returned: " + coins[r._id]);
+                                    const myquery = {
+                                        _id: r._id,
+                                        isConfirmed: true,
+                                    };
+                                    const newvalues = {
+                                        $set: {
+                                            nCoins: coins[r._id]
+                                        }
+                                    };
+                                    db.collection('bank3').update(myquery, newvalues, (err, result) => {
+                                        if (err) {
+                                            console.log(err);
+                                            return;
+                                        }
+                                    });
+
+
                                 });
-
-
-                            });
-} catch(err){
-console.log("Periodical update for first bn failed:"+err);
-}
+                            } catch (err) {
+                                console.log("Periodical update for first bn failed:" + err);
+                            }
                         }
 
                     });
 
 
                 }
-console.log("calling getB with "+r._id+" "+hexToBytes(r._id));                
-getB(hexToBytes(r._id)).then(function(value) {
+                console.log("calling getB with " + r._id + " " + hexToBytes(r._id));
+                getB(hexToBytes(r._id)).then(function(value) {
                     B = value.toString();
                     if (B == "error") {
                         console.log("error for A:" + r._id + " getting corresponding B");
@@ -84,10 +85,12 @@ getB(hexToBytes(r._id)).then(function(value) {
                         const myquery = {
                             _id: r._id
                         };
-                        db.collection('bank3').deleteOne(myquery, function(err, result) {
+                        /* After many tries it should be deleted 
+			db.collection('bank3').deleteOne(myquery, function(err, result) {
                             if (err) console.log(err); // removal failed, we should retry later
                             console.log("entry deleted:" + r._id);
-                        });
+                        }); 
+			*/
                         return;
                     }
                     console.log("confirmed with B:" + B);
@@ -162,7 +165,7 @@ async function run() {
             //var tx=await web3.eth.getTransaction("0x6c6a479424728942c4a7bcc2709abe197baaa5555cd8e1f3805dd1c4187158f4");
             var bn = tx.blockNumber;
             await get_B(encodedA, bn).then(function(value) {
-            //await getB(encodedA).then(function(value) {
+                //await getB(encodedA).then(function(value) {
                 B = value.toString();
                 if (B == "error") {
                     console.log("error for A:" + req.params.A + " getting corresponding B notwithstanding transaction txn:" + tx + " confirmed in bn:" + bn);
@@ -213,7 +216,7 @@ async function run() {
                     res.send("ok");
                 });
                 get_ncoins(encodedA, bn).then(function(value) { // note that this is nested inside get_B: the reason is that we execute this part only for a valid txn
-                //getncoins(encodedA).then(function(value) { // note that this is nested inside getB: the reason is that we execute this part only for a valid txn
+                    //getncoins(encodedA).then(function(value) { // note that this is nested inside getB: the reason is that we execute this part only for a valid txn
                     coins = value.toString();
                     if (value == "error") {
 
@@ -452,7 +455,7 @@ console.log('Bank3 server-side code running');
 // Configuring the connection to an Ethereum node
 const network = process.env.ETHEREUM_NETWORK;
 const web3 = new Web3(
-    new Web3.providers.HttpProvider(KEY,network ),
+    new Web3.providers.HttpProvider(KEY, network),
 );
 
 
@@ -469,7 +472,7 @@ web3.eth
 */
 
 async function getB(A) {
-return get_B(A,"latest");
+    return get_B(A, "latest");
 }
 async function get_B(A, bn) {
 
@@ -478,13 +481,13 @@ async function get_B(A, bn) {
 
     try {
         // Interact with Smart Contract
-var B=""; 
-       if (bn=="latest") B = await contract.methods.get_B(A).call();
-       else B = await contract.methods.get_B(A).call(null, bn);
+        var B = "";
+        if (bn == "latest") B = await contract.methods.get_B(A).call();
+        else B = await contract.methods.get_B(A).call(null, bn);
         console.log("B=" + B);
         return B;
     } catch (err) {
-        console.error("Failed to retrieve B for value " + A + "for bn:"+bn+":", err);
+        console.error("Failed to retrieve B for value " + A + "for bn:" + bn + ":", err);
         return "error";
     }
 }
@@ -496,22 +499,22 @@ function hexToBytes(hex) {
     return bytes;
 }
 async function getncoins(A) {
-return get_ncoins(A,"latest");
+    return get_ncoins(A, "latest");
 }
-async function get_ncoins(A,bn) {
+async function get_ncoins(A, bn) {
 
     // Instantiate a new Contract
     const contract = new web3.eth.Contract(contractBankWalletsABI, contractBankWalletsAddress);
 
     try {
-var _ncoins="";
+        var _ncoins = "";
         // Interact with Smart Contract
-if (bn=="latest")
-        _ncoins = await contract.methods.get_ncoins(A).call(null,bn);
+        if (bn == "latest")
+            _ncoins = await contract.methods.get_ncoins(A).call(null, bn);
         else _ncoins = await contract.methods.get_ncoins(A).call();
         return _ncoins;
     } catch (err) {
-        console.error("Failed to retrieve ncoins for value " + A + "for bn:"+bn+":", err);
+        console.error("Failed to retrieve ncoins for value " + A + "for bn:" + bn + ":", err);
         return "error";
     }
 }
