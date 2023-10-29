@@ -1,4 +1,4 @@
-// TODO: check correctly when variables are defined 
+// TODO: get_B does not seem to return correct B 
 //process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 //const CHAIN="goerli";
