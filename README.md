@@ -39,7 +39,7 @@ Then open ``localhost:8000`` in your browser.
 ### Demo: scanner functionality
 This part is needed if you want the scanner functionality to work.
 
-Install the ``node.js`` packages ``express``, ``mongodb``, ``nocache``, ``cors``, ``web3``, e.g.:
+Install the ``node.js`` packages ``express``, ``mongodb@2.2.19``, ``nocache``, ``cors``, ``web3``, e.g.:
 ```bash
 npm install express --save
 ```
