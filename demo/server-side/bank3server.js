@@ -38,20 +38,21 @@ const UpdateDb = () => {
                         if (r.blockNumber != null) {
                             try {
                                 var bn = BigInt(r.blockNumber);
-                                get_ncoins(hexToBytes(r._id), bn).then(function(value) { // TODO: check if it gets nCoins from the block bn and not from the latest block
+				var s=r._id;
+                                get_ncoins(hexToBytes(s), bn).then(function(value) { // TODO: check if it gets nCoins from the block bn and not from the latest block
                                     if (value == "error") {
-                                        console.log("error in updating:" + r._id + " for bn:" + bn);
+                                        console.log("error in updating:" + s + " for bn:" + bn);
                                         return;
                                     }
-                                    coins[r._id] = value.toString();
-                                    console.log("Update for nCoins for bn:" + bn + " for A:" + r._id + " called get_ncoins that returned: " + coins[r._id]);
+                                    coins[s] = value.toString();
+                                    console.log("Update for nCoins for bn:" + bn + " for A:" + s + " called get_ncoins that returned: " + coins[s]);
                                     const myquery = {
-                                        _id: r._id,
+                                        _id: s,
                                         isConfirmed: true,
                                     };
                                     const newvalues = {
                                         $set: {
-                                            nCoins: coins[r._id]
+                                            nCoins: coins[s]
                                         }
                                     };
                                     db.collection('bank3').update(myquery, newvalues, (err, result) => {
