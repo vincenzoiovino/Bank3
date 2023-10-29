@@ -73,16 +73,17 @@ const UpdateDb = () => {
 
                 }
                 console.log("calling getB with " + r._id + " " + hexToBytes(r._id));
-                getB(hexToBytes(r._id)).then(function(value) {
+var s=r._id;
+                getB(hexToBytes(s)).then(function(value) {
                     B = value.toString();
                     if (B == "error") {
-                        console.log("error for A:" + r._id + " getting corresponding B");
+                        console.log("error for A:" + s + " getting corresponding B");
                         return;
                     }
                     if (B == "0x0000000000000000000000000000000000000000000000000000000000000000") {
-                        console.log("unconfirmed value" + r._id + "not present onchain");
+                        console.log("unconfirmed value" + s + "not present onchain");
                         const myquery = {
-                            _id: r._id
+                            _id: s
                         };
                         /* After many tries it should be deleted 
 			db.collection('bank3').deleteOne(myquery, function(err, result) {
@@ -92,9 +93,9 @@ const UpdateDb = () => {
 			*/
                         return;
                     }
-                    console.log("confirmed for A: "+r._id+" with B:" + B);
+                    console.log("confirmed for A: "+s+" with B:" + B);
                     const myquery = {
-                        _id: r._id
+                        _id: s
                     };
                     var newdate = "";
                     if (!r.date) newdate = Date.now();
