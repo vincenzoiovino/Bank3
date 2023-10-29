@@ -1,7 +1,7 @@
-const CHAIN_ID=5; // Goerli = 5, Sepolia = 11155111
-//const CHAIN_ID = 11155111; // Goerli = 5, Sepolia = 11155111
-const CHAIN="Goerli"; 
-//const CHAIN = "Sepolia";
+//const CHAIN_ID=5; // Goerli = 5, Sepolia = 11155111
+const CHAIN_ID = 11155111; // Goerli = 5, Sepolia = 11155111
+//const CHAIN="Goerli"; 
+const CHAIN = "Sepolia";
 var passwordSaved = [];
 
 function addRowHandlers() {
@@ -93,9 +93,9 @@ var dotsinterval = setInterval(setDots, 1000);
 const SignMessage = "Do not sign this message in any application different than Bank3. The signature will be used as your SECRET PASSWORD!";
 const PublicKeyMessage = "Bank3: this signature will be used only to get your public key.";
 // Contract Details
-const contractBankWalletsAddress = "0xf03eB7b77Efe402c6e1721a17f9527F178Fc34f8"; // contract on Goerli
+//const contractBankWalletsAddress = "0xf03eB7b77Efe402c6e1721a17f9527F178Fc34f8"; // contract on Goerli
 // const contractBankWalletsAddress = "0x4d4F9E4A5d2e178B91d3BE81fB16D59F49099cb1"; // old contract on Sepolia
-//const contractBankWalletsAddress = "0xc32498817cC84236D0686D7ee449D2ADB186097B"; // contract on Sepolia
+const contractBankWalletsAddress = "0xc32498817cC84236D0686D7ee449D2ADB186097B"; // contract on Sepolia
 const contractBankWalletsABI = [{
         "inputs": [{
                 "internalType": "bytes",
@@ -257,8 +257,8 @@ const contractBankWalletsABI = [{
     }
 ];
 
-const contractZkRegAddress = "0xc32498817cC84236D0686D7ee449D2ADB186097B"; // contract on Goerli
-//const contractZkRegAddress = "0x4e9EAf3F2e2A1Bf76c94D041efe96B54bDC8A093"; // contract on Sepolia
+//const contractZkRegAddress = "0xc32498817cC84236D0686D7ee449D2ADB186097B"; // contract on Goerli
+const contractZkRegAddress = "0x4e9EAf3F2e2A1Bf76c94D041efe96B54bDC8A093"; // contract on Sepolia
 const contractZkRegABI = [{
         "inputs": [],
         "name": "BBJJPK_X_INTERFACE_ID",

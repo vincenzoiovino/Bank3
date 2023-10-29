@@ -1,5 +1,7 @@
-const CHAIN="goerli";
-//const CHAIN = "sepolia";
+//process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
+//const CHAIN="goerli";
+const CHAIN = "sepolia";
 const UpdateDb = () => {
     var coins = [];
     db.collection('bank3').find({}).toArray(async (err, result) => {
@@ -10,13 +12,13 @@ const UpdateDb = () => {
             for (r of res) {
                 encodedA[r._id] = hexToBytes(r._id);
                 if (r.isConfirmed == true) {
-                    await get_ncoins(encodedA[r._id]).then(function(value) {
+                    await getncoins(hexToBytes(r._id)).then(function(value) {
                         if (value == "error") {
                             console.log("error in updating:" + r._id);
                             return;
                         }
                         coins[r._id] = value.toString();
-                        console.log("Update for A:" + r._id + " called get_ncoins that returned: " + coins[r._id]);
+                        console.log("Periodical update for A:" + r._id + " called get_ncoins that returned: " + coins[r._id]);
                         const myquery = {
                             _id: r._id,
                             isConfirmed: true,
@@ -34,13 +36,15 @@ const UpdateDb = () => {
                         });
                         if (r.blockNumber) {
                             bn[r._id] = BigInt(r.blockNumber);
-                            get_ncoins(encodedA[r._id], bn[r._id]).then(function(value) { // TODO: it does not seem to work. It gets nCoins from the latest block and not from the block bn[r._id] as it should be
+try {
+                            get_ncoins(hexToBytes(r._id), BigInt(r.blockNumber)).then(function(value) { // TODO: it does not seem to work. It gets nCoins from the latest block and not from the block bn[r._id] as it should be
+                            //getncoins(encodedA[r._id]).then(function(value) { // TODO: it does not seem to work. It gets nCoins from the latest block and not from the block bn[r._id] as it should be
                                 if (value == "error") {
-                                    console.log("error in updating:" + r._id + " for bn:" + bn[r._id]);
+                                    console.log("error in updating:" + r._id + " for bn:" + BigInt(r.blockNumber));
                                     return;
                                 }
                                 coins[r._id] = value.toString();
-                                console.log("Update for nCoins for bn:" + bn[r._id] + " for A:" + r._id + " called get_ncoins that returned: " + coins[r._id]);
+                                console.log("Update for nCoins for bn:" + BigInt(r.blockNumber) + " for A:" + r._id + " called get_ncoins that returned: " + coins[r._id]);
                                 const myquery = {
                                     _id: r._id,
                                     isConfirmed: true,
@@ -59,14 +63,17 @@ const UpdateDb = () => {
 
 
                             });
-
+} catch(err){
+console.log("Periodical update for first bn failed:"+err);
+}
                         }
 
                     });
 
 
                 }
-                get_B(encodedA[r._id]).then(function(value) {
+console.log("calling getB with "+r._id+" "+hexToBytes(r._id));                
+getB(hexToBytes(r._id)).then(function(value) {
                     B = value.toString();
                     if (B == "error") {
                         console.log("error for A:" + r._id + " getting corresponding B");
@@ -155,6 +162,7 @@ async function run() {
             //var tx=await web3.eth.getTransaction("0x6c6a479424728942c4a7bcc2709abe197baaa5555cd8e1f3805dd1c4187158f4");
             var bn = tx.blockNumber;
             await get_B(encodedA, bn).then(function(value) {
+            //await getB(encodedA).then(function(value) {
                 B = value.toString();
                 if (B == "error") {
                     console.log("error for A:" + req.params.A + " getting corresponding B notwithstanding transaction txn:" + tx + " confirmed in bn:" + bn);
@@ -205,6 +213,7 @@ async function run() {
                     res.send("ok");
                 });
                 get_ncoins(encodedA, bn).then(function(value) { // note that this is nested inside get_B: the reason is that we execute this part only for a valid txn
+                //getncoins(encodedA).then(function(value) { // note that this is nested inside getB: the reason is that we execute this part only for a valid txn
                     coins = value.toString();
                     if (value == "error") {
 
@@ -247,9 +256,9 @@ async function run() {
         });
     });
 }
-const contractBankWalletsAddress = "0xf03eB7b77Efe402c6e1721a17f9527F178Fc34f8"; // contract on Goerli
+//const contractBankWalletsAddress = "0xf03eB7b77Efe402c6e1721a17f9527F178Fc34f8"; // contract on Goerli
 //const contractBankWalletsAddress = "0x4d4F9E4A5d2e178B91d3BE81fB16D59F49099cb1"; // old contract on Sepolia
-//const contractBankWalletsAddress = "0xc32498817cC84236D0686D7ee449D2ADB186097B"; // contract on Sepolia
+const contractBankWalletsAddress = "0xc32498817cC84236D0686D7ee449D2ADB186097B"; // contract on Sepolia
 const contractBankWalletsABI = [{
         "inputs": [{
                 "internalType": "bytes",
@@ -410,7 +419,8 @@ const contractBankWalletsABI = [{
         "type": "function"
     }
 ];
-const INFURA_KEY = "https://" + CHAIN + ".infura.io/v3/89235f1ec0f84511ade8dcf9aa9529f1";
+const KEY = "https://" + CHAIN + ".infura.io/v3/89235f1ec0f84511ade8dcf9aa9529f1"; // infura api key
+//const KEY = "https://eth-goerli.g.alchemy.com/v2/PgVwse_L8RTZIig5vGWjG5gYYVPFfZ2w"; // alchemy api key
 
 const express = require('express');
 const MongoClient = require('mongodb').MongoClient;
@@ -442,7 +452,7 @@ console.log('Bank3 server-side code running');
 // Configuring the connection to an Ethereum node
 const network = process.env.ETHEREUM_NETWORK;
 const web3 = new Web3(
-    new Web3.providers.HttpProvider(INFURA_KEY, ),
+    new Web3.providers.HttpProvider(KEY,network ),
 );
 
 
@@ -458,7 +468,9 @@ web3.eth
     });
 */
 
-
+async function getB(A) {
+return get_B(A,"latest");
+}
 async function get_B(A, bn) {
 
     // Instantiate a new Contract
@@ -466,11 +478,13 @@ async function get_B(A, bn) {
 
     try {
         // Interact with Smart Contract
-        const B = await contract.methods.get_B(A).call(null, bn);
+var B=""; 
+       if (bn=="latest") B = await contract.methods.get_B(A).call();
+       else B = await contract.methods.get_B(A).call(null, bn);
         console.log("B=" + B);
         return B;
     } catch (err) {
-        console.error("Failed to retrieve B for value " + A + ":", err);
+        console.error("Failed to retrieve B for value " + A + "for bn:"+bn+":", err);
         return "error";
     }
 }
@@ -481,17 +495,23 @@ function hexToBytes(hex) {
         bytes.push(parseInt(hex.substr(c, 2), 16));
     return bytes;
 }
-async function get_ncoins(A) {
+async function getncoins(A) {
+return get_ncoins(A,"latest");
+}
+async function get_ncoins(A,bn) {
 
     // Instantiate a new Contract
     const contract = new web3.eth.Contract(contractBankWalletsABI, contractBankWalletsAddress);
 
     try {
+var _ncoins="";
         // Interact with Smart Contract
-        const _ncoins = await contract.methods.get_ncoins(A).call();
+if (bn=="latest")
+        _ncoins = await contract.methods.get_ncoins(A).call(null,bn);
+        else _ncoins = await contract.methods.get_ncoins(A).call();
         return _ncoins;
     } catch (err) {
-        console.error("Failed to retrieve ncoins for value " + A + ":", err);
+        console.error("Failed to retrieve ncoins for value " + A + "for bn:"+bn+":", err);
         return "error";
     }
 }
