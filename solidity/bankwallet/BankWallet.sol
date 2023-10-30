@@ -15,7 +15,8 @@ contract BankWallet {
 
     struct Deposit {
         uint256 nCoins; // the amount of coins (in wei units) to be transferred
-        bytes32 B; // the value B
+        // string A;
+        bytes32 B; // the value B represented as hex string encoding an EC point in compressed form
 
     }
     address public Director;
@@ -44,8 +45,8 @@ function setFees(uint256 fees) external {
 }
 
     /** 
-     * @dev Make a deposit annotated with identifier id of msg.value coins with deposit CT=(A,B)
-     * @param A and B byte arrays representing the deposit
+     * @dev Make a deposit annotated with identifier id of msg.value coins with ciphertext CT=(A,B)
+     * @param A and B strings representing the ciphertext
      * 
      * The parameter calldata is not used on purpose, it will appear on ether scans
      * so one can use it off-chain to compute the proof needed for a withdrawal but the contract does not use it directly
@@ -54,6 +55,7 @@ function setFees(uint256 fees) external {
     {
  
        require(deposits[A].B==0);
+       require(msg.value!=0);
        deposits[A].nCoins=msg.value;
        deposits[A].B=B;
        //id=Id++;
@@ -98,7 +100,17 @@ deposits[A].nCoins=0;
 payable(addr).transfer(nCoins);
 
     }
- 
 
+ // getters for nCoins and B
+ function get_ncoins(bytes calldata A) public view returns (uint) {
+        return deposits[A].nCoins;
+    }
+
+    function get_B(bytes calldata A) public view returns (bytes32) {
+        return deposits[A].B;
+    }
+ function get_all(bytes calldata A) public view returns (Deposit memory) {
+        return deposits[A];
+    }
 }
 
