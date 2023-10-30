@@ -93,170 +93,224 @@ var dotsinterval = setInterval(setDots, 1000);
 const SignMessage = "Do not sign this message in any application different than Bank3. The signature will be used as your SECRET PASSWORD!";
 const PublicKeyMessage = "Bank3: this signature will be used only to get your public key.";
 // Contract Details
-//const contractBankWalletsAddress = "0xf03eB7b77Efe402c6e1721a17f9527F178Fc34f8"; // contract on Goerli
-// const contractBankWalletsAddress = "0x4d4F9E4A5d2e178B91d3BE81fB16D59F49099cb1"; // old contract on Sepolia
-const contractBankWalletsAddress = "0xc32498817cC84236D0686D7ee449D2ADB186097B"; // contract on Sepolia
-const contractBankWalletsABI = [{
-        "inputs": [{
-                "internalType": "bytes",
-                "name": "A",
-                "type": "bytes"
-            },
-            {
-                "internalType": "bytes32",
-                "name": "B",
-                "type": "bytes32"
-            }
-        ],
-        "name": "MakeDeposit",
-        "outputs": [],
-        "stateMutability": "payable",
-        "type": "function"
-    },
-    {
-        "inputs": [{
-                "internalType": "bytes",
-                "name": "A",
-                "type": "bytes"
-            },
-            {
-                "internalType": "address",
-                "name": "addr",
-                "type": "address"
-            },
-            {
-                "internalType": "bytes",
-                "name": "C",
-                "type": "bytes"
-            }
-        ],
-        "name": "MakeWithdrawalKeccac256",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [{
-                "internalType": "uint256",
-                "name": "nCoins",
-                "type": "uint256"
-            },
-            {
-                "internalType": "address",
-                "name": "addr",
-                "type": "address"
-            },
-            {
-                "internalType": "bytes",
-                "name": "A",
-                "type": "bytes"
-            },
-            {
-                "internalType": "bytes",
-                "name": "C",
-                "type": "bytes"
-            }
-        ],
-        "name": "MakeWithdrawalSha256",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [{
-            "internalType": "uint256",
-            "name": "fees",
-            "type": "uint256"
-        }],
-        "name": "setFees",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [{
-            "internalType": "uint256",
-            "name": "fees",
-            "type": "uint256"
-        }],
-        "stateMutability": "nonpayable",
-        "type": "constructor"
-    },
-    {
-        "inputs": [{
-            "internalType": "bytes",
-            "name": "",
-            "type": "bytes"
-        }],
-        "name": "deposits",
-        "outputs": [{
-                "internalType": "uint256",
-                "name": "nCoins",
-                "type": "uint256"
-            },
-            {
-                "internalType": "bytes32",
-                "name": "B",
-                "type": "bytes32"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "Director",
-        "outputs": [{
-            "internalType": "address",
-            "name": "",
-            "type": "address"
-        }],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "Fees",
-        "outputs": [{
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
-        }],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [{
-            "internalType": "bytes",
-            "name": "A",
-            "type": "bytes"
-        }],
-        "name": "get_B",
-        "outputs": [{
-            "internalType": "bytes32",
-            "name": "",
-            "type": "bytes32"
-        }],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [{
-            "internalType": "bytes",
-            "name": "A",
-            "type": "bytes"
-        }],
-        "name": "get_ncoins",
-        "outputs": [{
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
-        }],
-        "stateMutability": "view",
-        "type": "function"
-    }
+//const contractBankWalletsAddress = "0xf03eB7b77Efe402c6e1721a17f9527F178Fc34f8"; //old contract on Goerli
+//const contractBankWalletsAddress = "0xc32498817cC84236D0686D7ee449D2ADB186097B"; // old contract on Sepolia
+ const contractBankWalletsAddress = "0x06bBC56579D73d7E5C556f67D5c2D3eE66a79EA7"; //  contract on Sepolia
+const contractBankWalletsABI = 
+[
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "fees",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"inputs": [],
+		"name": "Director",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "Fees",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes",
+				"name": "A",
+				"type": "bytes"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "B",
+				"type": "bytes32"
+			}
+		],
+		"name": "MakeDeposit",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes",
+				"name": "A",
+				"type": "bytes"
+			},
+			{
+				"internalType": "address",
+				"name": "addr",
+				"type": "address"
+			},
+			{
+				"internalType": "bytes",
+				"name": "C",
+				"type": "bytes"
+			}
+		],
+		"name": "MakeWithdrawalKeccac256",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "nCoins",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "addr",
+				"type": "address"
+			},
+			{
+				"internalType": "bytes",
+				"name": "A",
+				"type": "bytes"
+			},
+			{
+				"internalType": "bytes",
+				"name": "C",
+				"type": "bytes"
+			}
+		],
+		"name": "MakeWithdrawalSha256",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes",
+				"name": "",
+				"type": "bytes"
+			}
+		],
+		"name": "deposits",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "nCoins",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "B",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes",
+				"name": "A",
+				"type": "bytes"
+			}
+		],
+		"name": "get_B",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes",
+				"name": "A",
+				"type": "bytes"
+			}
+		],
+		"name": "get_all",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "nCoins",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "B",
+						"type": "bytes32"
+					}
+				],
+				"internalType": "struct BankWallet.Deposit",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes",
+				"name": "A",
+				"type": "bytes"
+			}
+		],
+		"name": "get_ncoins",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "fees",
+				"type": "uint256"
+			}
+		],
+		"name": "setFees",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	}
 ];
-
 //const contractZkRegAddress = "0xc32498817cC84236D0686D7ee449D2ADB186097B"; // contract on Goerli
 const contractZkRegAddress = "0x4e9EAf3F2e2A1Bf76c94D041efe96B54bDC8A093"; // contract on Sepolia
 const contractZkRegABI = [{

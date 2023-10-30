@@ -1,126 +1,290 @@
-// TODO: get_B does not seem to return correct B 
-//process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+//const contractBankWalletsAddress = "0xf03eB7b77Efe402c6e1721a17f9527F178Fc34f8"; // old contract on Goerli
+//const contractBankWalletsAddress = "0xc32498817cC84236D0686D7ee449D2ADB186097B"; // old contract on Sepolia
+const contractBankWalletsAddress = "0x06bBC56579D73d7E5C556f67D5c2D3eE66a79EA7"; // contract on Sepolia
+const contractBankWalletsABI = 
+[
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "fees",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"inputs": [],
+		"name": "Director",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "Fees",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes",
+				"name": "A",
+				"type": "bytes"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "B",
+				"type": "bytes32"
+			}
+		],
+		"name": "MakeDeposit",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes",
+				"name": "A",
+				"type": "bytes"
+			},
+			{
+				"internalType": "address",
+				"name": "addr",
+				"type": "address"
+			},
+			{
+				"internalType": "bytes",
+				"name": "C",
+				"type": "bytes"
+			}
+		],
+		"name": "MakeWithdrawalKeccac256",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "nCoins",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "addr",
+				"type": "address"
+			},
+			{
+				"internalType": "bytes",
+				"name": "A",
+				"type": "bytes"
+			},
+			{
+				"internalType": "bytes",
+				"name": "C",
+				"type": "bytes"
+			}
+		],
+		"name": "MakeWithdrawalSha256",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes",
+				"name": "",
+				"type": "bytes"
+			}
+		],
+		"name": "deposits",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "nCoins",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "B",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes",
+				"name": "A",
+				"type": "bytes"
+			}
+		],
+		"name": "get_B",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes",
+				"name": "A",
+				"type": "bytes"
+			}
+		],
+		"name": "get_all",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "nCoins",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "B",
+						"type": "bytes32"
+					}
+				],
+				"internalType": "struct BankWallet.Deposit",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes",
+				"name": "A",
+				"type": "bytes"
+			}
+		],
+		"name": "get_ncoins",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "fees",
+				"type": "uint256"
+			}
+		],
+		"name": "setFees",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	}
+];
 
 //const CHAIN="goerli";
 const CHAIN = "sepolia";
-const UpdateDb = () => {
+async function UpdateDb() {
+var contract = new web3.eth.Contract(contractBankWalletsABI, contractBankWalletsAddress);
     var coins = [];
     db.collection('bank3').find({}).toArray(async (err, result) => {
-        if (err) return console.log(err);
-        if (result) {
-            var res = result;
-            const encodedA = [];
-            for (r of res) {
-                encodedA[r._id] = hexToBytes(r._id);
-                if (r.isConfirmed == true) {
-                    await getncoins(hexToBytes(r._id)).then(function(value) {
-                        if (value == "error") {
-                            console.log("error in updating:" + r._id);
-                            return;
-                        }
-                        coins[r._id] = value.toString();
-                        console.log("Periodical update for A:" + r._id + " called get_ncoins that returned: " + coins[r._id]);
-                        const myquery = {
-                            _id: r._id,
-                            isConfirmed: true,
-                        };
-                        const newvalues = {
-                            $set: {
-                                UpdatednCoins: coins[r._id]
-                            }
-                        };
-                        db.collection('bank3').update(myquery, newvalues, (err, result) => {
-                            if (err) {
-                                console.log(err);
-                                return;
-                            }
-                        });
-                        if (r.blockNumber != null) {
-                            try {
-                                var bn = BigInt(r.blockNumber);
-				var s=r._id;
-                                get_ncoins(hexToBytes(s), bn).then(function(value) { // TODO: check if it gets nCoins from the block bn and not from the latest block
-                                    if (value == "error") {
-                                        console.log("error in updating:" + s + " for bn:" + bn);
-                                        return;
-                                    }
-                                    coins[s] = value.toString();
-                                    console.log("Update for nCoins for bn:" + bn + " for A:" + s + " called get_ncoins that returned: " + coins[s]);
-                                    const myquery = {
-                                        _id: s,
-                                        isConfirmed: true,
-                                    };
-                                    const newvalues = {
-                                        $set: {
-                                            nCoins: coins[s]
-                                        }
-                                    };
-                                    db.collection('bank3').update(myquery, newvalues, (err, result) => {
-                                        if (err) {
-                                            console.log(err);
-                                            return;
-                                        }
-                                    });
-
-
-                                });
-                            } catch (err) {
-                                console.log("Periodical update for first bn failed:" + err);
-                            }
-                        }
-
-                    });
-
-
+        if (err) { 
+console.log(err);
+return;
+}
+        if (!result)  return;
+	var r;
+	var encodedA;
+            for (r of result) {
+	encodedA= hexToBytes(r._id);
+          // await get_deposit(encodedA).then(function(s){
+         await contract.methods.get_all(encodedA).call().then(function(s){
+console.log(s);
+var B=s.B;
+var ncoins=s.nCoins;
+                if (B == "error") {
+                    console.log("update request for A:" + r._id + " unable to get corresponding B");
+                    return;
                 }
-                console.log("calling getB with " + r._id + " " + hexToBytes(r._id));
-var s=r._id;
-                getB(hexToBytes(s)).then(function(value) {
-                    B = value.toString();
-                    if (B == "error") {
-                        console.log("error for A:" + s + " getting corresponding B");
-                        return;
-                    }
-                    if (B == "0x0000000000000000000000000000000000000000000000000000000000000000") {
-                        console.log("unconfirmed value" + s + "not present onchain");
-                        const myquery = {
-                            _id: s
-                        };
-                        /* After many tries it should be deleted 
-			db.collection('bank3').deleteOne(myquery, function(err, result) {
-                            if (err) console.log(err); // removal failed, we should retry later
-                            console.log("entry deleted:" + r._id);
-                        }); 
-			*/
-                        return;
-                    }
-                    console.log("confirmed for A: "+s+" with B:" + B);
+                if (B == "0x0000000000000000000000000000000000000000000000000000000000000000") {
+                    console.log("update request for A:" + r._id + " getting corresponding B=0");
                     const myquery = {
-                        _id: s
+                        _id: r._id
                     };
-                    var newdate = "";
-                    if (!r.date) newdate = Date.now();
-                    else newdate = r.date;
-                    const newvalues = {
-                        $set: {
-                            isConfirmed: true,
-                            B: B.substr(2),
-                            date: newdate,
-                        }
-                    };
-                    db.collection('bank3').update(myquery, newvalues, (err, result) => {
-                        if (err) {
-                            console.log(err);
-
-
-                            return;
-                        }
+ /* after many tries we should delete the entry                   
+ db.collection('bank3').deleteOne(myquery, function(err, result) {
+                        if (err) console.log(err); // removal failed, we should retry later
+                        console.log("entry deleted:" + r._id);
                     });
-                });
+*/
+                    return;
+                }
+                    console.log("update request for A:" + r._id + " corresponding to B: "+B+" and nCoins: "+ncoins);
+                const myquery = {
+                    _id: r._id
+                };
+                const newvalues = {
+                    $set: {
+                     //   isConfirmed: true,
+                       // B: B.substr(2),
+			UpdatednCoins: ncoins.toString(),
+		//	nCoins:r.nCoins,
+		//	txn:r.txn,
+		//	blockNumber:r.blockNumber,
+                  //      date: r.date,
+                    }
+                };
+                db.collection('bank3').update(myquery, newvalues, (err, result) => {
+                    if (err) {
+                        console.log(err);
 
-            }
-        }
-    });
+
+                        return;
+                    }
+                    console.log('deposit update into db:' + result);
+                });
+ });           
+}
+
+
+
+});
+
 
 }
 async function run() {
@@ -136,8 +300,7 @@ async function run() {
             date: Date.now(),
             txn: "",
         };
-        console.log(req.params.A);
-        console.log("unonfirmed");
+        console.log("unonfirmed request for "+req.params.A);
 
         db.collection('bank3').insertOne(deposit, (err, result) => {
             if (err) {
@@ -152,28 +315,29 @@ async function run() {
             res.send("ok");
         });
     });
-    // add a document to the DB collection recording the cofirmed A
+    // add a document to the DB collection recording the confirmed A
     app.get('/confirmed/:A/:txn', async (req, res) => {
+var contract = new web3.eth.Contract(contractBankWalletsABI, contractBankWalletsAddress);
         try {
-            console.log(req.params.A);
-            console.log(req.params.txn);
-            // check if req.params.A is confirmed and gets corresponding B, nCoins and possibly sender of the transaction txn
-            // TODO: add sender
+            console.log("confirmed request for A:"+req.params.A+" and txn:"+req.params.txn);
             const encodedA = await hexToBytes(req.params.A);
             var B = "";
             var coins = "";
             var tx = await web3.eth.getTransaction("0x" + req.params.txn);
-            //var tx=await web3.eth.getTransaction("0x6c6a479424728942c4a7bcc2709abe197baaa5555cd8e1f3805dd1c4187158f4");
             var bn = tx.blockNumber;
-            await get_B(encodedA, bn).then(function(value) {
-                //await getB(encodedA).then(function(value) {
-                B = value.toString();
+          //  await get_deposit(encodedA, bn).then(function(value) {
+         await contract.methods.get_all(encodedA,bn).call().then(function(value,error){
+if (error){
+console.log(error);
+return;
+}
+                B = value.B.toString();
                 if (B == "error") {
-                    console.log("error for A:" + req.params.A + " getting corresponding B notwithstanding transaction txn:" + tx + " confirmed in bn:" + bn);
+                    console.log("confirmed request for A:" + req.params.A + " unable to get corresponding B for transaction txn:" + tx + " in bn:" + bn);
                     return;
                 }
                 if (B == "0x0000000000000000000000000000000000000000000000000000000000000000") {
-                    console.log("unconfirmed value " + req.params.A + " not present onchain");
+                    console.log("confirmed request for A:" + req.params.A + " getting corresponding B=0 for transaction txn:" + tx + " in bn:" + bn);
                     const myquery = {
                         _id: req.params.A
                     };
@@ -188,7 +352,7 @@ async function run() {
                     return;
                 }
                 // from now we can assume that there exists and there will exist one and only one transaction onchain with value A=req.params.A
-                console.log("confirmed with B:" + B + " for bn:" + bn);
+                    console.log("confirmed request for A:" + req.params.A + " corresponding to B: "+value.B+" and nCoins: "+value.nCoins+" for transaction txn:" + tx + " in bn:" + bn);
                 const myquery = {
                     _id: req.params.A
                 };
@@ -196,7 +360,9 @@ async function run() {
                     $set: {
                         isConfirmed: true,
                         sender: tx.from,
-                        B: B.substr(2),
+                        B: value.B.substr(2),
+			nCoins:value.nCoins.toString(),
+			UpdatednCoins: "",
                         date: Date.now(),
                         blockNumber: "" + bn,
                         txn: req.params.txn,
@@ -216,34 +382,6 @@ async function run() {
                     console.log('deposit confirmed into db:' + result);
                     res.send("ok");
                 });
-                get_ncoins(encodedA, bn).then(function(value) { // note that this is nested inside get_B: the reason is that we execute this part only for a valid txn
-                    //getncoins(encodedA).then(function(value) { // note that this is nested inside getB: the reason is that we execute this part only for a valid txn
-                    coins = value.toString();
-                    if (value == "error") {
-
-                        console.log("error: For A:" + req.params.A + " called get_ncoins that returned: " + coins);
-                        return;
-                    }
-                    console.log("For A:" + req.params.A + " called get_ncoins that returned: " + coins);
-                    const myquery = {
-                        _id: req.params.A
-                    };
-                    const newvalues = {
-                        $set: {
-                            nCoins: coins
-                        }
-                    };
-                    db.collection('bank3').update(myquery, newvalues, (err, result) => {
-                        if (err) {
-                            console.log(err);
-                            // here we have two cases: 1) it fails because the transaction was not confirmed and so the entry was deleted. 2)it  fails for other reasons, in this case should keep on retrying later
-                            return;
-                        }
-                        console.log('updated coins confirmed into db');
-                    });
-
-
-                });
             });
         } catch (err) {}
     });
@@ -260,169 +398,7 @@ async function run() {
         });
     });
 }
-//const contractBankWalletsAddress = "0xf03eB7b77Efe402c6e1721a17f9527F178Fc34f8"; // contract on Goerli
-//const contractBankWalletsAddress = "0x4d4F9E4A5d2e178B91d3BE81fB16D59F49099cb1"; // old contract on Sepolia
-const contractBankWalletsAddress = "0xc32498817cC84236D0686D7ee449D2ADB186097B"; // contract on Sepolia
-const contractBankWalletsABI = [{
-        "inputs": [{
-                "internalType": "bytes",
-                "name": "A",
-                "type": "bytes"
-            },
-            {
-                "internalType": "bytes32",
-                "name": "B",
-                "type": "bytes32"
-            }
-        ],
-        "name": "MakeDeposit",
-        "outputs": [],
-        "stateMutability": "payable",
-        "type": "function"
-    },
-    {
-        "inputs": [{
-                "internalType": "bytes",
-                "name": "A",
-                "type": "bytes"
-            },
-            {
-                "internalType": "address",
-                "name": "addr",
-                "type": "address"
-            },
-            {
-                "internalType": "bytes",
-                "name": "C",
-                "type": "bytes"
-            }
-        ],
-        "name": "MakeWithdrawalKeccac256",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [{
-                "internalType": "uint256",
-                "name": "nCoins",
-                "type": "uint256"
-            },
-            {
-                "internalType": "address",
-                "name": "addr",
-                "type": "address"
-            },
-            {
-                "internalType": "bytes",
-                "name": "A",
-                "type": "bytes"
-            },
-            {
-                "internalType": "bytes",
-                "name": "C",
-                "type": "bytes"
-            }
-        ],
-        "name": "MakeWithdrawalSha256",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [{
-            "internalType": "uint256",
-            "name": "fees",
-            "type": "uint256"
-        }],
-        "name": "setFees",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [{
-            "internalType": "uint256",
-            "name": "fees",
-            "type": "uint256"
-        }],
-        "stateMutability": "nonpayable",
-        "type": "constructor"
-    },
-    {
-        "inputs": [{
-            "internalType": "bytes",
-            "name": "",
-            "type": "bytes"
-        }],
-        "name": "deposits",
-        "outputs": [{
-                "internalType": "uint256",
-                "name": "nCoins",
-                "type": "uint256"
-            },
-            {
-                "internalType": "bytes32",
-                "name": "B",
-                "type": "bytes32"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "Director",
-        "outputs": [{
-            "internalType": "address",
-            "name": "",
-            "type": "address"
-        }],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "Fees",
-        "outputs": [{
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
-        }],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [{
-            "internalType": "bytes",
-            "name": "A",
-            "type": "bytes"
-        }],
-        "name": "get_B",
-        "outputs": [{
-            "internalType": "bytes32",
-            "name": "",
-            "type": "bytes32"
-        }],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [{
-            "internalType": "bytes",
-            "name": "A",
-            "type": "bytes"
-        }],
-        "name": "get_ncoins",
-        "outputs": [{
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
-        }],
-        "stateMutability": "view",
-        "type": "function"
-    }
-];
+
 const KEY = "https://" + CHAIN + ".infura.io/v3/89235f1ec0f84511ade8dcf9aa9529f1"; // infura api key
 //const KEY = "https://eth-goerli.g.alchemy.com/v2/PgVwse_L8RTZIig5vGWjG5gYYVPFfZ2w"; // alchemy api key
 
@@ -460,38 +436,7 @@ const web3 = new Web3(
 );
 
 
-/* Test
-web3.eth
-    .getBlockNumber()
-    .then(function (blockNumber) {
-        console.log('Test: Get Current block number:', blockNumber);
-    })
-    .catch(function (error) {
-        console.log('Error:', error);
-        return;
-    });
-*/
 
-async function getB(A) {
-    return get_B(A, "latest");
-}
-async function get_B(A, bn) {
-
-    // Instantiate a new Contract
-    const contract = new web3.eth.Contract(contractBankWalletsABI, contractBankWalletsAddress);
-
-    try {
-        // Interact with Smart Contract
-        var B = "";
-        if (bn == "latest") B = await contract.methods.get_B(A).call();
-        else B = await contract.methods.get_B(A).call(null, bn);
-        console.log("B=" + B);
-        return B;
-    } catch (err) {
-        console.error("Failed to retrieve B for value " + A + "for bn:" + bn + ":", err);
-        return "error";
-    }
-}
 
 function hexToBytes(hex) {
     let bytes = [];
@@ -499,25 +444,30 @@ function hexToBytes(hex) {
         bytes.push(parseInt(hex.substr(c, 2), 16));
     return bytes;
 }
-async function getncoins(A) {
-    return get_ncoins(A, "latest");
-}
-async function get_ncoins(A, bn) {
+async function get_deposit(A,bn) {
 
-    // Instantiate a new Contract
     const contract = new web3.eth.Contract(contractBankWalletsABI, contractBankWalletsAddress);
 
     try {
-        var _ncoins = "";
-        // Interact with Smart Contract
-        if (bn == "latest")
-            _ncoins = await contract.methods.get_ncoins(A).call(null, bn);
-        else _ncoins = await contract.methods.get_ncoins(A).call();
-        return _ncoins;
+        return await contract.methods.get_all(A).call(null,bn);
     } catch (err) {
-        console.error("Failed to retrieve ncoins for value " + A + "for bn:" + bn + ":", err);
+        console.error("Failed to retrieve deposit for value " + A+ "for bn "+ bn+":", err);
+        return "error";
+    }
+}
+async function get_deposit(A) {
+
+    const contract = new web3.eth.Contract(contractBankWalletsABI, contractBankWalletsAddress);
+
+    try {
+         contract.methods.get_all(A).call(function(value){
+console.log(value);
+return value;
+});
+    } catch (err) {
+        console.error("Failed to retrieve deposit for value " + A+ ":", err);
         return "error";
     }
 }
 run();
-setInterval(UpdateDb, 8000);
+setInterval(UpdateDb, 15000);
