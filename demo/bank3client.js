@@ -739,6 +739,8 @@ async function SendFunction() {
             }
 
         }
+        document.getElementById("status4").style.color = "yellow";
+        document.getElementById("status4").innerText = "Deposit of " + amount + " ETH in favour of " + to + " associated to identifier: 0x" + A + " is going to be submitted...";
         var txn = "";
         await contract.methods.MakeDeposit(encodedA, encodedB).send({
             from: from,
@@ -757,7 +759,6 @@ async function SendFunction() {
             }
 
         });
-        document.getElementById("status1").innerText = "Deposit of " + amount + " ETH in favour of " + to + " associated to identifier: 0x" + A + "is going to be submitted...";
         clearInterval(waitdepositinterval);
         clearInterval(dotsinterval);
         dotsinterval = setInterval(setDots, 1000);
