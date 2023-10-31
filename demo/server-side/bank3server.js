@@ -1,3 +1,4 @@
+// TODO: scanner based on new transactions onchain.
 //const contractBankWalletsAddress = "0xf03eB7b77Efe402c6e1721a17f9527F178Fc34f8"; // old contract on Goerli
 //const contractBankWalletsAddress = "0xc32498817cC84236D0686D7ee449D2ADB186097B"; // old contract on Sepolia
 const contractBankWalletsAddress = "0x06bBC56579D73d7E5C556f67D5c2D3eE66a79EA7"; // contract on Sepolia
@@ -203,11 +204,14 @@ async function UpdateDb() {
         var encodedA;
         for (r of result) {
             encodedA = hexToBytes(r._id);
-            // await get_deposit(encodedA).then(function(s){
             await contract.methods.get_all(encodedA).call().then(function(s) {
                 console.log(s);
                 var B = s.B;
                 var ncoins = s.nCoins;
+                if (r.isConfirmed == true && r.nCoins == ncoins) {
+                    console.log("update request for A:" + r._id + " exiting with no change because r.nCoins=" + r.nCoins + " and onchain nCoins=" + ncoins);
+                    return;
+                }
                 if (B == "error") {
                     console.log("update request for A:" + r._id + " unable to get corresponding B");
                     return;
@@ -217,27 +221,27 @@ async function UpdateDb() {
                     const myquery = {
                         _id: r._id
                     };
-                    /* after many tries we should delete the entry                   
- db.collection('bank3').deleteOne(myquery, function(err, result) {
+                    /* TODO: after many tries we should delete the entry                   
+                         db.collection('bank3').deleteOne(myquery, function(err, result) {
                         if (err) console.log(err); // removal failed, we should retry later
                         console.log("entry deleted:" + r._id);
                     });
-*/
+		    */
                     return;
                 }
                 console.log("update request for A:" + r._id + " corresponding to B: " + B + " and nCoins: " + ncoins);
                 const myquery = {
                     _id: r._id
                 };
+                var coins = "";
+                if (r.UpdatednCoins && r.UpdatednCoins != "" && (r.UpdatednCoins != ncoins)) coins = r.UpdatednCoins;
+                else coins = r.nCoins;
                 const newvalues = {
                     $set: {
-                        //   isConfirmed: true,
-                        // B: B.substr(2),
-                        UpdatednCoins: ncoins.toString(),
-                        //	nCoins:r.nCoins,
-                        //	txn:r.txn,
-                        //	blockNumber:r.blockNumber,
-                        //      date: r.date,
+                        isConfirmed: true,
+                        B: s.B.substr(2),
+                        UpdatednCoins: "" + ncoins,
+                        nCoins: "" + coins,
                     }
                 };
                 db.collection('bank3').update(myquery, newvalues, (err, result) => {
@@ -267,7 +271,7 @@ async function run() {
         const deposit = {
             _id: req.params.A,
             isConfirmed: false,
-            nCoins: -1,
+            nCoins: "-1",
             date: Date.now(),
             txn: "",
         };
@@ -296,7 +300,6 @@ async function run() {
             var coins = "";
             var tx = await web3.eth.getTransaction("0x" + req.params.txn);
             var bn = tx.blockNumber;
-            //  await get_deposit(encodedA, bn).then(function(value) {
             await contract.methods.get_all(encodedA, bn).call().then(function(value, error) {
                 if (error) {
                     console.log(error);
@@ -415,30 +418,6 @@ function hexToBytes(hex) {
         bytes.push(parseInt(hex.substr(c, 2), 16));
     return bytes;
 }
-async function get_deposit(A, bn) {
 
-    const contract = new web3.eth.Contract(contractBankWalletsABI, contractBankWalletsAddress);
-
-    try {
-        return await contract.methods.get_all(A).call(null, bn);
-    } catch (err) {
-        console.error("Failed to retrieve deposit for value " + A + "for bn " + bn + ":", err);
-        return "error";
-    }
-}
-async function get_deposit(A) {
-
-    const contract = new web3.eth.Contract(contractBankWalletsABI, contractBankWalletsAddress);
-
-    try {
-        contract.methods.get_all(A).call(function(value) {
-            console.log(value);
-            return value;
-        });
-    } catch (err) {
-        console.error("Failed to retrieve deposit for value " + A + ":", err);
-        return "error";
-    }
-}
 run();
-setInterval(UpdateDb, 15000);
+setInterval(UpdateDb, 8000);

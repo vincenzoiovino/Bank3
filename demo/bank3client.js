@@ -983,7 +983,9 @@ document.getElementById("scanButton").addEventListener("click", async () => {
             var tr = "<tr>";
             tr += "<th>0x" + r._id + "</th>";
             tr += "<td>" + sender + "</td>";
-            if (!r.nCoins || r.nCoins == -1)
+            if (r.UpdatednCoins && (!r.nCoins || r.nCoins == -1))
+                tr += "<td>" + web3.utils.fromWei(r.UpdatednCoins, "ether") + "</td>";
+            else if (!r.nCoins || r.nCoins == -1)
                 tr += "<td>n/a (try later)</td>";
             else if (r.UpdatednCoins && r.UpdatednCoins != r.nCoins)
                 tr += "<td>" + web3.utils.fromWei(r.nCoins, "ether") + " (already claimed)</td>";
