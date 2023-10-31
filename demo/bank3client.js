@@ -660,6 +660,17 @@ async function SendFunction() {
         console.error("To and amount are required");
         return;
     }
+    if (to.substr(0, 2) != "0x") {
+        try {
+            to = await provider.resolveName("vitalik.eth");
+        } catch (err) {
+            swal("Failed to retrieve the address of " + to + " from the ENS registry.", {
+                icon: "error",
+            });
+            return;
+        }
+    }
+
     const accounts = await web3.eth.getAccounts();
     const from = accounts[0];
     var pk;
@@ -675,7 +686,6 @@ async function SendFunction() {
     // give possibility to use PK to make deposits
     else pk = publickey;
     //console.log(pk);
-
     const s = enc(pk.substr(2), to.substr(2)).split(' ');
     const A = s[0].substr(2);
     const B = s[1].substr(2);
@@ -747,7 +757,7 @@ async function SendFunction() {
             }
 
         });
-        //console.log("gasUsed="+gasUsed+"txn="+txn);
+        document.getElementById("status1").innerText = "Deposit of " + amount + " ETH in favour of " + to + " associated to identifier: 0x" + A + "is going to be submitted...";
         clearInterval(waitdepositinterval);
         clearInterval(dotsinterval);
         dotsinterval = setInterval(setDots, 1000);
