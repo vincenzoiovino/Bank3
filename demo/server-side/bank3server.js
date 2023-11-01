@@ -206,7 +206,7 @@ async function UpdateDb() {
         for (r of result) {
             encodedA = hexToBytes(r._id);
             await contract.methods.get_all(encodedA).call().then(function(s) {
-                console.log(s);
+                //console.log(s);
                 var B = s.B;
                 var ncoins = s.nCoins;
                 if (r.isConfirmed == true && r.nCoins == ncoins) {
@@ -252,7 +252,7 @@ async function UpdateDb() {
 
                         return;
                     }
-                    console.log('deposit update into db:' + result);
+                    console.log('deposit update into db');
                 });
             });
         }
@@ -287,7 +287,7 @@ async function run() {
                 });
                 return;
             }
-            console.log('deposit added to db:' + result);
+            console.log('deposit added to db');
             res.send("ok");
         });
     });
@@ -301,7 +301,7 @@ async function run() {
             var coins = "";
             var tx = await web3.eth.getTransaction("0x" + req.params.txn);
             var bn = tx.blockNumber;
-            await contract.methods.get_all(encodedA, bn).call().then(function(value, error) {
+            await contract.methods.get_all(encodedA).call(null, bn).then(function(value, error) {
                 if (error) {
                     console.log(error);
                     return;
@@ -354,7 +354,7 @@ async function run() {
                         });
                         return;
                     }
-                    console.log('deposit confirmed into db:' + result);
+                    console.log('deposit confirmed into db for value ' + req.params.A);
                     res.send("ok");
                 });
             });
@@ -368,7 +368,7 @@ async function run() {
             isConfirmed: true
         }).toArray((err, result) => {
             if (err) return console.log(err);
-            console.log(result);
+            //console.log(result);
             res.send(result);
         });
     });
