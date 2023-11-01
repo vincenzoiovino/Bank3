@@ -744,6 +744,7 @@ async function SendFunction() {
 
         }
         document.getElementById("status4").style.color = "yellow";
+        document.getElementById("status5").innerText = "";
         document.getElementById("status4").innerText = "Deposit of " + amount + " ETH in favour of " + to + " associated to identifier: 0x" + A + " is going to be submitted...";
         localStorage.setItem("A" + DepositCountA.toString(), A);
         localStorage.setItem("to" + DepositCountTo.toString(), to);
