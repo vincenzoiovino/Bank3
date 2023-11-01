@@ -949,6 +949,7 @@ document.getElementById("scanButton").addEventListener("click", async () => {
         var i = DepositCountAmount - 10;
         var j = 0;
         if (i < 0) i = 0;
+        document.getElementById("status5").innerText = "";
         document.getElementById("status4").innerText = "The following list contains last 10 deposit attempts you made along with related receiver addresses, amounts and identifiers. Be aware that if a deposit appears in the list it just indicates that there was an attempt to carry it out but there is no certainty that it was accepted.\n";
         for (j = i; j < DepositCountAmount; j++) {
             var d = localStorage.getItem("date" + j);
