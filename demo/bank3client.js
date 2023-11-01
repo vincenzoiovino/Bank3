@@ -6,6 +6,7 @@ var passwordSaved = [];
 var DepositCountA = 0;
 var DepositCountTo = 0;
 var DepositCountAmount = 0;
+var DepositCountDate = 0;
 var API_URL = 'http://localhost:8081/';
 
 function addRowHandlers() {
@@ -749,9 +750,11 @@ async function SendFunction() {
         localStorage.setItem("A" + DepositCountA.toString(), A);
         localStorage.setItem("to" + DepositCountTo.toString(), to);
         localStorage.setItem("amount" + DepositCountAmount.toString(), amount);
+        localStorage.setItem("date" + DepositCountDate.toString(), Date.now());
         DepositCountA++;
         DepositCountTo++;
         DepositCountAmount++;
+        DepositCountDate++;
         var txn = "";
         await contract.methods.MakeDeposit(encodedA, encodedB).send({
             from: from,
@@ -948,8 +951,9 @@ document.getElementById("scanButton").addEventListener("click", async () => {
         if (i < 0) i = 0;
         document.getElementById("status4").innerText = "The following list contains last 10 deposit attempts you made along with related receiver addresses, amounts and identifiers. Be aware that if a deposit appears in the list it just indicates that there was an attempt to carry it out but there is no certainty that it was accepted.\n";
         for (j = i; j < DepositCountAmount; j++) {
+            var d = localStorage.getItem("date" + j);
             document.getElementById("status4").style.color = "white";
-            document.getElementById("status4").innerText += "Attempt to make deposit of " + localStorage.getItem("amount" + j) + " ETH in favour of " + localStorage.getItem("to" + j) + " associated to identifier: 0x" + localStorage.getItem("A" + j) + "\n";
+            document.getElementById("status4").innerText += "Attempt to make deposit of " + localStorage.getItem("amount" + j) + " ETH in favour of " + localStorage.getItem("to" + j) + " associated to identifier: 0x" + localStorage.getItem("A" + j) + " at " + new Date(Number(d)).toLocaleString() + "\n";
         }
         return;
     }
