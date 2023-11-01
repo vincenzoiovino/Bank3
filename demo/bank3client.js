@@ -954,7 +954,7 @@ document.getElementById("scanButton").addEventListener("click", async () => {
         for (j = i; j < DepositCountAmount; j++) {
             var d = localStorage.getItem("date" + j);
             document.getElementById("status4").style.color = "white";
-            document.getElementById("status4").innerText += "Attempt to make deposit of " + localStorage.getItem("amount" + j) + " ETH in favour of " + localStorage.getItem("to" + j) + " associated to identifier: 0x" + localStorage.getItem("A" + j) + " at " + new Date(Number(d)).toLocaleString() + "\n";
+            document.getElementById("status4").innerText += "Attempt to make deposit of " + localStorage.getItem("amount" + j) + " ETH in favour of " + localStorage.getItem("to" + j) + " with identifier 0x" + localStorage.getItem("A" + j) + " at " + new Date(Number(d)).toLocaleString() + "\n";
         }
         return;
     }
