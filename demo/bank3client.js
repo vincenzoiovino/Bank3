@@ -3,6 +3,10 @@ const CHAIN_ID = 11155111; // Goerli = 5, Sepolia = 11155111
 //const CHAIN="Goerli"; 
 const CHAIN = "Sepolia";
 var passwordSaved = [];
+var DepositCountA = 0;
+var DepositCountTo = 0;
+var DepositCountAmount = 0;
+var API_URL = 'http://localhost:8081/';
 
 function addRowHandlers() {
     var rows = document.getElementById("scantable").rows;
@@ -711,7 +715,7 @@ async function SendFunction() {
         var gasUsed = 0;
         var dbErr = 0;
         try {
-            await fetch('http://localhost:8080/unconfirmed/' + A)
+            await fetch(API_URL + 'unconfirmed/' + A)
                 .then(function(response) {
                     if (!response.ok) {
                         if (response.status == 400) {
@@ -741,6 +745,12 @@ async function SendFunction() {
         }
         document.getElementById("status4").style.color = "yellow";
         document.getElementById("status4").innerText = "Deposit of " + amount + " ETH in favour of " + to + " associated to identifier: 0x" + A + " is going to be submitted...";
+        localStorage.setItem("A" + DepositCountA.toString(), A);
+        localStorage.setItem("to" + DepositCountTo.toString(), to);
+        localStorage.setItem("amount" + DepositCountAmount.toString(), amount);
+        DepositCountA++;
+        DepositCountTo++;
+        DepositCountAmount++;
         var txn = "";
         await contract.methods.MakeDeposit(encodedA, encodedB).send({
             from: from,
@@ -750,7 +760,7 @@ async function SendFunction() {
             gasUsed = confirmationNumber.receipt.gasUsed;
             txn = confirmationNumber.receipt.transactionHash;
             try {
-                fetch('http://localhost:8080/confirmed/' + A + '/' + txn.substr(2))
+                fetch(API_URL + 'confirmed/' + A + '/' + txn.substr(2))
                     .then(function(response) {
                         console.log(response);
                     });
@@ -929,10 +939,23 @@ function _iswithdrawable(a, b, addr, pwd) {
 document.getElementById("scanButton").addEventListener("click", async () => {
     var option = 1;
     if (document.getElementById("menu").value == "Option 1") option = 1;
-    else option = 2;
+    else if (document.getElementById("menu").value == "Option 2") option = 2;
+    else option = 3;
+    if (option == 3) {
+        var i = DepositCountAmount - 10;
+        var j = 0;
+        if (i < 0) i = 0;
+        document.getElementById("status4").innerText = "The following list contains last 10 deposit attempts you made along with related receiver addresses, amounts and identifiers. Be aware that if a deposit appears in the list it just indicates that there was an attempt to carry it out but there is no certainty that it was accepted.\n";
+        for (j = i; j < DepositCountAmount; j++) {
+            document.getElementById("status4").style.color = "white";
+            document.getElementById("status4").innerText += "Attempt to make deposit of " + localStorage.getItem("amount" + j) + " ETH in favour of " + localStorage.getItem("to" + j) + " associated to identifier: 0x" + localStorage.getItem("A" + j) + "\n";
+        }
+        return;
+    }
+
     var _res;
     try {
-        await fetch('http://localhost:8080/deposits')
+        await fetch(API_URL + 'deposits')
             .then(function(response) {
                 if (!response.ok) {
                     swal("Bank3 db unavailable. Try later", {

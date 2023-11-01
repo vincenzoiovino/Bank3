@@ -1,6 +1,7 @@
 // TODO: scanner based on new transactions onchain.
 //const contractBankWalletsAddress = "0xf03eB7b77Efe402c6e1721a17f9527F178Fc34f8"; // old contract on Goerli
 //const contractBankWalletsAddress = "0xc32498817cC84236D0686D7ee449D2ADB186097B"; // old contract on Sepolia
+var PORT = 8081;
 const contractBankWalletsAddress = "0x06bBC56579D73d7E5C556f67D5c2D3eE66a79EA7"; // contract on Sepolia
 const contractBankWalletsABI = [{
         "inputs": [{
@@ -397,9 +398,9 @@ MongoClient.connect(url, (err, database) => {
         return console.log(err);
     }
     db = database;
-    // start the express web server listening on 8080
-    app.listen(8080, () => {
-        console.log('listening on 8080');
+    // start the express web server listening on PORT
+    app.listen(PORT, () => {
+        console.log('listening on ' + PORT);
     });
 });
 console.log('Bank3 server-side code running');
