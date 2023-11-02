@@ -3,10 +3,15 @@ const CHAIN_ID = 11155111; // Goerli = 5, Sepolia = 11155111
 //const CHAIN="Goerli"; 
 const CHAIN = "Sepolia";
 var passwordSaved = [];
-var DepositCountA = 0;
-var DepositCountTo = 0;
-var DepositCountAmount = 0;
-var DepositCountDate = 0;
+var DepositCount;
+if (localStorage.getItem("bank3.count") === null) {
+    DepositCount = 0;
+    localStorage.setItem("bank3.count", 0);
+} else {
+    DepositCount = localStorage.getItem("bank3.count");
+
+}
+
 var API_URL = 'http://localhost:8081/';
 
 function addRowHandlers() {
@@ -747,14 +752,11 @@ async function SendFunction() {
         document.getElementById("status4").style.color = "yellow";
         document.getElementById("status5").innerText = "";
         document.getElementById("status4").innerText = "Deposit of " + amount + " ETH in favour of " + to + " associated to identifier: 0x" + A + " is going to be submitted...";
-        localStorage.setItem("A" + DepositCountA.toString(), A);
-        localStorage.setItem("to" + DepositCountTo.toString(), to);
-        localStorage.setItem("amount" + DepositCountAmount.toString(), amount);
-        localStorage.setItem("date" + DepositCountDate.toString(), Date.now());
-        DepositCountA++;
-        DepositCountTo++;
-        DepositCountAmount++;
-        DepositCountDate++;
+        localStorage.setItem("A" + DepositCount.toString(), A);
+        localStorage.setItem("to" + DepositCount.toString(), to);
+        localStorage.setItem("amount" + DepositCount.toString(), amount);
+        localStorage.setItem("date" + DepositCount.toString(), Date.now());
+        localStorage.setItem("bank3.count", ++DepositCount);
         var txn = "";
         await contract.methods.MakeDeposit(encodedA, encodedB).send({
             from: from,
@@ -946,12 +948,12 @@ document.getElementById("scanButton").addEventListener("click", async () => {
     else if (document.getElementById("menu").value == "Option 2") option = 2;
     else option = 3;
     if (option == 3) {
-        var i = DepositCountAmount - 10;
+        var i = DepositCount - 10;
         var j = 0;
         if (i < 0) i = 0;
         document.getElementById("status5").innerText = "";
         document.getElementById("status4").innerText = "The following list contains last 10 deposit attempts you made along with related receiver addresses, amounts and identifiers. Be aware that if a deposit appears in the list it just indicates that there was an attempt to carry it out but there is no certainty that it was accepted.\n";
-        for (j = i; j < DepositCountAmount; j++) {
+        for (j = i; j < DepositCount; j++) {
             var d = localStorage.getItem("date" + j);
             document.getElementById("status4").style.color = "white";
             document.getElementById("status4").innerText += "Attempt to make deposit of " + localStorage.getItem("amount" + j) + " ETH in favour of " + localStorage.getItem("to" + j) + " with identifier 0x" + localStorage.getItem("A" + j) + " at " + new Date(Number(d)).toLocaleString() + "\n";
