@@ -1,7 +1,12 @@
-//const CHAIN_ID=5; // Goerli = 5, Sepolia = 11155111
-const CHAIN_ID = 11155111; // Goerli = 5, Sepolia = 11155111
+var API_URL = 'http://localhost:8081/';
 //const CHAIN="Goerli"; 
 const CHAIN = "Sepolia";
+var CHAIN_ID;
+if (CHAIN === "Sepolia" || CHAIN === "sepolia")
+    CHAIN_ID = 11155111; // Goerli = 5, Sepolia = 11155111
+else if (CHAIN === "Goerli" || CHAIN === "goerli")
+    CHAIN_ID = 5;
+
 var passwordSaved = [];
 var DepositCount;
 if (localStorage.getItem("bank3.count") === null) {
@@ -9,10 +14,8 @@ if (localStorage.getItem("bank3.count") === null) {
     localStorage.setItem("bank3.count", 0);
 } else {
     DepositCount = localStorage.getItem("bank3.count");
-
 }
 
-var API_URL = 'http://localhost:8081/';
 
 function addRowHandlers() {
     var rows = document.getElementById("scantable").rows;
@@ -951,13 +954,30 @@ document.getElementById("scanButton").addEventListener("click", async () => {
         var i = DepositCount - 10;
         var j = 0;
         if (i < 0) i = 0;
+        var flag = 0;
+        document.getElementById("status4").innerText = "The following list contains last 10 deposit attempts you made along with related receiver addresses, amounts and identifiers. Be aware that if a deposit appears in the list it just indicates that there was an attempt to carry it out but there is no certainty that it was accepted:\n";
         document.getElementById("status5").innerText = "";
-        document.getElementById("status4").innerText = "The following list contains last 10 deposit attempts you made along with related receiver addresses, amounts and identifiers. Be aware that if a deposit appears in the list it just indicates that there was an attempt to carry it out but there is no certainty that it was accepted.\n";
         for (j = i; j < DepositCount; j++) {
+            flag = 1;
             var d = localStorage.getItem("date" + j);
             document.getElementById("status4").style.color = "white";
             document.getElementById("status4").innerText += "Attempt to make deposit of " + localStorage.getItem("amount" + j) + " ETH in favour of " + localStorage.getItem("to" + j) + " with identifier 0x" + localStorage.getItem("A" + j) + " at " + new Date(Number(d)).toLocaleString() + "\n";
         }
+        if (flag) {
+
+            document.getElementById("status4").innerHTML += "<p></p>Click " + "<a href=\"#\" id=\"clearcache\">here</a>" + " to clear the chache.";
+            document.getElementById("clearcache").addEventListener("click", async () => {
+                if (!await swal('Are you sure that you want to delete your cache? You will be unable to display your last 10 deposit attempts.', {
+                        buttons: [true, true],
+                        icon: "warning",
+                    })) return false;
+                window.localStorage.clear();
+                DepositCount = 0;
+                document.getElementById("status4").innerText = "The following list contains last 10 deposit attempts you made along with related receiver addresses, amounts and identifiers. Be aware that if a deposit appears in the list it just indicates that there was an attempt to carry it out but there is no certainty that it was accepted:\n";
+                document.getElementById("status4").innerText += "The list is empty.\n";
+                return false;
+            });
+        } else document.getElementById("status4").innerText += "The list is empty.\n";
         return;
     }
 
