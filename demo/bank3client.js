@@ -832,7 +832,8 @@ async function Withdraw() {
         });
         return;
     }
-    // Check if both to and amount are provided
+
+    /*
     var mypk = await getfromZkReg(0, myaddr);
     if (mypk == "error") {
         swal('Your account has not been already associated with any ZkRegistry public key', {
@@ -840,6 +841,7 @@ async function Withdraw() {
         });
         return;
     }
+   */
 
     const C = witness(A.substr(2), password);
     const contract = new web3.eth.Contract(contractBankWalletsABI, contractBankWalletsAddress);
@@ -940,9 +942,67 @@ document.getElementById("receiveButton").addEventListener("click", async () => {
     }
 });
 
+// Event Listener for Check Button
+document.getElementById("checkButton").addEventListener("click", async () => {
+    const metaMaskAvailable = await checkMetaMaskAvailability();
+    if (metaMaskAvailable) {
+        await Check();
+    }
+});
 
-function _iswithdrawable(a, b, addr, pwd) {
-    return 1;
+
+async function Check() {
+    const A = document.getElementById("idinput").value;
+    if (!A) {
+
+        swal("Identifier is required", {
+            icon: "error",
+        });
+        console.error("identifier is required");
+        return;
+    }
+
+    const accounts = await web3.eth.getAccounts();
+    const myaddr = accounts[0];
+    var password;
+    if (passwordSaved[myaddr]) password = passwordSaved[myaddr];
+    else {
+        password = await window.ethereum.request({
+            method: 'personal_sign',
+            params: [SignMessage, myaddr]
+        });
+        password = password.substr(2).toLowerCase();
+        passwordSaved[myaddr] = password;
+    }
+    if (password == "") {
+        swal("Password is empty", {
+            icon: "error",
+        });
+        return;
+    }
+    var encodedA = hexToBytes(A.substr(2));
+    const contract = new web3.eth.Contract(contractBankWalletsABI, contractBankWalletsAddress);
+
+    contract.methods.get_all(encodedA).call().then(function(data) {
+
+        var ncoins = data.nCoins.toString();
+        var B = data.B.toString();
+        if (B === "error" || B === "0x0000000000000000000000000000000000000000000000000000000000000000") {
+            swal("There is no valid deposit associated to this identifier", {
+                icon: "error",
+            });
+            return;
+        }
+        if (iswithdrawable(A.substr(2), B.substr(2), myaddr.substr(2), password) != "1")
+            swal("There is a valid deposit of " + ncoins + " associated to this identifier but is not withdrawable", {
+                icon: "info",
+            });
+        else
+            swal("There is a valid deposit of " + ncoins + " associated to this identifier and is withdrawable", {
+                icon: "info",
+            });
+    });
+
 }
 
 document.getElementById("scanButton").addEventListener("click", async () => {

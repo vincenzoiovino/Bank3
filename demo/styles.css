@@ -91,6 +91,14 @@
   margin-top: 50px;
   margin-bottom: 50px;
 }
+.thirdcontainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: left; /* Center the button horizontally */
+  align-items: center; /* Center the button vertically */
+  margin-top: 50px;
+  margin-bottom: 10px;
+}
 /* CSS */
 .button64 {
   align-items: center;
