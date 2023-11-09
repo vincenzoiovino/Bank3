@@ -995,7 +995,7 @@ async function Check() {
             }
             if (iswithdrawable(A.substr(2), B.substr(2), myaddr.substr(2), password) != "1")
                 swal("There is a valid deposit of " + ncoins + "eth associated to this identifier but is not withdrawable", {
-                    icon: "info",
+                    icon: "error",
                 });
             else
                 swal("There is a valid deposit of " + ncoins + "eth associated to this identifier and is withdrawable", {
