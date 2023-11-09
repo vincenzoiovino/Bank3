@@ -984,23 +984,31 @@ async function Check() {
     const contract = new web3.eth.Contract(contractBankWalletsABI, contractBankWalletsAddress);
 
     contract.methods.get_all(encodedA).call().then(function(data) {
-
-        var ncoins = data.nCoins.toString();
-        var B = data.B.toString();
-        if (B === "error" || B === "0x0000000000000000000000000000000000000000000000000000000000000000") {
-            swal("There is no valid deposit associated to this identifier", {
+        try {
+            var ncoins = web3.utils.fromWei(data.nCoins, "ether");
+            var B = data.B.toString();
+            if (B === "error" || B === "0x0000000000000000000000000000000000000000000000000000000000000000") {
+                swal("There is no valid deposit associated to this identifier", {
+                    icon: "error",
+                });
+                return;
+            }
+            if (iswithdrawable(A.substr(2), B.substr(2), myaddr.substr(2), password) != "1")
+                swal("There is a valid deposit of " + ncoins + "eth associated to this identifier but is not withdrawable", {
+                    icon: "info",
+                });
+            else
+                swal("There is a valid deposit of " + ncoins + "eth associated to this identifier and is withdrawable", {
+                    icon: "info",
+                });
+        } catch (err) {
+            swal("Unexpected error. Try later.", {
                 icon: "error",
             });
+            console.log(err);
             return;
+
         }
-        if (iswithdrawable(A.substr(2), B.substr(2), myaddr.substr(2), password) != "1")
-            swal("There is a valid deposit of " + ncoins + " associated to this identifier but is not withdrawable", {
-                icon: "info",
-            });
-        else
-            swal("There is a valid deposit of " + ncoins + " associated to this identifier and is withdrawable", {
-                icon: "info",
-            });
     });
 
 }
