@@ -46,7 +46,7 @@ function setFees(uint256 fees) external {
 
     /** 
      * @dev Make a deposit annotated with identifier id of msg.value coins with ciphertext CT=(A,B)
-     * @param A and B strings representing the ciphertext
+     * @param A and B byte arrays representing the identifier and ciphertext
      * 
      * The parameter calldata is not used on purpose, it will appear on ether scans
      * so one can use it off-chain to compute the proof needed for a withdrawal but the contract does not use it directly
