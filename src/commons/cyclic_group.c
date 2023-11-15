@@ -67,7 +67,7 @@ generate_secret_key_from_password (CycGrpZp * sk, char *password)
   sha3_Update (&ctx, (unsigned char *) password, strlen (password) + 1);	// we include the null terminating character
   hashed_password = sha3_Finalize (&ctx);
   CycGrpZp_new (sk);
-  if (BN_bin2bn (hashed_password, KECCAC_DIGEST_LENGTH, sk->B) != NULL)
+  if (BN_bin2bn (hashed_password, KECCAC_DIGEST_LENGTH, sk->B) != NULL) // TODO: check modulo bias issues for secp256k1
     ret = 1;
   return ret;
 }
