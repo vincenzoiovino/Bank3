@@ -14,7 +14,8 @@ Therefore, ``Bank3`` is *NOT* a coin mixer but presents the following difference
  * ``Bank3`` security is weaker than ``TC``: after withdrawal it is visible that Bob made the deposit. This is by design: the purpose here is just to hide the Bob's left wealth at the ``Bank3`` and not to mix the coins. This should not pose legal issues as for coin mixers.
 
 The repository contains a smart contract module in Solidity and the off-chain module written in C/Wasm-emscripten/Javascript.
-
+## Demo
+A fully working demo interacting with a `Sepolia` smart comtracy is available [here](https://demo.azkr.ch/bank3/index.html). Mobile browsers are not supported.
 ## Installation for the off-chain module
 ```bash
 ./install.sh
