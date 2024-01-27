@@ -21,7 +21,7 @@ Another application is to the management of the treasuries of Decentralized Auto
 ### This repo
 The repository contains smart contract modules in Solidity and the off-chain modules written in C/Wasm-emscripten/Javascript. The focus is on Wallets but we also implemented command line tools for the DAO variant.
 ### Live Demo
-A live demo interacting with a `Sepolia` smart comtract is available [here](https://demo.azkr.ch/bank3/index.html). Mobile browsers are not supported.
+A live demo for the Wallets variant interacting with a `Sepolia` smart comtract is available [here](https://demo.azkr.ch/bank3/index.html). Mobile browsers are not supported.
 ## Installation for the off-chain module
 ```bash
 ./install.sh
