@@ -13,7 +13,7 @@ Therefore, ``Bank3`` is *NOT* a coin mixer but presents the following difference
 * ``Bank3`` does not require trusted setup and is based on standard computational assumptions, namely the hardness of breaking discrete logs over elliptic curves whereas it is known that any system based on SNARKs as ``TC`` cannot be proven secure from falsifiable assumptions.
  * ``Bank3`` security is weaker than ``TC``: after withdrawal it is visible that Bob made the deposit. This is by design: the purpose here is just to hide the Bob's left wealth at the ``Bank3`` and not to mix the coins. This should not pose legal issues as for coin mixers.
 ### Applications
-A Bank3 for Wallets would ease the management of wallets. Indeed, in order to preserve privacy, it will not be necessary to create new accounts for each transactions. The latter mechanism is usually adopted by websites who receive donations like Wikileaks.
+A Bank3 for Wallets would ease the management of wallets. Indeed, in order to preserve privacy, it will not be necessary to create new accounts for each transaction. The latter mechanism is usually adopted by websites who receive donations like Wikileaks.
 
 Unfortunately, it is less user-friendly for shops which might want to display a single QR code encoding their own account in order to not to deal with the creation of multiple accounts. Moreover, regulations might require declaring the amount of coins held in all personal accounts. Using the Bank3 mechanism, the withdrawable coins at the Bank3 might be considered as not part of your yearly revenues.
 
