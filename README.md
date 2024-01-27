@@ -4,7 +4,7 @@ The repository provides implementation of the ``Bank3``  protocols described in 
 ). 
 
 ``Bank3`` is essentially an anonymous deposit system (both for Wallets and DAOs) that can be described by the following example. Alice can deposit anonymously ``n`` coins in favour of Bob by sending the coins to the ``Bank3`` contract. At any point of time Bob will hold ``m>n`` coins at the ``Bank3``  contract, and nobody will be able to infer how much wealth Bob holds. Bob can withdraw the ``n`` coins deposited by Alice in favour of him using just the ability to use his personal wallet. After withdrawal, the fact that Alice deposited ``n`` coins in favour of Bob will be public but it will not be possible to leak how many more coins Bob holds at the ``Bank3``.
-
+### Difference with coulin mixers
 Therefore, ``Bank3`` is *NOT* a coin mixer but presents the following differences and advantages with respect to Trnad0 C@sh (``TC``):
  * A ``TC`` deposit+withdrawal can consume more than 1.3/1.4 milions of GAS whereas in our current ``Bank3`` implementation a deposit (resp. withdrawal) costs about 68k (resp. 35k) and likely we can lower the deposit cost a bit more (e.g., with fixed notes like in ``TC`` it should go down quite a bit)!
  *   ``TC`` runs in fractions of a minute on powerful laptops whereas ``Bank3`` can run in fractions of a second even on mobile devices.
@@ -12,9 +12,16 @@ Therefore, ``Bank3`` is *NOT* a coin mixer but presents the following difference
 * ``Bank3`` requires only hashing on-chain  and as such is very portable and efficient. A slight variant of ``Bank3`` might be likely implemented also in ``Bitcoin``!
 * ``Bank3`` does not require trusted setup and is based on standard computational assumptions, namely the hardness of breaking discrete logs over elliptic curves whereas it is known that any system based on SNARKs as ``TC`` cannot be proven secure from falsifiable assumptions.
  * ``Bank3`` security is weaker than ``TC``: after withdrawal it is visible that Bob made the deposit. This is by design: the purpose here is just to hide the Bob's left wealth at the ``Bank3`` and not to mix the coins. This should not pose legal issues as for coin mixers.
+### Applications
+A Bank3 for Wallets would ease the management of wallets. Indeed, in order to preserve privacy, it will not be necessary to create new accounts for each transactions. The latter mechanism is usually adopted by websites who receive donations like Wikileaks.
 
-The repository contains smart contract modules in Solidity and the off-chain modules written in C/Wasm-emscripten/Javascript.
-## Live Demo
+Unfortunately, it is less user-friendly for shops which might want to display a single QR code encoding their own account in order to not to deal with the creation of multiple accounts. Moreover, regulations might require declaring the amount of coins held in all personal accounts. Using the Bank3 mechanism, the withdrawable coins at the Bank3 might be considered as not part of your yearly revenues.
+
+Another application is to the management of the treasuries of Decentralized Autonomous Organisations (DAOs) as we will show later. DAOs are not administrated by single users so the creation of multiple accounts to receive payments would be too complex and clashes with the DAO’s governance.
+
+### This repo
+The repository contains smart contract modules in Solidity and the off-chain modules written in C/Wasm-emscripten/Javascript. The focus is on Wallets but we also implemented command line tools for the DAO variant.
+### Live Demo
 A live demo interacting with a `Sepolia` smart comtract is available [here](https://demo.azkr.ch/bank3/index.html). Mobile browsers are not supported.
 ## Installation for the off-chain module
 ```bash
