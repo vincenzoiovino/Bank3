@@ -4,7 +4,7 @@ The repository provides implementation of the ``Bank3``  protocols described in 
 ). 
 
 ``Bank3`` is essentially an anonymous deposit system (both for Wallets and DAOs) that can be described by the following example. Alice can deposit anonymously ``n`` coins in favour of Bob by sending the coins to the ``Bank3`` contract. At any point of time Bob will hold ``m>n`` coins at the ``Bank3``  contract, and nobody will be able to infer how much wealth Bob holds. Bob can withdraw the ``n`` coins deposited by Alice in favour of him using just the ability to use his personal wallet. After withdrawal, the fact that Alice deposited ``n`` coins in favour of Bob will be public but it will not be possible to leak how many more coins Bob holds at the ``Bank3``.
-### Difference with coulin mixers
+### Difference with coin mixers
 Therefore, ``Bank3`` is *NOT* a coin mixer but presents the following differences and advantages with respect to Trnad0 C@sh (``TC``):
  * A ``TC`` deposit+withdrawal can consume more than 1.3/1.4 milions of GAS whereas in our current ``Bank3`` implementation a deposit (resp. withdrawal) costs about 68k (resp. 35k) and likely we can lower the deposit cost a bit more (e.g., with fixed notes like in ``TC`` it should go down quite a bit)!
  *   ``TC`` runs in fractions of a minute on powerful laptops whereas ``Bank3`` can run in fractions of a second even on mobile devices.
