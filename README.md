@@ -158,14 +158,16 @@ The value `C` in the output of the previous execution is the witness that will b
 #### On-chain part
 Let us say that the user `1` is responsible to make the withdrawal.
 The user `1` invokes the method `MakeWithdrawalSha256` of the Bank DAO contract with the following parameters: 
-`t=1`, the proposal accepted in the Generic DAO.
-`nCoins=100`, the amount of coins to withdraw from the Bank.
-`addr=9cF86D8D08bC34248210474C4B019befb0fE70fA` , the address of the generic DAO contract in favour of which the withdrawal is performed, 
-`id=0`, the identifier of the deposit of Alice that was for the amount `1000wei >100 wei`).
-`C=0x023C9C232F8D527AB5780BC679185424DBCA273DFAA4E1D48B501AF2D28B8AE25E`, the witness computed above.
+* `t=1`, the proposal accepted in the Generic DAO.
+* `nCoins=100`, the amount of coins to withdraw from the Bank.
+* `addr=9cF86D8D08bC34248210474C4B019befb0fE70fA` , the address of the generic DAO contract in favour of which the withdrawal is performed, 
+* `id=0`, the identifier of the deposit of Alice that was for the amount `1000wei >100 wei`).
+* `C=0x023C9C232F8D527AB5780BC679185424DBCA273DFAA4E1D48B501AF2D28B8AE25E`, the witness computed above.
 The transaction will transfer `100 wei` from the Bank contract to the generic DAO contract.
 With the same witness you can actually repeat the same process `10` times until all `1000 wei` consume the deposit of Alice.
 
 The user can also do the previous procedure by replacing `MakeWithdrawalSha256` with `MakeWithdrawalKeccac256` but in this case in the deposit phase it should use the program `encrypt_keccac` instead of `encrypt`.
+
+Note: the example shows the withdrawal of `1000wei` from a transaction of `100wei`. This is not meaningful because after the withdrawal it might be possible for an attacker to withdraw the rest of `900wei` in the transaction. However, our system is general and allows this sort of partial withdrawals. For instance, unclaimed coins could go for donations, etc.
 ## References
 Vincenzo Iovino. [Bank3: enabling deposits and withdrawals from Wallets and DAOs in a private and decentralized way](https://hackmd.io/q4RHSYE6Tb6fRqgPIML9QA?view), 2023.
