@@ -1,7 +1,7 @@
 # The Bank3 System
 ## Overview
-The repository provides implementation of the ``Bank3``  protocols described in this [note](https://hackmd.io/q4RHSYE6Tb6fRqgPIML9QA?view
-). 
+The repository provides implementation of the basic version of the ``Bank3`` protocols for Wallets and DAOs described in this [note](https://hackmd.io/q4RHSYE6Tb6fRqgPIML9QA?view
+).  This repo only covers a subset of the Bank3 functionalities and does focus on Ethereum.
 
 ``Bank3`` is essentially an anonymous deposit system (both for Wallets and DAOs) that can be described by the following example. Alice can deposit anonymously ``n`` coins in favour of Bob by sending the coins to the ``Bank3`` contract. At any point of time Bob will hold ``m>n`` coins at the ``Bank3``  contract, and nobody will be able to infer how much wealth Bob holds. Bob can withdraw the ``n`` coins deposited by Alice in favour of him using just the ability to use his personal wallet. After withdrawal, the fact that Alice deposited ``n`` coins in favour of Bob will be public but it will not be possible to leak how many more coins Bob holds at the ``Bank3``.
 ### Difference with coin mixers
@@ -18,6 +18,7 @@ Unfortunately, this possibility is less user-friendly for shops which might want
 
 Another application is to the management of the treasuries of Decentralized Autonomous Organisations (DAOs) as we will show in the Bank DAO section. DAOs are not administrated by single users so the creation of multiple accounts to receive payments would be too complex and clashes with the DAO’s governance.
 
+More applications can be achieved with the extended variants of the Bank3 protocol which are not covered in this repo and for which the reader is deferred to the original [note](https://hackmd.io/q4RHSYE6Tb6fRqgPIML9QA?view).  
 ### This repo
 The repository contains smart contract modules in Solidity and the off-chain modules written in C/Wasm-emscripten/Javascript. The focus is on Wallets but we also implemented command line tools for the DAO variant.
 ### Live Demo
