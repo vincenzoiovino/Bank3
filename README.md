@@ -1,6 +1,6 @@
 # The Bank3 System
 ## Overview
-The repository provides implementation of the basic version of the ``Bank3`` protocols for Wallets and DAOs described in this [note](https://hackmd.io/q4RHSYE6Tb6fRqgPIML9QA?view](https://hackmd.io/yR2x-LH_TTWZFso5LJreqw
+The repository provides implementation of the basic version of the ``Bank3`` protocols for Wallets and DAOs described in this [note]([https://hackmd.io/q4RHSYE6Tb6fRqgPIML9QA?view](https://hackmd.io/yR2x-LH_TTWZFso5LJreqw](https://hackmd.io/@mrguizzo/Byb_tjWqxg)
 ).  This repo only covers a subset of the Bank3 functionalities and does focus on Ethereum. See the above note and [this paper](https://drive.google.com/file/d/13R03H8zSlOdK5KKY2f2qO54yJ6jMHttE/view?usp=sharing) for variants that offers more privacy and flexibility.
 
 ``Bank3`` is essentially an anonymous deposit system (both for Wallets and DAOs) that can be described by the following example. Alice can deposit anonymously ``n`` coins in favour of Bob by sending the coins to the ``Bank3`` contract. At any point of time Bob will hold ``m>n`` coins at the ``Bank3``  contract, and nobody will be able to infer how much wealth Bob holds. Bob can withdraw the ``n`` coins deposited by Alice in favour of him using just the ability to use his personal wallet. After withdrawal, the fact that Alice deposited ``n`` coins in favour of Bob will be public but it will not be possible to leak how many more coins Bob holds at the ``Bank3``.
